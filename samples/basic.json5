@@ -1,0 +1,10 @@
+{
+    nodes: 2,
+    tokens: [ {
+        symbol: "LUM",
+        amount: 1
+    }, {
+        symbol: "RIF",
+        amount: 2
+    }]
+}
