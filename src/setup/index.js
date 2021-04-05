@@ -1,43 +1,59 @@
-import Lumino from 'lumino-js-sdk';
-import Web3 from 'web3';
-import { getTokenAddress } from '../token/util';
+import ContainerManager from "./containers";
+
+const DEFAULT_TOKENS = [
+    "LUM",
+    "RIF"
+];
 
 export default class SetupLoader {
     constructor() {
+        this.containerManager = new ContainerManager();
     }
 
-    static async fromSetup(setup) {
+    static async of(setup) {
         const loader = new SetupLoader();
+        await loader.containerManager.startupRsk();
         await loader.loadNodes(setup);
         await loader.openChannels(setup);
         return loader;
     }
 
-    loadNodes(setup) {
-        let nodeNames = [];
-        if (Array.isArray(setup.nodes)) {
-            nodeNames = setup.nodes
-        } else {
-            for (let i = 0; i < setup.nodes; i++) {
-                nodeNames.push(`node${i}`);
+    validateTokens(tokens) {
+        if (tokens) {
+            console.log('tokens', tokens);
+            const notExistentTokens = tokens.filter(token => DEFAULT_TOKENS.indexOf(token.symbol) === -1);
+            if (notExistentTokens.length > 0) {
+                throw new Error(`You need to specify a valid token symbol on the tokens configuration. 
+                                    Valid values are ${DEFAULT_TOKENS}. Error: invalid values ${notExistentTokens.map(token => token.symbol)}`);
             }
         }
-        return this.setupNodes(nodeNames);
     }
 
-    setupNodes(nodeNames) {
-        this.nodes = {}
-        nodeNames.forEach((nodeName, i) => {
-            this.nodes[nodeName] = {
-                sdk: this.buildSdk(i),
+    loadNodes(setup) {
+        let nodeConfigs = [];
+        if (Array.isArray(setup.nodes)) {
+            const tokens = setup.nodes.flatMap(node => node.tokens);
+            this.validateTokens(tokens);
+            nodeConfigs = setup.nodes;
+        } else {
+            this.validateTokens(setup.tokens);
+            for (let i = 0; i < setup.nodes; i++) {
+                nodeConfigs.push({
+                    name: `node${i}`,
+                    tokens: setup.tokens
+                });
             }
-        })
+        }
+        return this.setupNodes(nodeConfigs);
     }
 
-    buildSdk(i) {
-        return new Lumino({luminoNodeBaseUrl: `http://localhost:500${i + 1}/api/v1`});
+    setupNodes(nodeConfigs) {
+        this.nodes = {};
+        nodeConfigs.forEach(nodeConfig => {
+            this.nodes[nodeConfig.name] = this.containerManager.startupLuminoNode(nodeConfig);
+        });
     }
-    
+
     openChannels(setup) {
         return Promise.all(setup.channels.map(async ({token, participant1, participant2}) => {
             const creator = this.nodes[participant1.node];
@@ -57,14 +73,15 @@ export default class SetupLoader {
         }));
     }
 
-
     getTokens() {
-        return [
-            "LUM",
-            "RIF"
-        ] 
+        return DEFAULT_TOKENS;
     }
 
+    getNodes() {
+        return this.nodes;
+    }
 
-
+    stop() {
+        this.containerManager.stopAll();
+    }
 }

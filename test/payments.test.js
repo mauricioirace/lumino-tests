@@ -6,7 +6,7 @@ describe("Payments", () => {
   let setup;
 
   beforeAll(async () => {
-    setup = await SetupLoader.fromSetup(advanced);
+    setup = await SetupLoader.of(advanced);
   }, 60 * 1000)
   
   it('should make a payment', async () => {
