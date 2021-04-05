@@ -1,4 +1,10 @@
 export default class ContainerManager {
+
+    private rskNodes: any[];
+    private notifiers: any[];
+    private explorers: any[];
+    private luminoNodes: any[];
+
     constructor() {
         this.rskNodes = [];
         this.notifiers = [];

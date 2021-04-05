@@ -1,4 +1,4 @@
-import ContainerManager from "./containers";
+import ContainerManager from "../containers";
 
 const DEFAULT_TOKENS = [
     "LUM",
@@ -6,11 +6,15 @@ const DEFAULT_TOKENS = [
 ];
 
 export default class SetupLoader {
+
+    private containerManager: ContainerManager;
+    private nodes: any;
+
     constructor() {
         this.containerManager = new ContainerManager();
     }
 
-    static async of(setup) {
+    public static async of(setup) {
         const loader = new SetupLoader();
         await loader.containerManager.startupRsk();
         await loader.loadNodes(setup);
