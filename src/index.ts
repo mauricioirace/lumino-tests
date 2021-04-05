@@ -1,15 +1,7 @@
-import SetupLoader, {SetupJson} from "./setup";
-import {Node} from "container-manager";
-
-export interface LuminoTesting {
-    nodes: () => Node[];
-    stop: () => void;
-}
+import SetupLoader from "./setup";
+import {LuminoTesting} from "types/lumino-testing";
+import {SetupJson} from "types/setup";
 
 export default async function LuminoTesting(setupJson: SetupJson): Promise<LuminoTesting> {
-    const setupLoader: SetupLoader = await SetupLoader.create(setupJson);
-    return {
-        nodes: setupLoader.getNodes,
-        stop: setupLoader.stop
-    };
+   return await SetupLoader.initialize(setupJson);
 }

@@ -1,7 +1,7 @@
-import LuminoTesting from "../src";
+import LuminoTesting from '../src';
 import * as basic from '../samples/basic.json';
 import * as advanced from '../samples/advanced.json';
-import {SetupJson} from "setup";
+import {SetupJson} from 'types/setup';
 
 describe("Bootstrapping", () => {
     it('should have basic nodes ready', async () => {

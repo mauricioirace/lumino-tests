@@ -1,38 +1,9 @@
-import ContainerManager, {Node} from "../container-manager";
-import { getTokenAddress } from 'token/util';
+import ContainerManager from "../container-manager";
+import {getTokenAddress, validateTokens} from 'token/util';
 import Web3 from 'web3';
-
-export interface SetupParticipant {
-    node: string;
-    deposit: number;
-}
-
-export interface SetupChannel {
-    tokenSymbol: string;
-    participant1: SetupParticipant;
-    participant2: SetupParticipant;
-}
-
-export interface SetupToken {
-    symbol: string;
-    amount: number;
-}
-
-export interface SetupNode {
-    name: string;
-    tokens: SetupToken[];
-}
-
-export interface SetupJson {
-    nodes: SetupNode[] | number;
-    channels: SetupChannel[];
-    tokens?: SetupToken[];
-}
-
-export const DEFAULT_TOKENS = [
-    "LUM",
-    "RIF"
-];
+import {LuminoNode, Node} from "types/node";
+import {SetupJson, SetupNode, SetupToken} from "types/setup";
+import {LuminoTesting} from "types/lumino-testing";
 
 export default class SetupLoader {
 
@@ -40,34 +11,25 @@ export default class SetupLoader {
 
     private constructor(private containerManager: ContainerManager) {}
 
-    public static async create(setup: SetupJson): Promise<SetupLoader> {
-        const containerManager = new ContainerManager();
-        await containerManager.startupRsk();
+    public static async initialize(setup: SetupJson): Promise<LuminoTesting> {
+        const containerManager = await ContainerManager.create('regtest');
         const setupLoader: SetupLoader = new SetupLoader(containerManager);
-        await setupLoader.loadNodes(setup);
+        await setupLoader.loadLuminoNodes(setup);
         await setupLoader.openChannels(setup);
-        return setupLoader;
+        return {
+            nodes: setupLoader.getNodes,
+            stop: setupLoader.stop
+        };
     }
 
-    private validateTokens(tokens?: SetupToken[]): void {
-        if (tokens) {
-            console.log('tokens', tokens);
-            const notExistentTokens = tokens.filter(token => DEFAULT_TOKENS.indexOf(token.symbol) === -1);
-            if (notExistentTokens.length > 0) {
-                throw new Error(`You need to specify a valid token symbol on the tokens configuration. 
-                                    Valid values are ${DEFAULT_TOKENS}. Error: invalid values ${notExistentTokens.map(token => token.symbol)}`);
-            }
-        }
-    }
-
-    private async loadNodes(setup: SetupJson): Promise<void> {
+    private async loadLuminoNodes(setup: SetupJson): Promise<void> {
         let nodeConfigs: SetupNode[] = [];
         if (Array.isArray(setup.nodes)) {
             const tokens: SetupToken[] = setup.nodes.flatMap(node => node.tokens);
-            this.validateTokens(tokens);
+            validateTokens(tokens);
             nodeConfigs = setup.nodes;
         } else {
-            this.validateTokens(setup.tokens);
+            validateTokens(setup.tokens);
             for (let i = 0; i < setup.nodes; i++) {
                 nodeConfigs.push({
                     name: `node${i}`,
@@ -75,10 +37,6 @@ export default class SetupLoader {
                 });
             }
         }
-        await this.setupNodes(nodeConfigs);
-    }
-
-    private async setupNodes(nodeConfigs: SetupNode[]): Promise<void> {
         this.nodes = [];
         for (let nodeConfig of nodeConfigs) {
             this.nodes[nodeConfig.name] = await this.containerManager.startupLuminoNode(nodeConfig);
@@ -90,8 +48,8 @@ export default class SetupLoader {
         //  the channel setup should be in another file using the parsed configuration from here,
         //  same thing we do with the nodes above.
         return Promise.all(setup.channels.map(async ({tokenSymbol, participant1, participant2}) => {
-            const creator = this.nodes[participant1.node];
-            const partner = this.nodes[participant2.node];
+            const creator = this.nodes[participant1.node] as LuminoNode;
+            const partner = this.nodes[participant2.node] as LuminoNode;
             await creator.client.sdk.openChannel({
                 tokenAddress: getTokenAddress(tokenSymbol),
                 amountOnWei: Web3.utils.toWei(participant1.deposit.toString()),
@@ -111,7 +69,7 @@ export default class SetupLoader {
         return this.nodes;
     }
 
-    public stop(): void {
-        this.containerManager.stopAll();
+    public async stop(): Promise<void> {
+        await this.containerManager.stopAll();
     }
 }
