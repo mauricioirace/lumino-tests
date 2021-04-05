@@ -1,7 +1,13 @@
-import SetupLoader from "./setup";
+import SetupLoader, {SetupJson} from "./setup";
+import {Node} from "container-manager";
 
-export default async function LuminoTesting(setupJson: any) {
-    const setupLoader = await new SetupLoader(setupJson);
+export interface LuminoTesting {
+    nodes: () => Node[];
+    stop: () => void;
+}
+
+export default async function LuminoTesting(setupJson: SetupJson): Promise<LuminoTesting> {
+    const setupLoader: SetupLoader = await SetupLoader.create(setupJson);
     return {
         nodes: setupLoader.getNodes,
         stop: setupLoader.stop

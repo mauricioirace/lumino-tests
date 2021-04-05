@@ -1,5 +1,5 @@
 import LuminoClient from "../src/lumino-client";
-import { ETHER } from './src/units';
+import {ETHER} from './src/units';
 
 describe("Channels", () => {
   const nodes = {};

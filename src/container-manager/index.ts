@@ -1,11 +1,22 @@
-import Lumino from 'lumino-js-sdk';
+import LuminoClient from "lumino-client";
+import {SetupNode} from "setup";
+
+export interface NodeContainer {
+    start(config: any): void;
+    stop(): void;
+}
+
+export interface Node {
+    client?: LuminoClient;
+    container: NodeContainer;
+}
 
 export default class ContainerManager {
 
-    private rskNodes: any[];
-    private notifiers: any[];
-    private explorers: any[];
-    private luminoNodes: any[];
+    private rskNodes: Node[];
+    private notifiers: Node[];
+    private explorers: Node[];
+    private luminoNodes: Node[];
 
     constructor() {
         this.rskNodes = [];
@@ -13,25 +24,37 @@ export default class ContainerManager {
         this.explorers = [];
         this.luminoNodes = [];
     }
-    startupRsk() {
+
+    async startupRsk(): Promise<Node> {
         console.log('Setup RSK');
+        return;
     }
-    startupNotifiers(amount) {
+
+    async startupNotifiers(amount): Promise<Node> {
         console.log('Setup Notifiers');
+        return;
     }
-    startupExplorer() {
+
+    async startupExplorer(): Promise<Node> {
         console.log('Setup Explorer');
+        return;
     }
-    startupLuminoNode(nodeConfig) {
+
+    async startupLuminoNode(nodeConfig: SetupNode): Promise<Node> {
         console.log('Setup Lumino', nodeConfig);
         return {
-            sdk: new Lumino({luminoNodeBaseUrl: `http://localhost:500${i++}/api/v1`})
-        }
+            container: {
+                start: config => {},
+                stop: () => {}
+            },
+            client: await LuminoClient.create(`http://localhost:500${i++}/api/v1`)
+        };
     }
-    stopAll() {
-        this.luminoNodes.forEach(node => node.stop());
-        this.explorers.forEach(node => node.stop());
-        this.notifiers.forEach(node => node.stop());
-        this.rskNodes.forEach(node => node.stop());
+
+    stopAll(): void {
+        this.luminoNodes.forEach(node => node.container.stop());
+        this.explorers.forEach(node => node.container.stop());
+        this.notifiers.forEach(node => node.container.stop());
+        this.rskNodes.forEach(node => node.container.stop());
     }
 }

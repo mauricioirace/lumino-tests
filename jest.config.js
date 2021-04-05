@@ -1,5 +1,4 @@
 module.exports = {
-  roots: ['<rootDir>/src'],
   verbose: true,
   clearMocks: true,
   collectCoverage: true,

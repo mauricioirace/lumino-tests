@@ -1,25 +1,55 @@
-import ContainerManager from "../container-manager";
+import ContainerManager, {Node} from "../container-manager";
 import { getTokenAddress } from 'token/util';
 import Web3 from 'web3';
 
-const DEFAULT_TOKENS = [
+export interface SetupParticipant {
+    node: string;
+    deposit: number;
+}
+
+export interface SetupChannel {
+    tokenSymbol: string;
+    participant1: SetupParticipant;
+    participant2: SetupParticipant;
+}
+
+export interface SetupToken {
+    symbol: string;
+    amount: number;
+}
+
+export interface SetupNode {
+    name: string;
+    tokens: SetupToken[];
+}
+
+export interface SetupJson {
+    nodes: SetupNode[] | number;
+    channels: SetupChannel[];
+    tokens?: SetupToken[];
+}
+
+export const DEFAULT_TOKENS = [
     "LUM",
     "RIF"
 ];
 
 export default class SetupLoader {
 
-    private containerManager: ContainerManager;
-    private nodes: any;
+    private nodes: Node[];
 
-    async constructor(setup) {
-        this.containerManager = new ContainerManager();
-        await this.containerManager.startupRsk();
-        await this.loadNodes(setup);
-        await this.openChannels(setup);
+    private constructor(private containerManager: ContainerManager) {}
+
+    public static async create(setup: SetupJson): Promise<SetupLoader> {
+        const containerManager = new ContainerManager();
+        await containerManager.startupRsk();
+        const setupLoader: SetupLoader = new SetupLoader(containerManager);
+        await setupLoader.loadNodes(setup);
+        await setupLoader.openChannels(setup);
+        return setupLoader;
     }
 
-    validateTokens(tokens) {
+    private validateTokens(tokens?: SetupToken[]): void {
         if (tokens) {
             console.log('tokens', tokens);
             const notExistentTokens = tokens.filter(token => DEFAULT_TOKENS.indexOf(token.symbol) === -1);
@@ -30,10 +60,10 @@ export default class SetupLoader {
         }
     }
 
-    loadNodes(setup) {
-        let nodeConfigs = [];
+    private async loadNodes(setup: SetupJson): Promise<void> {
+        let nodeConfigs: SetupNode[] = [];
         if (Array.isArray(setup.nodes)) {
-            const tokens = setup.nodes.flatMap(node => node.tokens);
+            const tokens: SetupToken[] = setup.nodes.flatMap(node => node.tokens);
             this.validateTokens(tokens);
             nodeConfigs = setup.nodes;
         } else {
@@ -41,51 +71,47 @@ export default class SetupLoader {
             for (let i = 0; i < setup.nodes; i++) {
                 nodeConfigs.push({
                     name: `node${i}`,
-                    tokens: setup.tokens
+                    tokens: setup.tokens as SetupToken[]
                 });
             }
         }
-        return this.setupNodes(nodeConfigs);
+        await this.setupNodes(nodeConfigs);
     }
 
-    setupNodes(nodeConfigs) {
-        this.nodes = {};
-        nodeConfigs.forEach(nodeConfig => {
-            this.nodes[nodeConfig.name] = this.containerManager.startupLuminoNode(nodeConfig);
-        });
+    private async setupNodes(nodeConfigs: SetupNode[]): Promise<void> {
+        this.nodes = [];
+        for (let nodeConfig of nodeConfigs) {
+            this.nodes[nodeConfig.name] = await this.containerManager.startupLuminoNode(nodeConfig);
+        }
     }
 
-    openChannels(setup) {
+    private openChannels(setup) {
         // TODO: this should be delegated to another module, i mean since this is a setup parser only
         //  the channel setup should be in another file using the parsed configuration from here,
         //  same thing we do with the nodes above.
         return Promise.all(setup.channels.map(async ({tokenSymbol, participant1, participant2}) => {
             const creator = this.nodes[participant1.node];
             const partner = this.nodes[participant2.node];
-            await creator.sdk.openChannel({
+            await creator.client.sdk.openChannel({
                 tokenAddress: getTokenAddress(tokenSymbol),
                 amountOnWei: Web3.utils.toWei(participant1.deposit.toString()),
-                rskPartnerAddress: (await partner.sdk.getAddress()).our_address
+                rskPartnerAddress: (await partner.client.sdk.getAddress()).our_address
               });
             if (participant2.deposit) {
-                await partner.sdk.depositTokens({
+                await partner.client.sdk.depositTokens({
                     tokenAddress: getTokenAddress(tokenSymbol),
                     amountOnWei: Web3.utils.toWei(participant2.deposit.toString()),
-                    partnerAddress: (await creator.sdk.getAddress()).our_address
+                    partnerAddress: (await creator.client.sdk.getAddress()).our_address
                   });
             }
         }));
     }
 
-    getTokens() {
-        return DEFAULT_TOKENS;
-    }
-
-    getNodes() {
+    public getNodes(): Node[] {
         return this.nodes;
     }
 
-    stop() {
+    public stop(): void {
         this.containerManager.stopAll();
     }
 }
