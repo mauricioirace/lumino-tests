@@ -1,14 +1,16 @@
-import LuminoNode from "./src/LuminoNode";
+import LuminoClient from "../src/lumino-client";
 import { ETHER } from './src/units';
 
 describe("Channels", () => {
   const nodes = {};
 
   beforeAll(async () => {
-    nodes.initiator = await LuminoNode.fromUrl("http://localhost:5001/api/v1");
-    nodes.target = await LuminoNode.fromUrl( "http://localhost:5002/api/v1");
+    // TODO: fix this, we should use the testing framework instead of calling the sdk wrapper, Lumino Client should be only called internally,
+    //  we should use LuminoTesting here and reference the nodes depending on the testing configuration
+    nodes.initiator = await new LuminoClient("http://localhost:5001/api/v1");
+    nodes.target = await new LuminoClient( "http://localhost:5002/api/v1");
   })
-  
+
   it('should open a channel with no balance', async () => {
     await nodes.initiator.client.openChannel({
       tokenAddress: nodes.initiator.tokens[0],
@@ -26,7 +28,7 @@ describe("Channels", () => {
     });
   }, 60 * 1000);
 
-  
+
   it('should deposit 1 token', async () => {
     await nodes.initiator.client.openChannel({
       tokenAddress: nodes.initiator.tokens[0],

@@ -1,4 +1,6 @@
-import ContainerManager from "../containers";
+import ContainerManager from "../container-manager";
+import { getTokenAddress } from 'token/util';
+import Web3 from 'web3';
 
 const DEFAULT_TOKENS = [
     "LUM",
@@ -10,16 +12,11 @@ export default class SetupLoader {
     private containerManager: ContainerManager;
     private nodes: any;
 
-    constructor() {
+    async constructor(setup) {
         this.containerManager = new ContainerManager();
-    }
-
-    public static async of(setup) {
-        const loader = new SetupLoader();
-        await loader.containerManager.startupRsk();
-        await loader.loadNodes(setup);
-        await loader.openChannels(setup);
-        return loader;
+        await this.containerManager.startupRsk();
+        await this.loadNodes(setup);
+        await this.openChannels(setup);
     }
 
     validateTokens(tokens) {
@@ -59,17 +56,20 @@ export default class SetupLoader {
     }
 
     openChannels(setup) {
-        return Promise.all(setup.channels.map(async ({token, participant1, participant2}) => {
+        // TODO: this should be delegated to another module, i mean since this is a setup parser only
+        //  the channel setup should be in another file using the parsed configuration from here,
+        //  same thing we do with the nodes above.
+        return Promise.all(setup.channels.map(async ({tokenSymbol, participant1, participant2}) => {
             const creator = this.nodes[participant1.node];
             const partner = this.nodes[participant2.node];
             await creator.sdk.openChannel({
-                tokenAddress: getTokenAddress(token),
+                tokenAddress: getTokenAddress(tokenSymbol),
                 amountOnWei: Web3.utils.toWei(participant1.deposit.toString()),
                 rskPartnerAddress: (await partner.sdk.getAddress()).our_address
               });
             if (participant2.deposit) {
                 await partner.sdk.depositTokens({
-                    tokenAddress: getTokenAddress(token),
+                    tokenAddress: getTokenAddress(tokenSymbol),
                     amountOnWei: Web3.utils.toWei(participant2.deposit.toString()),
                     partnerAddress: (await creator.sdk.getAddress()).our_address
                   });

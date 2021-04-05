@@ -1,7 +1,7 @@
 {
     "nodes": [
         {
-            "name": "node00",
+            "name": "initiator",
             "tokens": [
                 {
                     "symbol": "LUM",
@@ -14,19 +14,28 @@
             ]
         },
         {
-            "name": "node01",
-            "tokens": []
+            "name": "target",
+            "tokens":[
+                {
+                    "symbol": "LUM",
+                    "amount": 1
+                },
+                {
+                    "symbol": "RIF",
+                    "amount": 2
+                }
+            ]
         }
     ],
     "channels": [
         {
             "tokenSymbol": "LUM",
             "participant1": {
-                "node": "node00",
+                "node": "initiator",
                 "deposit": 1
             },
             "participant2": {
-                "node": "node01",
+                "node": "target",
                 "deposit": 1
             }
         }
