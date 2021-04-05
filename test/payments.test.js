@@ -1,12 +1,12 @@
 import SetupLoader from "../src/setup";
 import { getTokenAddress } from "../src/token/util";
-import advanced from '../samples/advanced';
+import p2p from '../samples/p2p.json';
 
 describe("Payments", () => {
   let setup;
 
   beforeAll(async () => {
-    setup = await SetupLoader.of(advanced);
+    setup = await SetupLoader.of(p2p);
   }, 60 * 1000)
   
   it('should make a payment', async () => {

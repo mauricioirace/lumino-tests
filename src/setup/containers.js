@@ -1,4 +1,10 @@
+import Lumino from 'lumino-js-sdk';
+
+
+let i = 1;
+
 export default class ContainerManager {
+    
     constructor() {
         this.rskNodes = [];
         this.notifiers = [];
@@ -16,6 +22,9 @@ export default class ContainerManager {
     }
     startupLuminoNode(nodeConfig) {
         console.log('Setup Lumino', nodeConfig);
+        return {
+            sdk: new Lumino({luminoNodeBaseUrl: `http://localhost:500${i++}/api/v1`})
+        }
     }
     stopAll() {
         this.luminoNodes.forEach(node => node.stop());

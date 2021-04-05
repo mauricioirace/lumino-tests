@@ -1,4 +1,6 @@
 import ContainerManager from "./containers";
+import { getTokenAddress } from '../token/util'
+import Web3 from 'web3';
 
 const DEFAULT_TOKENS = [
     "LUM",
@@ -55,17 +57,17 @@ export default class SetupLoader {
     }
 
     openChannels(setup) {
-        return Promise.all(setup.channels.map(async ({token, participant1, participant2}) => {
+        return Promise.all(setup.channels.map(async ({tokenSymbol, participant1, participant2}) => {
             const creator = this.nodes[participant1.node];
             const partner = this.nodes[participant2.node];
             await creator.sdk.openChannel({
-                tokenAddress: getTokenAddress(token),
+                tokenAddress: getTokenAddress(tokenSymbol),
                 amountOnWei: Web3.utils.toWei(participant1.deposit.toString()),
                 rskPartnerAddress: (await partner.sdk.getAddress()).our_address
               });
             if (participant2.deposit) {
                 await partner.sdk.depositTokens({
-                    tokenAddress: getTokenAddress(token),
+                    tokenAddress: getTokenAddress(tokenSymbol),
                     amountOnWei: Web3.utils.toWei(participant2.deposit.toString()),
                     partnerAddress: (await creator.sdk.getAddress()).our_address
                   });
