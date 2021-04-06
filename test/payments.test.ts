@@ -1,6 +1,6 @@
-import { getTokenAddress } from "token/util";
-import p2p from '../samples/p2p.json';
-import LuminoTesting from "index";
+import { getTokenAddress } from "../src/token/util";
+import p2p from '../sample-toplogies/p2p.json';
+import LuminoTesting from "../src";
 
 describe("Payments", () => {
   let tester;

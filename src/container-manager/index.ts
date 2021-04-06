@@ -1,75 +1,41 @@
-import LuminoClient from "lumino-client";
-import {SetupNode} from "setup";
+import {SetupNode} from "../types/setup";
+import DockerManager from "../container-manager/docker-manager";
+import {ChainName} from '../types/chain-name';
+import {LuminoNode, Node} from "../types/node";
 
-export interface NodeContainer {
-    start(config: any): void;
-    stop(): void;
-}
-
-export interface Node {
-    client?: LuminoClient;
-    container: NodeContainer;
-}
-let i = 1;
 export default class ContainerManager {
 
-    private rskNodes: Node[];
+    private rskNode: Node;
+    private explorer: Node;
     private notifiers: Node[];
-    private explorers: Node[];
-    private luminoNodes: Node[];
+    private luminoNodes: LuminoNode[];
 
-    constructor() {
-        this.rskNodes = [];
+    private constructor(private dockerManager: DockerManager) {
+        this.rskNode = {
+            container: dockerManager.getContainer('rsk-node')
+        };
+        this.explorer = {
+            container: dockerManager.getContainer('lumino-explorer')
+        };
         this.notifiers = [];
-        this.explorers = [];
         this.luminoNodes = [];
     }
 
-    async startupRsk(): Promise<Node> {
-        console.log('Setup RSK');
-        return {
-            container: {
-                start: config => {},
-                stop: () => {}
-            },
-        };
+    public static async create(chainName: ChainName): Promise<ContainerManager> {
+        const dockerManager = await DockerManager.create(chainName);
+        return new ContainerManager(dockerManager);
     }
 
-    async startupNotifiers(amount): Promise<Node> {
-        console.log('Setup Notifiers');
-        return {
-            container: {
-                start: config => {},
-                stop: () => {}
-            },
-        };
-    }
-
-    async startupExplorer(): Promise<Node> {
-        console.log('Setup Explorer');
-        return {
-            container: {
-                start: config => {},
-                stop: () => {}
-            },
-        };
-    }
-
-    async startupLuminoNode(nodeConfig: SetupNode): Promise<Node> {
+    public async startupLuminoNode(nodeConfig: SetupNode): Promise<LuminoNode> {
         console.log('Setup Lumino', nodeConfig);
-        return {
-            container: {
-                start: config => {},
-                stop: () => {}
-            },
-            client: await LuminoClient.create(`http://localhost:500${i++}/api/v1`)
-        };
+        //TODO: pending add dockerfile to testcontainers
+        throw new Error("NOT_IMPLEMENTED");
     }
 
-    stopAll(): void {
-        this.luminoNodes.forEach(node => node.container.stop());
-        this.explorers.forEach(node => node.container.stop());
-        this.notifiers.forEach(node => node.container.stop());
-        this.rskNodes.forEach(node => node.container.stop());
+    public async stopAll(): Promise<void> {
+        for (const node of this.luminoNodes) {
+            await node.container.stop();
+        }
+        await this.dockerManager.destroy();
     }
 }

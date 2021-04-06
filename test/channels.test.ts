@@ -2,9 +2,10 @@ import LuminoTesting from "index";
 import noChannels from '../samples/no-channels.json';
 import Web3 from 'web3';
 import { getTokenAddress } from "token/util";
+import { LuminoTesting } from "../src/types/lumino-testing";
 
 describe("Channels", () => {
-  let tester;
+  let tester: LuminoTesting;
 
   beforeAll(async () => {
     tester = await LuminoTesting(noChannels);
