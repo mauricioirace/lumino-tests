@@ -1,12 +1,7 @@
-import LuminoClient from "lumino-client";
-import {SetupChannel} from "setup";
-import { Node } from 'container-manager';
-import { getTokenAddress, toWei } from "token/util";
-
-export interface Channel {
-    client?: LuminoClient;
-    container: Node;
-}
+import LuminoClient from "../lumino-client";
+import {SetupChannel} from "../types/setup";
+import {Node, LuminoNode, NodeList} from "../types/node";
+import { getTokenAddress, toWei } from "../util/token";
 
 export default class ChannelManager {
 
@@ -18,9 +13,9 @@ export default class ChannelManager {
     }
     async openChannel({ tokenSymbol, participant1, participant2 }: SetupChannel, nodes: NodeList): Promise<void> {
         const tokenAddress = getTokenAddress(tokenSymbol);
-        const creator = nodes[participant1.node];
-        const partner = nodes[participant2.node];
-        await creator.client.sdk.openChannel({
+        const creator = nodes[participant1.node] as LuminoNode;
+        const partner = nodes[participant2.node] as LuminoNode;
+        await creator.client?.sdk.openChannel({
             tokenAddress: tokenAddress,
             amountOnWei: toWei(participant1.deposit),
             rskPartnerAddress: partner.client.address

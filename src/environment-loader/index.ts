@@ -1,5 +1,5 @@
 import ContainerManager from '../container-manager';
-import {validateTokens} from '../token/util';
+import {validateTokens} from '../util/token';
 import {NodeList} from '../types/node';
 import {SetupJson, SetupNode, SetupToken} from '../types/setup';
 import {LuminoTestEnvironment} from "../types/lumino-test-environment";

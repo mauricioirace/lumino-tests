@@ -7,9 +7,9 @@ describe("Bootstrapping", () => {
     it('should have basic nodes ready', async () => {
         const testEnvironment = await setupTestEnvironment(basic as SetupJson);
         expect(Object.keys(testEnvironment.nodes).length > 0);
-    });
+    }, 60 * 1000);
     it('should have advanced nodes ready', async () => {
         const testEnvironment = await setupTestEnvironment(advanced as SetupJson);
         expect(Object.keys(testEnvironment.nodes).length > 0);
-    });
+    }, 60 * 1000);
 })

@@ -12,7 +12,7 @@ export function getTokenAddress(symbol:string): string {
     }
 }
 
-export function toWei(amount: Number): Number {
+export function toWei(amount: number): number {
     return Number(Web3.utils.toWei(amount.toString()))
 }
 
