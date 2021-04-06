@@ -1,7 +1,7 @@
-import SetupLoader from "./setup";
-import {LuminoTesting} from "./types/lumino-testing";
+import EnvironmentLoader from "./environment-loader";
+import {LuminoTestEnvironment} from "./types/lumino-test-environment";
 import {SetupJson} from "./types/setup";
 
-export default async function LuminoTesting(setupJson: SetupJson): Promise<LuminoTesting> {
-   return SetupLoader.initialize(setupJson);
+export default async function setupTestEnvironment(setupJson: SetupJson): Promise<LuminoTestEnvironment> {
+   return EnvironmentLoader.load(setupJson);
 }

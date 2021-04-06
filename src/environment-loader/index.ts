@@ -1,27 +1,23 @@
-import ContainerManager from "../container-manager";
-import {getTokenAddress, validateTokens} from '../token/util';
-import Web3 from 'web3';
-import {LuminoNode, Node, NodeList} from "../types/node";
-import {SetupJson, SetupNode, SetupToken} from "../types/setup";
-import {LuminoTesting} from "../types/lumino-testing";
-import ChannelManager from "../channel-manager";
+import ContainerManager from '../container-manager';
+import {validateTokens} from '../token/util';
+import {NodeList} from '../types/node';
+import {SetupJson, SetupNode, SetupToken} from '../types/setup';
+import {LuminoTestEnvironment} from "../types/lumino-test-environment";
+import ChannelManager from '../channel-manager';
 
-export default class SetupLoader {
+export default class EnvironmentLoader {
 
     private nodes: NodeList = {};
 
     private constructor(private containerManager: ContainerManager, private channelManager: ChannelManager) {}
 
-    public static async initialize(setup: SetupJson): Promise<LuminoTesting> {
+    public static async load(setup: SetupJson): Promise<LuminoTestEnvironment> {
         const containerManager = await ContainerManager.create('regtest');
         const channelManager = new ChannelManager();
-        const setupLoader: SetupLoader = new SetupLoader(containerManager, channelManager);
+        const setupLoader = new EnvironmentLoader(containerManager, channelManager);
         await setupLoader.loadLuminoNodes(setup);
         await setupLoader.openChannels(setup);
-        return {
-            nodes: setupLoader.getNodes,
-            stop: setupLoader.stop
-        };
+        return new LuminoTestEnvironment(setupLoader);
     }
 
     private async loadLuminoNodes(setup: SetupJson): Promise<void> {
