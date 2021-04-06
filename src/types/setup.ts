@@ -1,3 +1,5 @@
+import {ChainName} from "./chain-name";
+
 export interface SetupParticipant {
     node: string;
     deposit: number;
@@ -20,6 +22,7 @@ export interface SetupNode {
 }
 
 export interface SetupJson {
+    chainName: ChainName;
     nodes: SetupNode[] | number;
     channels: SetupChannel[];
     tokens?: SetupToken[];

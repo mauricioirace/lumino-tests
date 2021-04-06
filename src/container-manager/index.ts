@@ -1,6 +1,5 @@
-import {SetupNode} from "../types/setup";
+import {SetupJson, SetupNode} from "../types/setup";
 import DockerManager from "../container-manager/docker-manager";
-import {ChainName} from '../types/chain-name';
 import {LuminoNode, Node} from "../types/node";
 
 export default class ContainerManager {
@@ -21,15 +20,17 @@ export default class ContainerManager {
         this.luminoNodes = [];
     }
 
-    public static async create(chainName: ChainName): Promise<ContainerManager> {
-        const dockerManager = await DockerManager.create(chainName);
-        return new ContainerManager(dockerManager);
+    public static async create(setup: SetupJson): Promise<ContainerManager> {
+        return new ContainerManager(await DockerManager.create(setup));
     }
 
     public async startupLuminoNode(nodeConfig: SetupNode): Promise<LuminoNode> {
         console.log('Setup Lumino', nodeConfig);
         //TODO: pending add dockerfile to testcontainers
-        throw new Error("NOT_IMPLEMENTED");
+        return Promise.resolve({
+            client: undefined,
+            container: undefined
+        } as any);
     }
 
     public async stopAll(): Promise<void> {

@@ -1,8 +1,7 @@
 FROM ubuntu:latest
 
 ARG RSK_CORE_VERSION_CODENAME=PAPYRUS
-ARG RSK_CORE_VERSION_NUMBER=2.1.0
-ARG CHAIN_NAME=regtest
+ARG RSK_CORE_VERSION_NUMBER=2.2.0
 
 ENV DEBIAN_FRONTEND=noninteractive
 ENV HOME=/root
@@ -24,19 +23,24 @@ RUN \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/* && \
   rm -f /etc/rsk/node.conf && \
-  ln -s /etc/rsk/${CHAIN_NAME}.conf /etc/rsk/node.conf
+  ln -s /etc/rsk/regtest.conf /etc/rsk/node.conf
 
 # Supervisod CONF
 COPY assets/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY assets/${CHAIN_NAME}/information /root
+COPY assets/information /root
 COPY assets/getInfo /usr/bin/getInfo
-COPY assets/${CHAIN_NAME}/node.conf /etc/rsk/${CHAIN_NAME}.conf
+COPY assets/node.conf /etc/rsk/regtest.conf
 
 # Downloading RSK Core
 RUN wget -P ${RSK_CORE_LOCATION} "https://github.com/rsksmart/rskj/releases/download/${RSK_CORE_VERSION_CODENAME}-${RSK_CORE_VERSION_NUMBER}/rskj-core-${RSK_CORE_VERSION_NUMBER}-${RSK_CORE_VERSION_CODENAME}-all.jar"
 RUN cp ${RSK_CORE_LOCATION}/*.jar /usr/share/rsk/rsk.jar
 RUN chmod +x /usr/bin/getInfo
-RUN mkdir -p /var/lib/rsk/database/${CHAIN_NAME}
+RUN mkdir -p /var/lib/rsk/database/regtest
+
+COPY assets/rsk-db.zip /var/lib/rsk/database/regtest
+
+RUN cd /var/lib/rsk/database/regtest && unzip rsk-db.zip && rm rsk-db.zip
+RUN chmod -R 777 /var/lib/rsk/database/regtest
 
 EXPOSE 4444
 EXPOSE 30305

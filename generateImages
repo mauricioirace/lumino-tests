@@ -1,0 +1,10 @@
+#/bin/bash
+
+echo "Generating required images"
+RSK_DOCKER_FOLDER="src/container-manager/docker-manager/docker-files/rsk-node"
+RSK_IMAGE_NAME="rsk-node-image"
+RSK_CORE_VERSION_CODENAME="PAPYRUS"
+RSK_CORE_VERSION_NUMBER="2.2.0"
+
+cd "${RSK_DOCKER_FOLDER}" || exit 1
+docker build --build-arg RSK_CORE_VERSION_CODENAME=${RSK_CORE_VERSION_CODENAME} --build-arg RSK_CORE_VERSION_NUMBER=${RSK_CORE_VERSION_NUMBER} --no-cache -t "${RSK_IMAGE_NAME}" .
