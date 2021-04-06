@@ -1,6 +1,6 @@
-import {Node} from "types/node";
+import {NodeList} from "../types/node";
 
 export interface LuminoTesting {
-    nodes: () => Node[];
+    nodes: () => NodeList;
     stop: () => void;
 }

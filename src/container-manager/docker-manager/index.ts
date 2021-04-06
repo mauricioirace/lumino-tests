@@ -4,9 +4,7 @@ import {StartedGenericContainer} from "testcontainers/dist/generic-container";
 
 export default class DockerManager {
 
-    private dockerComposeEnvironment: StartedDockerComposeEnvironment;
-
-    private constructor(dockerComposeEnvironment: StartedDockerComposeEnvironment) {}
+    private constructor(private dockerComposeEnvironment: StartedDockerComposeEnvironment) {}
 
     static async create(chainName: string): Promise<DockerManager> {
         const dockerComposeEnvironment: StartedDockerComposeEnvironment = await new DockerComposeEnvironment(

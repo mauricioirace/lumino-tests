@@ -1,13 +1,13 @@
 import ContainerManager from "../container-manager";
-import {getTokenAddress, validateTokens} from 'token/util';
+import {getTokenAddress, validateTokens} from '../token/util';
 import Web3 from 'web3';
-import {LuminoNode, Node} from "types/node";
-import {SetupJson, SetupNode, SetupToken} from "types/setup";
-import {LuminoTesting} from "types/lumino-testing";
+import {LuminoNode, Node, NodeList} from "../types/node";
+import {SetupJson, SetupNode, SetupToken} from "../types/setup";
+import {LuminoTesting} from "../types/lumino-testing";
 
 export default class SetupLoader {
 
-    private nodes: Node[];
+    private nodes: NodeList = {};
 
     private constructor(private containerManager: ContainerManager) {}
 
@@ -37,13 +37,13 @@ export default class SetupLoader {
                 });
             }
         }
-        this.nodes = [];
+        this.nodes = {};
         for (let nodeConfig of nodeConfigs) {
             this.nodes[nodeConfig.name] = await this.containerManager.startupLuminoNode(nodeConfig);
         }
     }
 
-    private openChannels(setup) {
+    private openChannels(setup: SetupJson) {
         // TODO: this should be delegated to another module, i mean since this is a setup parser only
         //  the channel setup should be in another file using the parsed configuration from here,
         //  same thing we do with the nodes above.
@@ -65,7 +65,7 @@ export default class SetupLoader {
         }));
     }
 
-    public getNodes(): Node[] {
+    public getNodes(): NodeList {
         return this.nodes;
     }
 

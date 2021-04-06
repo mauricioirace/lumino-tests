@@ -1,8 +1,7 @@
-import LuminoClient from "lumino-client";
 import {SetupNode} from "../types/setup";
-import DockerManager from "container-manager/docker-manager";
+import DockerManager from "../container-manager/docker-manager";
 import {ChainName} from '../types/chain-name';
-import {LuminoNode, Node} from "types/node";
+import {LuminoNode, Node} from "../types/node";
 
 export default class ContainerManager {
 

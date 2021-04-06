@@ -1,7 +1,7 @@
-import {SetupToken} from "types/setup";
+import {SetupToken} from "../types/setup";
 import {DEFAULT_TOKENS} from "../constants";
 
-export function getTokenAddress(symbol) {
+export function getTokenAddress(symbol: string) {
     switch (symbol) {
         case "LUM":
         case "RIF":
