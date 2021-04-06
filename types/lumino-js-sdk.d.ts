@@ -9,7 +9,7 @@ declare module 'lumino-js-sdk' {
          * @constructor
          * @param {String} luminoNodeBaseUrl - The base URL to invoke the api of node.
          */
-        constructor({ luminoNodeBaseUrl }: {luminoNodeBaseUrl: string});
+        constructor(luminoNodeBaseUrl: string);
 
         /**
          * Get payments with combination of parameters.
@@ -49,7 +49,16 @@ declare module 'lumino-js-sdk' {
          *    })
          *
          */
-        getPayments(params);
+        getPayments(params: {
+             token_network_identifier: string,
+             initiator_address: String,
+             target_address: String,
+             from_date: String,
+             to_date: String,
+             event_type: Integer,
+             limit: Integer,
+             offset: Integer,
+        }): Promise<any>;
 
         /**
          * Get a list of tokens the node knows about
@@ -57,7 +66,7 @@ declare module 'lumino-js-sdk' {
          * @return {Promise} Tokens - Returns a Promise that, when fulfilled, will either return an Array with the
          * token addresses or an Error with the problem.
          */
-        getTokens();
+        getTokens(): Promise<any>;
 
         /**
          * Get a list of tokens the node knows about
@@ -65,7 +74,7 @@ declare module 'lumino-js-sdk' {
          * @return {Promise} Tokens - Returns a Promise that, when fulfilled, will either return an Object with the
          * node's address or an Error with the problem.
          */
-        getAddress();
+        getAddress(): Promise<any>;
 
         /**
          * Get Joinable channels by token address
@@ -75,7 +84,7 @@ declare module 'lumino-js-sdk' {
          * @return {Promise} Channels - Returns a Observable that, when fulfilled, will either return an Array with the
          * channels or an Error with the problem. The channels obtained are only open.
          */
-        getJoinableChannels(tokenAddresses);
+        getJoinableChannels(tokenAddresses: string): Promise<any>;
 
         /**
          * Get channels
@@ -85,7 +94,7 @@ declare module 'lumino-js-sdk' {
          * @return {Promise} Channels - Returns a Observable that, when fulfilled, will either return an Array with the
          * channels or an Error with the problem. The channels obtained are only open.
          */
-        getChannels(tokenAddress = null);
+        getChannels(tokenAddress?: string): Promise<any>;
 
         /**
          * Get channel
@@ -96,7 +105,8 @@ declare module 'lumino-js-sdk' {
          * @return {Promise} Channels - Returns a Observable that, when fulfilled, will either return an Array with the
          * channels or an Error with the problem. The channels obtained are only open.
          */
-        getChannel({ tokenAddress, partnerAddress });
+        getChannel({ tokenAddress, partnerAddress }:
+                       { tokenAddress: string, partnerAddress: string }): Promise<any>;
 
         /**
          * Search tokens, channels, nodes and rns addresses.
@@ -109,7 +119,8 @@ declare module 'lumino-js-sdk' {
          * result search or an Error with the problem. The search result can get contain token addresses matches, node
          * address matches, channel identifier matches and rns address matches.
          */
-        search({ query, onlyReceivers });
+        search({ query, onlyReceivers }:
+                   { query: string, onlyReceivers: boolean }): Promise<any>;
 
         /**
          * Open a new channel between two nodes. Allow open a new channel by rsk address node or
@@ -125,12 +136,8 @@ declare module 'lumino-js-sdk' {
          *
          * @returns {Promise} new channel info, or and error information
          */
-        openChannel({
-                        tokenAddress,
-                        amountOnWei,
-                        rskPartnerAddress,
-                        rnsPartnerAddress,
-                    });
+        openChannel({ tokenAddress, amountOnWei, rskPartnerAddress, rnsPartnerAddress}:
+                        { tokenAddress: string, amountOnWei: number, rskPartnerAddress: string, rnsPartnerAddress: string}): Promise<any>;
 
         /**
          * Close an exist channel.
@@ -139,7 +146,8 @@ declare module 'lumino-js-sdk' {
          * @param tokenAddress {String} - For example: 0x714E99c00D4Abf4a8a2Af90Fd40B595C68801C42
          * @returns {Promise} close channel response, or error response.
          */
-        closeChannel({ tokenAddress, partnerAddress });
+        closeChannel({ tokenAddress, partnerAddress }:
+                         { tokenAddress: string, partnerAddress: string }): Promise<any>;
 
         /**
          * Make off chain payment in a channel.
@@ -150,7 +158,8 @@ declare module 'lumino-js-sdk' {
          *
          * @returns {Promise}
          */
-        makePayment({ amountOnWei, tokenAddress, partnerAddress });
+        makePayment({ amountOnWei, tokenAddress, partnerAddress }:
+                        { amountOnWei: number, tokenAddress: string, partnerAddress: string }): Promise<any>;
 
         /**
          * Deposit tokens into a channel
@@ -161,7 +170,8 @@ declare module 'lumino-js-sdk' {
          *
          * @returns {Promise} deposit result or error
          */
-        depositTokens({ amountOnWei, tokenAddress, partnerAddress });
+        depositTokens({ amountOnWei, tokenAddress, partnerAddress }:
+                          { amountOnWei: number, tokenAddress: string, partnerAddress: string }): Promise<any>;
 
         /**
          * Join into a network creating a new channels with specific token with each node of the
@@ -174,12 +184,8 @@ declare module 'lumino-js-sdk' {
          *
          * @returns {Promise} with the result response
          */
-        joinNetwork({
-                        fundsOnWei,
-                        tokenAddress,
-                        initialChannelTarget,
-                        joinableFundsTarget,
-                    });
+        joinNetwork({ fundsOnWei, tokenAddress, initialChannelTarget, joinableFundsTarget }:
+                        { fundsOnWei: number, tokenAddress: string, initialChannelTarget?: number, joinableFundsTarget?: number }): Promise<any>;
 
         /**
          *  Leave network for specific token
@@ -188,7 +194,7 @@ declare module 'lumino-js-sdk' {
          *
          * @returns {Promise}
          */
-        leaveNetwork(tokenAddress);
+        leaveNetwork(tokenAddress: string): Promise<any>;
     }
 
 }
