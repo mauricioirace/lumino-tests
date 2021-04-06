@@ -1,32 +1,28 @@
-import path from "path";
-import {GenericContainer, Network, StartedNetwork, StartedTestContainer, Wait} from "testcontainers";
+import {GenericContainer, StartedTestContainer, Wait} from "testcontainers";
 import {SetupJson} from "../../types/setup";
 
 const NETWORK_NAME: string = 'rsk-network';
 
 export default class DockerManager {
 
-    private constructor(private startedNetwork: StartedNetwork, private rskContainer: StartedTestContainer) {}
+    private constructor(private rskContainer: StartedTestContainer) {}
 
     static async create(setup: SetupJson): Promise<DockerManager> {
-        console.log('Starting net');
-        const startedNetwork: StartedNetwork = await new Network({name: NETWORK_NAME}).start();
         console.log('Creating rsk container');
         const rskContainer = await new GenericContainer("rsk-node-image:latest")
             .withExposedPorts(4444, 30305)
             .withNetworkMode(NETWORK_NAME)
-            .withName('rsk-node')
             .withHealthCheck({
                 test: "curl -s http://localhost:4444 -X POST -H \"Content-Type: application/json\" --data '{\"jsonrpc\":\"2.0\",\"method\":\"web3_clientVersion\",\"params\": [],\"id\":1}' || exit 1",
-                interval: 1000,
-                timeout: 3000,
+                interval: 5000,
+                timeout: 20000,
                 retries: 5,
-                startPeriod: 1000
+                startPeriod: 10000
             })
             .withWaitStrategy(Wait.forHealthCheck())
             .start();
         console.log('Creating docker manager');
-        return Promise.resolve(new DockerManager(startedNetwork, rskContainer));
+        return Promise.resolve(new DockerManager(rskContainer));
     }
 
     public getContainer(
@@ -43,7 +39,6 @@ export default class DockerManager {
 
     public async destroy(): Promise<void> {
         await this.rskContainer.stop({removeVolumes: true});
-        await this.startedNetwork.stop();
     }
 
 }

@@ -43,7 +43,5 @@ RUN cd /var/lib/rsk/database/regtest && unzip rsk-db.zip && rm rsk-db.zip
 RUN chmod -R 777 /var/lib/rsk/database/regtest
 
 EXPOSE 4444
-EXPOSE 30305
 
-# Define default command.
-CMD ["/usr/bin/supervisord"]
+ENTRYPOINT ["/usr/bin/supervisord"]

@@ -13,9 +13,8 @@ export default class ContainerManager {
         this.rskNode = {
             container: dockerManager.getContainer('rsk-node')
         };
-        this.explorer = {
-            container: dockerManager.getContainer('lumino-explorer')
-        };
+        // TODO: add explorer when we have it
+        this.explorer = {} as Node;
         this.notifiers = [];
         this.luminoNodes = [];
     }
