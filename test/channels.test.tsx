@@ -1,69 +1,68 @@
-import LuminoClient from "../src/lumino-client";
-import {ETHER} from './src/units';
+import LuminoTesting from "index";
+import noChannels from '../samples/no-channels.json';
+import Web3 from 'web3';
+import { getTokenAddress } from "token/util";
 
 describe("Channels", () => {
-  const nodes = {};
+  let tester;
 
   beforeAll(async () => {
-    // TODO: fix this, we should use the testing framework instead of calling the sdk wrapper, Lumino Client should be only called internally,
-    //  we should use LuminoTesting here and reference the nodes depending on the testing configuration
-    nodes.initiator = await new LuminoClient("http://localhost:5001/api/v1");
-    nodes.target = await new LuminoClient( "http://localhost:5002/api/v1");
-  })
+    tester = await LuminoTesting(noChannels);
+  }, 60 * 1000)
 
   it('should open a channel with no balance', async () => {
-    await nodes.initiator.client.openChannel({
-      tokenAddress: nodes.initiator.tokens[0],
-      amountOnWei: 0 * ETHER,
+    await tester.nodes().initiator.client.sdk.openChannel({
+      tokenAddress: getTokenAddress("LUM"),
+      amountOnWei: Number(Web3.utils.toWei("0")),
       rskPartnerAddress: '0x8645315E490A05FeE7EDcF671B096E82D9b616a4'
     });
   }, 60 * 1000);
 
 
   it('should open a channel with 1 token', async () => {
-    await nodes.initiator.client.openChannel({
-      tokenAddress: nodes.initiator.tokens[0],
-      amountOnWei: 0 * ETHER,
+    await tester.nodes().initiator.client.sdk.openChannel({
+      tokenAddress: getTokenAddress("LUM"),
+      amountOnWei: Number(Web3.utils.toWei("0")),
       rskPartnerAddress: '0xb9eA1f16E4f1E5CAF211aF150F2147eEd9Fb2245'
     });
   }, 60 * 1000);
 
 
   it('should deposit 1 token', async () => {
-    await nodes.initiator.client.openChannel({
-      tokenAddress: nodes.initiator.tokens[0],
-      amountOnWei: 0 * ETHER,
+    await tester.nodes().initiator.client.sdk.openChannel({
+      tokenAddress: getTokenAddress("LUM"),
+      amountOnWei: Number(Web3.utils.toWei("0")),
       rskPartnerAddress: '0x907E188cAFdE3913296c3d526cD06F103Dbf15a3'
     });
-    await nodes.initiator.client.depositTokens({
-      tokenAddress: nodes.initiator.tokens[0],
-      amountOnWei: 1 * ETHER,
+    await tester.nodes().initiator.client.sdk.depositTokens({
+      tokenAddress: getTokenAddress("LUM"),
+      amountOnWei: Number(Web3.utils.toWei("1")),
       partnerAddress: '0x907E188cAFdE3913296c3d526cD06F103Dbf15a3'
     });
   }, 60 * 1000);
 
 
   it('should close a channel with 1 token', async () => {
-    await nodes.initiator.client.openChannel({
-      tokenAddress: nodes.initiator.tokens[0],
-      amountOnWei: 1 * ETHER,
+    await tester.nodes().initiator.client.sdk.openChannel({
+      tokenAddress: getTokenAddress("LUM"),
+      amountOnWei: Number(Web3.utils.toWei("1")),
       rskPartnerAddress: '0x03c173e750DDd140D4eB186c5fe76dfa7dff926C'
     });
-    await nodes.initiator.client.closeChannel({
-      tokenAddress: nodes.initiator.tokens[0],
+    await tester.nodes().initiator.client.sdk.closeChannel({
+      tokenAddress: getTokenAddress("LUM"),
       partnerAddress: '0x03c173e750DDd140D4eB186c5fe76dfa7dff926C'
     });
   }, 60 * 1000);
 
 
   it('should close a channel with no balance', async () => {
-    await nodes.initiator.client.openChannel({
-      tokenAddress: nodes.initiator.tokens[0],
-      amountOnWei: 0 * ETHER,
+    await tester.nodes().initiator.client.sdk.openChannel({
+      tokenAddress: getTokenAddress("LUM"),
+      amountOnWei:Number(Web3.utils.toWei("0")),
       rskPartnerAddress: '0xa749925DC36f4f15fdA3E23325097A42Cb0369D0'
     });
-    await nodes.initiator.client.closeChannel({
-      tokenAddress: nodes.initiator.tokens[0],
+    await tester.nodes().initiator.client.sdk.closeChannel({
+      tokenAddress: getTokenAddress("LUM"),
       partnerAddress: '0xa749925DC36f4f15fdA3E23325097A42Cb0369D0'
     });
   }, 60 * 1000);
@@ -71,15 +70,17 @@ describe("Channels", () => {
 
 
   it('should close a channel from partner', async () => {
-    await nodes.initiator.client.openChannel({
-      tokenAddress: nodes.initiator.tokens[0],
-      amountOnWei: 0 * ETHER,
-      rskPartnerAddress: nodes.target.address
+    /* TODO: Uncomment when we have dynamic node creation
+    await tester.nodes().initiator.client.sdk.openChannel({
+      tokenAddress: getTokenAddress("LUM"),
+      amountOnWei: Number(Web3.utils.toWei("0")),
+      rskPartnerAddress: tester.nodes().target.address
     });
-    await nodes.target.client.closeChannel({
-      tokenAddress: nodes.initiator.tokens[0],
-      partnerAddress: nodes.initiator.address
+    await tester.nodes().target.client.sdk.closeChannel({
+      tokenAddress: getTokenAddress("LUM"),
+      partnerAddress: tester.nodes().initiator.address
     });
   }, 60 * 1000);
-
+*/
+  })  
 })

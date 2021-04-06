@@ -9,7 +9,7 @@ export interface LuminoTesting {
 export default async function LuminoTesting(setupJson: SetupJson): Promise<LuminoTesting> {
     const setupLoader: SetupLoader = await SetupLoader.create(setupJson);
     return {
-        nodes: setupLoader.getNodes,
-        stop: setupLoader.stop
+        nodes: () => setupLoader.getNodes(),
+        stop: () => setupLoader.stop()
     };
 }

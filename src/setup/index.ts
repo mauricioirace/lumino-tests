@@ -1,4 +1,5 @@
 import ContainerManager, {Node} from "../container-manager";
+import ChannelManager from 'channel-manager'
 import { getTokenAddress } from 'token/util';
 import Web3 from 'web3';
 
@@ -38,12 +39,12 @@ export default class SetupLoader {
 
     private nodes: Node[];
 
-    private constructor(private containerManager: ContainerManager) {}
+    private constructor(private containerManager: ContainerManager, private channelManager: ChannelManager) {}
 
     public static async create(setup: SetupJson): Promise<SetupLoader> {
         const containerManager = new ContainerManager();
         await containerManager.startupRsk();
-        const setupLoader: SetupLoader = new SetupLoader(containerManager);
+        const setupLoader: SetupLoader = new SetupLoader(containerManager, new ChannelManager());
         await setupLoader.loadNodes(setup);
         await setupLoader.openChannels(setup);
         return setupLoader;
@@ -85,26 +86,8 @@ export default class SetupLoader {
         }
     }
 
-    private openChannels(setup) {
-        // TODO: this should be delegated to another module, i mean since this is a setup parser only
-        //  the channel setup should be in another file using the parsed configuration from here,
-        //  same thing we do with the nodes above.
-        return Promise.all(setup.channels.map(async ({tokenSymbol, participant1, participant2}) => {
-            const creator = this.nodes[participant1.node];
-            const partner = this.nodes[participant2.node];
-            await creator.client.sdk.openChannel({
-                tokenAddress: getTokenAddress(tokenSymbol),
-                amountOnWei: Web3.utils.toWei(participant1.deposit.toString()),
-                rskPartnerAddress: (await partner.client.sdk.getAddress()).our_address
-              });
-            if (participant2.deposit) {
-                await partner.client.sdk.depositTokens({
-                    tokenAddress: getTokenAddress(tokenSymbol),
-                    amountOnWei: Web3.utils.toWei(participant2.deposit.toString()),
-                    partnerAddress: (await creator.client.sdk.getAddress()).our_address
-                  });
-            }
-        }));
+    private async openChannels(setup) {
+        return await this.channelManager.openChannels(setup.channels, this.nodes);
     }
 
     public getNodes(): Node[] {

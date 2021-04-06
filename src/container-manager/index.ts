@@ -10,7 +10,7 @@ export interface Node {
     client?: LuminoClient;
     container: NodeContainer;
 }
-
+let i = 1;
 export default class ContainerManager {
 
     private rskNodes: Node[];
@@ -27,17 +27,32 @@ export default class ContainerManager {
 
     async startupRsk(): Promise<Node> {
         console.log('Setup RSK');
-        return;
+        return {
+            container: {
+                start: config => {},
+                stop: () => {}
+            },
+        };
     }
 
     async startupNotifiers(amount): Promise<Node> {
         console.log('Setup Notifiers');
-        return;
+        return {
+            container: {
+                start: config => {},
+                stop: () => {}
+            },
+        };
     }
 
     async startupExplorer(): Promise<Node> {
         console.log('Setup Explorer');
-        return;
+        return {
+            container: {
+                start: config => {},
+                stop: () => {}
+            },
+        };
     }
 
     async startupLuminoNode(nodeConfig: SetupNode): Promise<Node> {

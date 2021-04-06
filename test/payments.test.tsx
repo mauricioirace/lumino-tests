@@ -1,35 +1,35 @@
-import { getTokenAddress } from "../src/token/util";
+import { getTokenAddress } from "token/util";
 import p2p from '../samples/p2p.json';
 import LuminoTesting from "index";
 
 describe("Payments", () => {
-  let setup;
+  let tester;
 
   beforeAll(async () => {
-    setup = await LuminoTesting(p2p);
+    tester = await LuminoTesting(p2p);
   }, 60 * 1000)
 
   it('should make a payment', async () => {
-    const OldInitiatorChannel = await setup.nodes.initiator.sdk.getChannel({
+    const OldInitiatorChannel = await tester.nodes().initiator.client.sdk.getChannel({
       tokenAddress: getTokenAddress("LUM"),
-      partnerAddress: (await setup.nodes.target.sdk.getAddress()).our_address
+      partnerAddress: tester.nodes().target.client.address
     });
-    const OldTargetChannel = await setup.nodes.target.sdk.getChannel({
+    const OldTargetChannel = await tester.nodes().target.client.sdk.getChannel({
       tokenAddress: getTokenAddress("LUM"),
-      partnerAddress: (await setup.nodes.initiator.sdk.getAddress()).our_address
+      partnerAddress: tester.nodes().initiator.client.address
     });
-    await setup.nodes.initiator.sdk.makePayment({
+    await tester.nodes().initiator.client.sdk.makePayment({
       tokenAddress: getTokenAddress("LUM"),
-      partnerAddress: (await setup.nodes.target.sdk.getAddress()).our_address,
+      partnerAddress: tester.nodes().target.client.address,
       amountOnWei: 1
     });
-    const initiatorChannel = await setup.nodes.initiator.sdk.getChannel({
+    const initiatorChannel = await tester.nodes().initiator.client.sdk.getChannel({
       tokenAddress: getTokenAddress("LUM"),
-      partnerAddress: (await setup.nodes.target.sdk.getAddress()).our_address
+      partnerAddress: tester.nodes().target.client.address
     });
-    const targetChannel = await setup.nodes.target.sdk.getChannel({
+    const targetChannel = await tester.nodes().target.client.sdk.getChannel({
       tokenAddress: getTokenAddress("LUM"),
-      partnerAddress: (await setup.nodes.initiator.sdk.getAddress()).our_address
+      partnerAddress: tester.nodes().initiator.client.address
     });
     expect(initiatorChannel.balance === OldInitiatorChannel.balance - 1);
     expect(targetChannel.balance === OldTargetChannel.balance + 1);
@@ -37,31 +37,31 @@ describe("Payments", () => {
 
 
   it('should make payments in both directions', async () => {
-    const OldInitiatorChannel = await setup.nodes.initiator.sdk.getChannel({
+    const OldInitiatorChannel = await tester.nodes().initiator.client.sdk.getChannel({
       tokenAddress: getTokenAddress("LUM"),
-      partnerAddress: (await setup.nodes.target.sdk.getAddress()).our_address
+      partnerAddress: tester.nodes().target.client.address
     });
-    const OldTargetChannel = await setup.nodes.target.sdk.getChannel({
+    const OldTargetChannel = await tester.nodes().target.client.sdk.getChannel({
       tokenAddress: getTokenAddress("LUM"),
-      partnerAddress: (await setup.nodes.initiator.sdk.getAddress()).our_address
+      partnerAddress: tester.nodes().initiator.client.address
     });
-    await setup.nodes.initiator.sdk.makePayment({
+    await tester.nodes().initiator.client.sdk.makePayment({
       tokenAddress: getTokenAddress("LUM"),
-      partnerAddress: (await setup.nodes.target.sdk.getAddress()).our_address,
+      partnerAddress: tester.nodes().target.client.address,
       amountOnWei: 1
     });
-    await setup.nodes.target.sdk.makePayment({
+    await tester.nodes().target.client.sdk.makePayment({
       tokenAddress: getTokenAddress("LUM"),
-      partnerAddress: (await setup.nodes.initiator.sdk.getAddress()).our_address,
+      partnerAddress: tester.nodes().initiator.client.address,
       amountOnWei: 1
     });
-    const initiatorChannel = await setup.nodes.initiator.sdk.getChannel({
+    const initiatorChannel = await tester.nodes().initiator.client.sdk.getChannel({
       tokenAddress: getTokenAddress("LUM"),
-      partnerAddress: (await setup.nodes.target.sdk.getAddress()).our_address
+      partnerAddress: tester.nodes().target.client.address
     });
-    const targetChannel = await setup.nodes.target.sdk.getChannel({
+    const targetChannel = await tester.nodes().target.client.sdk.getChannel({
       tokenAddress: getTokenAddress("LUM"),
-      partnerAddress: (await setup.nodes.initiator.sdk.getAddress()).our_address
+      partnerAddress: tester.nodes().initiator.client.address
     });
     expect(initiatorChannel.balance === OldInitiatorChannel.balance);
     expect(targetChannel.balance === OldTargetChannel.balance);
