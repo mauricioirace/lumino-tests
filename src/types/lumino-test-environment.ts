@@ -3,10 +3,10 @@ import EnvironmentLoader from '../environment-loader';
 
 export class LuminoTestEnvironment {
     get nodes(): NodeList {
-        return this.setupLoader.getNodes();
+        return this.environmentLoader.getNodes();
     }
-    constructor(private setupLoader: EnvironmentLoader) {}
+    constructor(private environmentLoader: EnvironmentLoader) {}
     async stop() {
-        await this.setupLoader.stop();
+        await this.environmentLoader.stop();
     }
 }

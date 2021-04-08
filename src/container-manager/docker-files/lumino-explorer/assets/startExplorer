@@ -11,7 +11,6 @@ source "${HOME}/.nvm/nvm.sh"
 
 EXPLORER_LOGS_FOLDER="/var/logs/explorer"
 EXPLORER_ROOT_FOLDER="${HOME}/lumino-explorer/lumino-explorer-api"
-EXPLORER_WEB_ROOT_FOLDER="${HOME}/lumino-explorer/lumino-explorer-web"
 EXPLORER_POM_FILE="${EXPLORER_ROOT_FOLDER}/pom.xml"
 EXPLORER_CREATE_DB_FILE=/root/createDB.js
 EXPLORER_DELETE_DB_FILE=/root/deleteDB.js
@@ -31,7 +30,7 @@ if [ "${EXPLORER_PORT}" == "" ]; then
 fi
 
 if [ "${TOKEN_NETWORK_REGISTRY}" == "" ]; then
-    TOKEN_NETWORK_REGISTRY=0xed8c9163F888Bc2f9C4F299325003DA5fC8676DD
+    TOKEN_NETWORK_REGISTRY=0x7f467DdFf135b9A3B4926D10cAf538987b4E57bd
 fi
 
 if [ "${MONGO_DB_HOST}" == "" ]; then
@@ -45,17 +44,6 @@ echo "RSK_ENDPOINT=${RSK_ENDPOINT}"
 echo "EXPLORER_PORT=${EXPLORER_PORT}"
 echo "TOKEN_NETWORK_REGISTRY=${TOKEN_NETWORK_REGISTRY}"
 echo "MONGO_DB_HOST=${MONGO_DB_HOST}"
-
-echo "Building web"
-cd "${EXPLORER_WEB_ROOT_FOLDER}" || exit
-echo "Installing and building web"
-npm install && REACT_APP_API_URL="${EXPLORER_API_URL}" npm run build --production
-echo "Removing nginx directory"
-rm -rf "/var/www/html/explorer"
-echo "Moving production build to nginx directory"
-mv "${EXPLORER_WEB_ROOT_FOLDER}/build" "/var/www/html/explorer"
-echo "Starting nginx service"
-service nginx start
 
 # Init log folder
 if [ ! -d "${EXPLORER_LOGS_FOLDER}" ]; then

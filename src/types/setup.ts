@@ -1,5 +1,3 @@
-import {ChainName} from "./chain-name";
-
 export interface SetupParticipant {
     node: string;
     deposit: number;
@@ -19,11 +17,14 @@ export interface SetupToken {
 export interface SetupNode {
     name: string;
     tokens: SetupToken[];
+    enableHub: boolean;
 }
 
 export interface SetupJson {
-    chainName: ChainName;
+    enableHub: boolean;
     nodes: SetupNode[] | number;
     channels: SetupChannel[];
     tokens?: SetupToken[];
+    enableExplorer?: boolean;
+    notifiers?: number;
 }

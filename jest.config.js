@@ -2,7 +2,7 @@ module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
     roots: [
-        '<rootDir>/test/'
+        '<rootDir>/test/cases'
     ],
     clearMocks: true,
     collectCoverage: true,

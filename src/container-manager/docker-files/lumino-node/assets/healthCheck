@@ -1,0 +1,11 @@
+#!/bin/bash
+
+NODE_STATUS=$(curl -s http://localhost:5001/api/v1/address)
+
+if [ "" == "${NODE_STATUS}" ]; then
+  echo "NODE OFFLINE"
+  exit 1
+else
+  echo "NODE ONLINE"
+  exit 0
+fi

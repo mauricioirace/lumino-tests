@@ -42,6 +42,9 @@ COPY assets/rsk-db.zip /var/lib/rsk/database/regtest
 RUN cd /var/lib/rsk/database/regtest && unzip rsk-db.zip && rm rsk-db.zip
 RUN chmod -R 777 /var/lib/rsk/database/regtest
 
+COPY assets/healthCheck /usr/bin/healthCheck
+RUN chmod +x /usr/bin/healthCheck
+
 EXPOSE 4444
 
 ENTRYPOINT ["/usr/bin/supervisord"]

@@ -1,21 +1,47 @@
 #!/bin/bash
 
-echo "Generating required images"
-RSK_DOCKER_FOLDER="src/container-manager/docker-manager/docker-files/rsk-node"
-RSK_IMAGE_NAME="rsk-node-image"
-RSK_CORE_VERSION_CODENAME="PAPYRUS"
-RSK_CORE_VERSION_NUMBER="2.2.0"
+ROOT_PATH=$(pwd)
+
+RSK_DOCKER_FOLDER="${ROOT_PATH}/src/container-manager/docker-files/rsk-node"
+EXPLORER_DOCKER_FOLDER="${ROOT_PATH}/src/container-manager/docker-files/lumino-explorer"
+LUMINO_DOCKER_FOLDER="${ROOT_PATH}/src/container-manager/docker-files/lumino-node"
+
+RSK_IMAGE_NAME="lumino-testing-rsk-node-image"
+EXPLORER_IMAGE_NAME="lumino-testing-explorer-image"
+LUMINO_IMAGE_NAME="lumino-testing-lumino-node-image"
+
 NETWORK_NAME="rsk-network"
 
 function createMissingResources() {
-    NETWORK=$(sudo docker network ls --filter name=${NETWORK_NAME} -q)
+    NETWORK=$(docker network ls --filter name=${NETWORK_NAME} -q)
     if [ "${NETWORK}" == "" ]; then
         echo "Creating network ${NETWORK_NAME}"
         docker network create ${NETWORK_NAME}
     fi
 }
 
+echo "Generating required images"
+
 createMissingResources
 
+echo "Generating rsk node docker image..."
+
 cd "${RSK_DOCKER_FOLDER}" || exit 1
-docker build --build-arg RSK_CORE_VERSION_CODENAME=${RSK_CORE_VERSION_CODENAME} --build-arg RSK_CORE_VERSION_NUMBER=${RSK_CORE_VERSION_NUMBER} --no-cache -t "${RSK_IMAGE_NAME}" .
+docker build -t "${RSK_IMAGE_NAME}" .
+cd "${ROOT_PATH}" || exit 1
+
+echo "Generating lumino explorer docker image..."
+
+cd "${EXPLORER_DOCKER_FOLDER}" || exit 1
+docker build -t "${EXPLORER_IMAGE_NAME}" .
+cd "${ROOT_PATH}" || exit 1
+
+echo "Generating lumino node docker image..."
+
+cd "${LUMINO_DOCKER_FOLDER}" || exit 1
+docker build -t "${LUMINO_IMAGE_NAME}" .
+cd "${ROOT_PATH}" || exit 1
+
+echo "All done!"
+
+exit 0
