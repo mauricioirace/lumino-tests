@@ -45,7 +45,7 @@ export default class ContainerManager {
             container: this.explorerEnvironment.getContainer('lumino-explorer')
         });
         console.debug('Started lumino explorer successfully');
-        return Promise.resolve(this.explorerEnvironment);
+        return this.explorerEnvironment;
     }
 
     public async startNotifier(instanceNumber: number): Promise<StartedGenericContainer> {
