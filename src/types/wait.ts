@@ -11,9 +11,7 @@ export function waitForHealthCheck({command, container, expectedResult, timeoutM
     const healthCheck = async () => {
         const result = await container.exec(command.split(' '));
         console.debug('HealthCheck Command Result', result);
-        if (expectedResult === result.output) {
-            return true;
-        } else return result.exitCode === 0;
+        return expectedResult === result.output || result.exitCode === 0;
     }
 
     return new Promise(async (resolve, reject) => {
