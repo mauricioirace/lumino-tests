@@ -1,6 +1,6 @@
 export enum Token {
-    LUM = <any> 'LUM',
-    RIF = <any> 'RIF'
+    LUM = 'LUM',
+    RIF = 'RIF'
 }
 
 export const INVALID_TOKEN: string = 'INVALID_TOKEN';
