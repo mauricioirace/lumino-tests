@@ -33,7 +33,7 @@ export default class ContainerManager {
             container: this.rskNodeEnvironment.getContainer('rsk-node')
         });
         console.debug('Started rsk node successfully');
-        return Promise.resolve(this.rskNodeEnvironment);
+        return this.rskNodeEnvironment;
     }
 
     public async startExplorer(): Promise<StartedDockerComposeEnvironment> {
