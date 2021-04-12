@@ -1,0 +1,26 @@
+#!/bin/bash
+
+KEY_NAME=$1
+KEY_PASSWORD=$2
+
+if [ "${KEY_NAME}" == "" ]; then
+	echo "You need to specify a key name"
+	exit 1
+fi
+
+if [ "${KEY_PASSWORD}" == "" ]; then
+        echo "You need to specify a key password"
+        exit 1
+fi
+
+if [ -f "${KEY_NAME}.der" ]; then
+	echo "Are you sure you want to overwrite the existent key (y/N)?"
+	read OVERWRITE
+	if [ "${OVERWRITE}" != "y" ]; then
+		exit 0
+	fi
+fi
+
+openssl ecparam -genkey -name secp256k1 -out "${KEY_NAME}.pem" -param_enc explicit
+
+openssl pkcs8 -in "${KEY_NAME}.pem" -topk8 -v2 aes-256-cbc -outform DER -out "${KEY_NAME}.der" -passout pass:${KEY_PASSWORD}

@@ -1,0 +1,57 @@
+#!/bin/bash
+
+RSK_NODE_HOST=$1
+EXPLORER_NODE_HOST=$2
+
+if [ "" == "${RSK_NODE_HOST}" ]; then
+  RSK_NODE_HOST="rsk-node"
+fi
+
+if [ "" == "${EXPLORER_NODE_HOST}" ]; then
+  EXPLORER_NODE_HOST="lumino-explorer"
+fi
+
+RSK_STATUS=$(curl -s http://${RSK_NODE_HOST}:4444 -X POST -H "Content-Type: application/json" --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}')
+
+EXPLORER_STATUS=$(curl -s http://${EXPLORER_NODE_HOST}:8080/api/v1/dashboard | jq '.tokens')
+
+EXPLORER_EXPECTED_STATUS='[
+  {
+    "channels": [],
+    "address": "0x0e569743f573323f430b6e14e5676eb0ccad03d9",
+    "name": "LuminoToken",
+    "network_address": "0xcd4790de95c8b5bd55e544507a9c3c34904acf5f",
+    "symbol": "LUM"
+  },
+  {
+    "channels": [],
+    "address": "0x1af2844a588759d0de58abd568add96bb8b3b6d8",
+    "name": "RIF",
+    "network_address": "0xafa16a8d7a94550079014d537e9440ddb7765d29",
+    "symbol": "RIF"
+  }
+]'
+
+RSK_ONLINE=0
+EXPLORER_ONLINE=0
+
+if [ "" != "${RSK_STATUS}" ]; then
+  RSK_ONLINE=1
+else
+  echo "RSK_NODE OFFLINE"
+fi
+
+if [ "${EXPLORER_EXPECTED_STATUS}" == "${EXPLORER_STATUS}" ]; then
+  EXPLORER_ONLINE=1
+else
+  echo "EXPLORER_NODE OFFLINE"
+  echo "${EXPLORER_STATUS}"
+fi
+
+if [ ${RSK_ONLINE} == 1 ] && [ ${EXPLORER_ONLINE} == 1 ]; then
+  echo "NODE ONLINE"
+  exit 0
+else
+  echo "NODE_OFFLINE"
+  exit 1
+fi

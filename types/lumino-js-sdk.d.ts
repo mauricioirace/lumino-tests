@@ -137,7 +137,7 @@ declare module 'lumino-js-sdk' {
          * @returns {Promise} new channel info, or and error information
          */
         openChannel({ tokenAddress, amountOnWei, rskPartnerAddress, rnsPartnerAddress}:
-                        { tokenAddress: string, amountOnWei: number, rskPartnerAddress: string, rnsPartnerAddress: string}): Promise<any>;
+                        { tokenAddress: string, amountOnWei: number, rskPartnerAddress?: string, rnsPartnerAddress?: string}): Promise<any>;
 
         /**
          * Close an exist channel.

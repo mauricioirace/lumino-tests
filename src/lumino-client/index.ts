@@ -8,7 +8,7 @@ export default class LuminoClient {
         public tokens: any[]) {}
 
     public static async create(luminoNodeBaseUrl: string): Promise<LuminoClient> {
-        const sdk = new Lumino({luminoNodeBaseUrl});
+        const sdk = new Lumino(luminoNodeBaseUrl);
         const address = await sdk.getAddress();
         const tokens = await sdk.getTokens();
         return new LuminoClient(sdk, address, tokens);

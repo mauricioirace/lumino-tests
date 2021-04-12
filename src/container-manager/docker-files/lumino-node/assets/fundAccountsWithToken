@@ -1,0 +1,70 @@
+#!/bin/bash
+
+TRUFFLE_CONFIG="module.exports = {  networks: { development: { host: 'rsk-node', port: 4444, network_id: '33' } } };"
+
+ACCOUNT_ADDRESSES=$1
+TOKEN_AMOUNT=$2
+TOKEN_NAME=$3
+
+RIF_TOKEN_ADDRESS='0x1Af2844A588759D0DE58abD568ADD96BB8B3B6D8'
+RIF_TOKEN_ABI='{"abi":[{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"spender","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":false,"internalType":"uint256","name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"spender","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"sender","type":"address"},{"internalType":"address","name":"recipient","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"}]}'
+LUMINO_TOKEN_ADDRESS='0x0E569743F573323F430B6E14E5676EB0cCAd03D9'
+LUMINO_TOKEN_ABI='{"abi":[{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"supply","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"multiplier","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"balances","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"decimals","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"_decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"transferFunds","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"version","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"balance","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"owner_address","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"num","type":"uint256"}],"name":"mint","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"num","type":"uint256"},{"name":"target","type":"address"}],"name":"mintFor","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"_owner","type":"address"},{"name":"_spender","type":"address"}],"name":"allowance","outputs":[{"name":"remaining","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"initial_supply","type":"uint256"},{"name":"decimal_units","type":"uint8"},{"name":"token_name","type":"string"},{"name":"token_symbol","type":"string"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_to","type":"address"},{"indexed":true,"name":"_num","type":"uint256"}],"name":"Minted","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_from","type":"address"},{"indexed":true,"name":"_to","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"_owner","type":"address"},{"indexed":true,"name":"_spender","type":"address"},{"indexed":false,"name":"_value","type":"uint256"}],"name":"Approval","type":"event"}]}'
+
+
+if [ "" == "${ACCOUNT_ADDRESSES}" ]; then
+	echo "You need to specify at least one account address"
+	exit 1
+fi
+
+if [ "" == "${TOKEN_AMOUNT}" ]; then
+	TOKEN_AMOUNT=10
+fi
+
+if [ "" == "${TOKEN_NAME}" ]; then
+	echo "You need to specify at least one token name, could be RIF or LUM"
+	exit 1
+fi
+
+if [ "RIF" == "${TOKEN_NAME}" ]; then
+  CONTRACT_ABI=${RIF_TOKEN_ABI}
+  CONTRACT_ADDRESS=${RIF_TOKEN_ADDRESS}
+elif [ "LUM" == "${TOKEN_NAME}" ]; then
+  CONTRACT_ABI=${LUMINO_TOKEN_ABI}
+  CONTRACT_ADDRESS=${LUMINO_TOKEN_ADDRESS}
+else
+  echo "Invalid token name, valid values are RIF or LUM"
+  exit 1
+fi
+
+echo ${TRUFFLE_CONFIG} >> truffle-config.js
+
+cat > fundAccountsWithToken.js << EOF
+module.exports = async function(callback) {
+	let tokenAbi = JSON.parse('${CONTRACT_ABI}').abi;
+	let token = new web3.eth.Contract(tokenAbi, '${CONTRACT_ADDRESS}');
+	const accounts = await web3.eth.getAccounts();
+
+	const addresses = '${ACCOUNT_ADDRESSES}'.split(',');
+
+  	for (const address of addresses) {
+		  console.log('Trying to fund account ' + address + ' with ${TOKEN_AMOUNT} ${TOKEN_NAME} tokens from account ' + accounts[0]);
+      try{
+			  let balance = await token.methods.balanceOf(address).call();
+        console.log('Old Balance for ' + address + ' = ' + web3.utils.fromWei(balance));
+			  await token.methods.transfer(address, web3.utils.toWei('${TOKEN_AMOUNT}', 'ether')).send({from: accounts[0]});
+  			balance = await token.methods.balanceOf(address).call();
+        console.log('New Balance for ' + address + ' = ' + web3.utils.fromWei(balance));
+		} catch (error) {
+			console.log(error);
+		}
+	}
+}
+EOF
+
+truffle exec fundAccountsWithToken.js
+
+rm fundAccountsWithToken.js
+rm truffle-config.js
+
+echo "Funding accounts successfully completed"

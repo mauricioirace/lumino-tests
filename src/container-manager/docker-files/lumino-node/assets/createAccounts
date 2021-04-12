@@ -1,0 +1,48 @@
+#!/bin/bash
+
+#TODO: This script needs to be improved, it's to create several accounts.
+# Usage: ./createAccounts <PASSWORD> <ACCOUNT_AMOUNT> <ETH_AMOUNT>
+
+PASSWORD=$1
+ACCOUNT_AMOUNT=$2
+ETH_AMOUNT=$3
+
+if [ "" == "${PASSWORD}" ]; then
+        echo "You need to specify the password for the accounts"
+        exit 1
+fi
+
+
+if [ "" == "${ACCOUNT_AMOUNT}" ]; then
+	echo "You need to specify the amount of accounts to create"
+	exit 1
+fi
+
+if [ "" == "${ETH_AMOUNT}" ]; then
+        ETH_AMOUNT=10
+fi
+
+echo "${PASSWORD}" > password.txt
+
+echo "Creating ${ACCOUNT_AMOUNT} accounts with password ${PASSWORD}"
+
+ACCOUNTS=()
+
+for index in $(seq 1 ${ACCOUNT_AMOUNT})
+do
+	ACCOUNT=$(geth account new --password password.txt)
+	ACCOUNT=$(echo "${ACCOUNT}" | sed -e 's/Address: {\(.*\)}/\1/')
+	ACCOUNTS+=(${ACCOUNT})
+done
+
+rm password.txt
+
+echo "Funding accounts with ${ETH_AMOUNT}"
+
+for ACCOUNT in ${ACCOUNTS[@]}
+do
+	fundAccounts ${ACCOUNT} ${ETH_AMOUNT}
+	echo "0x${ACCOUNT}" >> /root/.accounts
+done
+
+echo "Accounts created successfully"
