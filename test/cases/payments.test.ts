@@ -1,17 +1,25 @@
-import { getTokenAddress } from "../../src/util/token";
+import { getTokenAddress, toWei } from "../../src/util/token";
 import p2p from '../../sample-toplogies/p2p.json';
 import setupTestEnvironment from "../../src";
 import { LuminoTestEnvironment } from "../../src/types/lumino-test-environment";
 import { LuminoNode } from "../../src/types/node";
 import { Dictionary } from "../../src/util/collection";
 
+const TIMEOUT = 10 * 60 * 1000;
+
+
 describe("Payments", () => {
   let nodes: Dictionary<LuminoNode>;
+  let tester: LuminoTestEnvironment;
 
   beforeAll(async () => {
-    const tester = await setupTestEnvironment(p2p);
+    tester = await setupTestEnvironment(p2p);
     nodes = tester.nodes as Dictionary<LuminoNode>;
-  }, 60 * 1000)
+  }, TIMEOUT);
+
+  afterAll(async () => {
+    await tester.stop();
+  }, TIMEOUT);
 
   it('should make a payment', async () => {
     const OldInitiatorChannel = await nodes.initiator.client.sdk.getChannel({
@@ -22,10 +30,12 @@ describe("Payments", () => {
       tokenAddress: getTokenAddress("LUM"),
       partnerAddress: nodes.initiator.client.address
     });
+    console.debug(OldInitiatorChannel.balance)
+    console.debug(OldTargetChannel)
     await nodes.initiator.client.sdk.makePayment({
       tokenAddress: getTokenAddress("LUM"),
       partnerAddress: nodes.target.client.address,
-      amountOnWei: 1
+      amountOnWei: toWei(1)
     });
     const initiatorChannel = await nodes.initiator.client.sdk.getChannel({
       tokenAddress: getTokenAddress("LUM"),
@@ -37,7 +47,7 @@ describe("Payments", () => {
     });
     expect(initiatorChannel.balance === OldInitiatorChannel.balance - 1);
     expect(targetChannel.balance === OldTargetChannel.balance + 1);
-  }, 60 * 1000);
+  }, TIMEOUT);
 
 
   it('should make payments in both directions', async () => {
@@ -49,15 +59,17 @@ describe("Payments", () => {
       tokenAddress: getTokenAddress("LUM"),
       partnerAddress: nodes.initiator.client.address
     });
+    console.debug(OldInitiatorChannel.balance)
+    console.debug(OldTargetChannel)
     await nodes.initiator.client.sdk.makePayment({
       tokenAddress: getTokenAddress("LUM"),
       partnerAddress: nodes.target.client.address,
-      amountOnWei: 1
+      amountOnWei: toWei(1)
     });
     await nodes.target.client.sdk.makePayment({
       tokenAddress: getTokenAddress("LUM"),
       partnerAddress: nodes.initiator.client.address,
-      amountOnWei: 1
+      amountOnWei: toWei(1)
     });
     const initiatorChannel = await nodes.initiator.client.sdk.getChannel({
       tokenAddress: getTokenAddress("LUM"),
@@ -69,6 +81,6 @@ describe("Payments", () => {
     });
     expect(initiatorChannel.balance === OldInitiatorChannel.balance);
     expect(targetChannel.balance === OldTargetChannel.balance);
-  }, 60 * 1000);
+  }, TIMEOUT);
 
 })

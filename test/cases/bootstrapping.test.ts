@@ -1,4 +1,5 @@
-import * as basic from '../../sample-toplogies/basic.json';
+import basic from '../../sample-toplogies/basic.json';
+import advanced from '../../sample-toplogies/advanced.json';
 import {SetupJson} from '../../src/types/setup';
 import setupTestEnvironment from '../../src';
 import {LuminoTestEnvironment} from '../../src/types/lumino-test-environment';
@@ -32,8 +33,8 @@ describe("Bootstrapping Advanced", () => {
 
     let advancedEnvironment: LuminoTestEnvironment;
 
-    it('should have basic nodes ready', async () => {
-        advancedEnvironment = await setupTestEnvironment(basic as SetupJson);
+    it('should have advanced nodes ready', async () => {
+        advancedEnvironment = await setupTestEnvironment(advanced as SetupJson);
         expect(Object.keys(advancedEnvironment.nodes).length).toBe(2);
         const firstNode = advancedEnvironment.nodes.firstNode as LuminoNode;
         const secondNode = advancedEnvironment.nodes.secondNode as LuminoNode;

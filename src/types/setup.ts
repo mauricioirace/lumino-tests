@@ -17,11 +17,11 @@ export interface SetupToken {
 export interface SetupNode {
     name: string;
     tokens: SetupToken[];
-    enableHub: boolean;
+    enableHub?: boolean;
 }
 
 export interface SetupJson {
-    enableHub: boolean;
+    enableHub?: boolean;
     nodes: SetupNode[] | number;
     channels: SetupChannel[];
     tokens?: SetupToken[];

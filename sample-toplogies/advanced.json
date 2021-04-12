@@ -30,7 +30,7 @@
             },
             "participant2": {
                 "node": "secondNode",
-                "deposit": 1
+                "deposit": 0
             }
         }
     ]

@@ -5,11 +5,11 @@
             "tokens": [
                 {
                     "symbol": "LUM",
-                    "amount": 1
+                    "amount": 100
                 },
                 {
                     "symbol": "RIF",
-                    "amount": 2
+                    "amount": 100
                 }
             ]
         },
@@ -18,11 +18,11 @@
             "tokens":[
                 {
                     "symbol": "LUM",
-                    "amount": 1
+                    "amount": 100
                 },
                 {
                     "symbol": "RIF",
-                    "amount": 2
+                    "amount": 100
                 }
             ]
         }

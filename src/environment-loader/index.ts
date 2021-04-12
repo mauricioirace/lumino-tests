@@ -30,7 +30,9 @@ export default class EnvironmentLoader {
             await this.containerManager.startExplorer();
         }
         await this.loadLuminoNodes(setup);
-        // await setupLoader.openChannels(setup);
+        if (setup.channels && setup.channels.length > 0) {
+            await this.openChannels(setup);
+        }
     }
 
     private async loadLuminoNodes(setup: SetupJson): Promise<void> {
@@ -45,7 +47,7 @@ export default class EnvironmentLoader {
                 nodeConfigs.push({
                     name: `node${i}`,
                     tokens: setup.tokens as SetupToken[],
-                    enableHub: setup.enableHub
+                    enableHub: setup.enableHub ?? false
                 });
             }
         }
