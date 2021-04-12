@@ -1,13 +1,14 @@
-import {StartedGenericContainer} from "testcontainers/dist/generic-container";
 import LuminoClient from "../lumino-client";
-import { Dictionary } from "../util/collection";
+import {Dictionary} from "../util/collection";
+import {StartedTestContainer} from "testcontainers";
 
 export interface LuminoNode extends Node {
+    name: string;
     client: LuminoClient;
 }
 
 export interface Node {
-    container: StartedGenericContainer;
+    container: StartedTestContainer;
 }
 
 export type NodeList = Dictionary<Node>

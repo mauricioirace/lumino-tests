@@ -1,7 +1,9 @@
 {
+    "enableExplorer": false,
     "nodes": [
         {
-            "name": "node00",
+            "name": "firstNode",
+            "enableHub": false,
             "tokens": [
                 {
                     "symbol": "LUM",
@@ -14,7 +16,8 @@
             ]
         },
         {
-            "name": "node01",
+            "name": "secondNode",
+            "enableHub": false,
             "tokens": []
         }
     ],
@@ -22,11 +25,11 @@
         {
             "tokenSymbol": "LUM",
             "participant1": {
-                "node": "node00",
+                "node": "firstNode",
                 "deposit": 1
             },
             "participant2": {
-                "node": "node01",
+                "node": "secondNode",
                 "deposit": 1
             }
         }

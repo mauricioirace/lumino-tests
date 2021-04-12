@@ -1,5 +1,8 @@
 {
+    "enableExplorer": false,
+    "enableHub": false,
     "nodes": 2,
+    "notifiers": 0,
     "tokens": [
         {
             "symbol": "LUM",
@@ -11,3 +14,4 @@
         }
     ]
 }
+

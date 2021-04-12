@@ -1,0 +1,17 @@
+#!/bin/bash
+
+NODE_HOST=$1
+
+if [ "" == "${NODE_HOST}" ]; then
+  NODE_HOST="rsk-node"
+fi
+
+NODE_STATUS=$(curl -s http://${NODE_HOST}:4444 -X POST -H "Content-Type: application/json" --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}')
+
+if [ "" == "${NODE_STATUS}" ]; then
+  echo "NODE OFFLINE"
+  exit 1
+else
+  echo "NODE ONLINE"
+  exit 0
+fi

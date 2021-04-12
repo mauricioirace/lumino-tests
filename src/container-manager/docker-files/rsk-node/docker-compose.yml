@@ -1,0 +1,14 @@
+version: "2.2"
+
+services:
+    rsk-node:
+        image: "lumino-testing-rsk-node-image:latest"
+        container_name: "rsk-node"
+        restart: "no"
+        networks: ["rsk-network"]
+        ports:
+            - "4444"
+
+networks:
+  rsk-network:
+    external: true
