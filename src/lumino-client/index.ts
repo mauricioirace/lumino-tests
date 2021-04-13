@@ -11,7 +11,7 @@ export default class LuminoClient {
         const sdk = new Lumino(luminoNodeBaseUrl);
         const address = await sdk.getAddress();
         const tokens = await sdk.getTokens();
-        return new LuminoClient(sdk, address, tokens);
+        return new LuminoClient(sdk, address.our_address, tokens);
     }
 
 }

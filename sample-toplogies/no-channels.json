@@ -27,17 +27,5 @@
             ]
         }
     ],
-    "channels": [
-        {
-            "tokenSymbol": "LUM",
-            "participant1": {
-                "node": "initiator",
-                "deposit": 10
-            },
-            "participant2": {
-                "node": "target",
-                "deposit": 10
-            }
-        }
-    ]
+    "channels": []
 }

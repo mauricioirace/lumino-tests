@@ -1,5 +1,6 @@
 import {SetupToken} from '../types/setup';
 import {INVALID_TOKEN, Token} from '../constants';
+import Web3 from 'web3';
 
 export function getTokenAddress(symbol: string): string {
     switch (symbol) {
@@ -20,6 +21,10 @@ export function isValidTokenSymbol(symbol: string): boolean {
         default:
             return false;
     }
+}
+
+export function toWei(amount: number): number {
+    return Number(Web3.utils.toWei(amount.toString()))
 }
 
 export function validateTokens(tokens?: SetupToken[]): void {

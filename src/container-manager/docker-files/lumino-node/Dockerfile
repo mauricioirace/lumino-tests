@@ -71,5 +71,9 @@ RUN cd /root/.ethereum/keystore && unzip keystore.zip && rm keystore.zip
 RUN /bin/bash -c "mkdir /root/.rif-comms && cd /root/.rif-comms && generateKey server infuy"
 
 EXPOSE $NODE_PORT
+# RIF COMMS 
+EXPOSE 6010
+# RIF COMMS WS
+EXPOSE 6011
 
 ENTRYPOINT ["/usr/bin/supervisord"]
