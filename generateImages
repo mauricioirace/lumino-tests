@@ -4,10 +4,12 @@ ROOT_PATH=$(pwd)
 
 RSK_DOCKER_FOLDER="${ROOT_PATH}/src/container-manager/docker-files/rsk-node"
 EXPLORER_DOCKER_FOLDER="${ROOT_PATH}/src/container-manager/docker-files/lumino-explorer"
+RIF_COMMS_DOCKER_FOLDER="${ROOT_PATH}/src/container-manager/docker-files/rif-comms-bootnode"
 LUMINO_DOCKER_FOLDER="${ROOT_PATH}/src/container-manager/docker-files/lumino-node"
 
 RSK_IMAGE_NAME="lumino-testing-rsk-node-image"
 EXPLORER_IMAGE_NAME="lumino-testing-explorer-image"
+RIF_COMMS_IMAGE_NAME="lumino-testing-rif-comms-boot-node-image"
 LUMINO_IMAGE_NAME="lumino-testing-lumino-node-image"
 
 NETWORK_NAME="rsk-network"
@@ -34,6 +36,12 @@ echo "Generating lumino explorer docker image..."
 
 cd "${EXPLORER_DOCKER_FOLDER}" || exit 1
 docker build -t "${EXPLORER_IMAGE_NAME}" .
+cd "${ROOT_PATH}" || exit 1
+
+echo "Generating rif comms boot node docker image..."
+
+cd "${RIF_COMMS_DOCKER_FOLDER}" || exit 1
+docker build -t "${RIF_COMMS_IMAGE_NAME}" .
 cd "${ROOT_PATH}" || exit 1
 
 echo "Generating lumino node docker image..."

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+STATUS=$(cat /root/init.log | grep online)
+
+if [ "${STATUS}" == "" ]; then
+  echo "NODE OFFLINE"
+  exit 1
+else
+  echo "NODE ONLINE"
+  exit 0
+fi

@@ -7,6 +7,19 @@ trap 'exec 2>&4 1>&3' 0 1 2 3
 exec 1>${INIT_LOG} 2>&1
 
 # Setup node to run rif-comms node
+IP_ADDRESS=`echo $(hostname -I) | sed 's/ *$//g'`
+RIF_COMMS_CONF_FILE="/root/rif-communications-pubsub-bootnode/config/server.json5"
+
+echo $(sed "s/__IP_PLACEHOLDER__/${IP_ADDRESS}/" ${RIF_COMMS_CONF_FILE}) > ${RIF_COMMS_CONF_FILE}
+
+echo $(sed "s/__BOOT_NODE_IP_PLACEHOLDER__/${BOOT_NODE_IP}/" ${RIF_COMMS_CONF_FILE}) > ${RIF_COMMS_CONF_FILE}
+
+RIF_COMMS_KEY_PASSWORD="rif-comms-${IP_ADDRESS}"
+
+echo $(sed "s/__PASSWORD_PLACEHOLDER__/${RIF_COMMS_KEY_PASSWORD}/" ${RIF_COMMS_CONF_FILE}) > ${RIF_COMMS_CONF_FILE}
+
+cd /root/.rif-comms || exit 1
+generateKey server ${RIF_COMMS_KEY_PASSWORD}
 
 source /root/.nvm/nvm.sh && nvm use 14.13
 
@@ -94,7 +107,7 @@ source ${ENV_NAME}/bin/activate
 
 # Setup the default command
 
-COMMAND="lumino --address ${ACCOUNT_ADDRESS} --password-file password-file.txt --accept-disclaimer --transport=rif-comms --grpc-endpoint localhost:${GRPC_PORT} --keystore-path ~/.ethereum/keystore --network-id ${NETWORK_ID} --eth-rpc-endpoint ${RSK_ENDPOINT} --environment-type development --tokennetwork-registry-contract-address=${TOKEN_NETWORK_REGISTRY} --secret-registry-contract-address=${SECRET_REGISTRY} --endpoint-registry-contract-address=${ENDPOINT_REGISTRY} --no-sync-check --api-address=http://0.0.0.0:${NODE_PORT}"
+COMMAND="lumino --address ${ACCOUNT_ADDRESS} --password-file password-file.txt --accept-disclaimer --transport=rif-comms --grpc-endpoint ${IP_ADDRESS}:${GRPC_PORT} --keystore-path ~/.ethereum/keystore --network-id ${NETWORK_ID} --eth-rpc-endpoint ${RSK_ENDPOINT} --environment-type development --tokennetwork-registry-contract-address=${TOKEN_NETWORK_REGISTRY} --secret-registry-contract-address=${SECRET_REGISTRY} --endpoint-registry-contract-address=${ENDPOINT_REGISTRY} --no-sync-check --api-address=http://0.0.0.0:${NODE_PORT}"
 
 # Adding the flag if HUB_MODE is enabled
 

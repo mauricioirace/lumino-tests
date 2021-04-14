@@ -11,7 +11,7 @@
         bootstrap: {
           enabled: true,
           list: [
-            "/ip4/__BOOT_NODE_IP_PLACEHOLDER__/tcp/6010/p2p/16Uiu2HAmG54amgkEfoy1vJdzdMAFhFpUsjTko4sBBqss1YsGib98"
+            "/ip4/__IP_PLACEHOLDER__/tcp/6010/p2p/16Uiu2HAmG54amgkEfoy1vJdzdMAFhFpUsjTko4sBBqss1YsGib98"
           ]
         }
       }
@@ -20,7 +20,7 @@
   loadPrivKeyFromFile: true,
   key : {
     createNew: false,
-    password:"__PASSWORD_PLACEHOLDER__",
+    password:"infuy",
     openSSL:true,
     privateKeyURLPath:"file:////root/.rif-comms/server.der",
     type: "DER"

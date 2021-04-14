@@ -21,6 +21,7 @@ export default class EnvironmentLoader {
 
     private async parseAndLoad(setup: SetupJson): Promise<void> {
         await this.containerManager.startRskNode();
+        await this.containerManager.startupRifCommunicationsBootNode();
         if (setup.notifiers) {
             for (let notifier = 0; notifier < setup.notifiers; notifier++) {
                 await this.containerManager.startNotifier(notifier);

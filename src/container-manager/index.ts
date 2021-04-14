@@ -3,8 +3,8 @@ import {LuminoNode} from "../types/node";
 import {
     DockerComposeEnvironment,
     GenericContainer,
-    GenericContainerBuilder,
-    StartedDockerComposeEnvironment, StartedTestContainer
+    StartedDockerComposeEnvironment,
+    StartedTestContainer
 } from "testcontainers";
 import path from "path";
 import {StartedGenericContainer} from "testcontainers/dist/generic-container";
@@ -16,6 +16,7 @@ export default class ContainerManager {
 
     private rskNodeEnvironment?: StartedDockerComposeEnvironment;
     private explorerEnvironment?: StartedDockerComposeEnvironment;
+    private rifCommsBootNode?: StartedTestContainer;
     private luminoNodes: LuminoNode[] = [];
 
     private constructor() {}
@@ -60,7 +61,7 @@ export default class ContainerManager {
     }
 
     public getContainer(
-        containerName: 'rsk-node' | 'lumino-explorer' | 'mongo-db' | 'lumino-node',
+        containerName: 'rsk-node' | 'lumino-explorer' | 'mongo-db' | 'lumino-node' | 'boot-node',
         luminoNodeName?: string,
         scaleNumber?: number): StartedGenericContainer | StartedTestContainer | undefined {
         switch (containerName) {
@@ -69,14 +70,34 @@ export default class ContainerManager {
             case 'lumino-explorer':
             case 'mongo-db':
                 return this.explorerEnvironment?.getContainer(containerName);
-            case "lumino-node":
+            case 'lumino-node':
                 return this.luminoNodes.find(node => node.name === luminoNodeName)?.container;
+            case 'boot-node':
+                return this.rifCommsBootNode;
         }
+    }
+
+    public async startupRifCommunicationsBootNode(): Promise<void> {
+        console.debug('Creating rif-comms boot node...');
+        let rifCommsBootNodeContainer: GenericContainer = new GenericContainer('lumino-testing-rif-comms-boot-node-image:latest');
+        rifCommsBootNodeContainer = rifCommsBootNodeContainer.withNetworkMode(DOCKER_NETWORK_NAME).withName('lumino-testing-rif-comms-boot-node');
+        const rifCommsBootNodeStartedContainer = await rifCommsBootNodeContainer.start();
+        await waitForHealthCheck({
+            command: 'healthCheck',
+            expectedResult: 'NODE ONLINE',
+            container: rifCommsBootNodeStartedContainer
+        });
+        this.rifCommsBootNode = rifCommsBootNodeStartedContainer;
+        console.debug('Rif comms boot node successfully started.');
     }
 
     public async startupLuminoNode(nodeConfig: SetupNode): Promise<LuminoNode> {
 
         console.debug('Creating lumino node', nodeConfig);
+
+        if (!this.rifCommsBootNode) {
+            return Promise.reject('No rif-communications boot node up.');
+        }
 
         let luminoNodeContainer: GenericContainer = new GenericContainer('lumino-testing-lumino-node-image:latest');
 
@@ -102,7 +123,12 @@ export default class ContainerManager {
             }
         }
 
-        console.debug(`Starting lumino node ${nodeConfig.name}`)
+        console.debug(`Starting lumino node ${nodeConfig.name}`);
+
+        const containerName = `lumino-testing-lumino-node-${this.luminoNodes.length}`;
+
+        luminoNodeContainer.withEnv('BOOT_NODE_IP', await this.rifCommsBootNode.getIpAddress(DOCKER_NETWORK_NAME));
+        luminoNodeContainer.withName(containerName);
 
         const startedContainer: StartedTestContainer = await luminoNodeContainer.start();
 
@@ -137,5 +163,6 @@ export default class ContainerManager {
         for (const luminoNode of this.luminoNodes) {
             await luminoNode.container.stop({removeVolumes: true});
         }
+        await this.rifCommsBootNode?.stop({removeVolumes: true});
     }
 }

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+INIT_LOG=/root/init.log
+
+exec 3>&1 4>&2
+trap 'exec 2>&4 1>&3' 0 1 2 3
+exec 1>${INIT_LOG} 2>&1
+
+# Setup node to run rif-comms node
+IP_ADDRESS=`echo $(hostname -I) | sed 's/ *$//g'`
+RIF_COMMS_CONF_FILE="/root/rif-communications-pubsub-bootnode/config/server.json5"
+
+echo $(sed "s/__IP_PLACEHOLDER__/${IP_ADDRESS}/" ${RIF_COMMS_CONF_FILE}) > ${RIF_COMMS_CONF_FILE}
+
+source /root/.nvm/nvm.sh && nvm use 14.13
+
+cd /root/rif-communications-pubsub-bootnode || exit 1
+
+# Run rif-comms with pm2
+
+NODE_ENV=server pm2 start --name rif-comms npm -- run api-server

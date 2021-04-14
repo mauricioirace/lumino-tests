@@ -10,7 +10,7 @@ ENV PYTHON_VERSION=3.7.3
 
 # Installing basic packages
 RUN apt-get update && \
-	apt-get install -y build-essential zip unzip curl supervisor systemd wget curl lsof nano nginx \
+	apt-get install -y build-essential zip unzip curl supervisor systemd wget curl lsof nano \
 	software-properties-common unzip zip ssh git libcurl4 openssl liblzma5 tar
 RUN apt-get install -y libsecp256k1-dev libssl-dev automake pkg-config libtool libffi-dev libgmp-dev libyaml-cpp-dev \
 	libreadline-gplv2-dev libncursesw5-dev libssl-dev \
@@ -63,17 +63,15 @@ RUN chmod +x /usr/local/bin/fundAccounts
 RUN chmod +x /usr/local/bin/fundAccountsWithToken
 RUN chmod +x /usr/local/bin/healthCheck
 
-RUN mkdir /root/.tokens && mkdir -p /root/.ethereum/keystore
+RUN mkdir /root/.rif-comms && mkdir -p /root/.ethereum/keystore
 COPY assets/keystore.zip /root/.ethereum/keystore
 RUN cd /root/.ethereum/keystore && unzip keystore.zip && rm keystore.zip
-
-# generating rif-comms key
-RUN /bin/bash -c "mkdir /root/.rif-comms && cd /root/.rif-comms && generateKey server infuy"
 
 EXPOSE $NODE_PORT
 # RIF COMMS 
 EXPOSE 6010
 # RIF COMMS WS
 EXPOSE 6011
+EXPOSE 6012
 
 ENTRYPOINT ["/usr/bin/supervisord"]
