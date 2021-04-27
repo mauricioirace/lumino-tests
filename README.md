@@ -43,13 +43,13 @@
 
 ## About
 
-The purpose of the `lumino-tests` project is to provide tools which can run arbitrarily complex automated tests. These aim to serve as complements to the RIF Lumino unit tests for robustness purposes.
+The purpose of the `lumino-tests` project is to provide tools which can run arbitrarily complex automated tests. These aim to serve as complements to the RIF Lumino unit tests, for robustness purposes.
 
 ### How it Works
 
 The project is written chiefly in [TypeScript](https://www.typescriptlang.org/) and uses [Jest](https://jestjs.io/) as its testing framework.
 
-Under the hood it makes use of both [Docker](https://www.docker.com/) as well as the [Lumino SDK](https://github.com/rsksmart/lumino-sdk) in order to boot up testing scenarios and carry out actions in them.
+Under the hood it makes use of both [Docker](https://www.docker.com/), as well as the [Lumino SDK](https://github.com/rsksmart/lumino-sdk), in order to boot up testing scenarios and carry out actions in them.
 
 ## Getting Started
 
@@ -126,7 +126,7 @@ lumino-tests$ ./generateImages
 
 #### Project
 
-To install the project execute the following command at the root directory:
+To install the project, execute the following command at the root directory:
 
 ```bash
 npm install
@@ -142,7 +142,7 @@ To run the entire test suite, execute the following command at the root director
 npm run test
 ```
 
-Be aware that running the whole test suite may take a while.
+Please be aware that running the whole test suite may take a while.
 
 At end of the execution you should see an output similar this one:
 
@@ -194,11 +194,11 @@ and so on.
 
 ### New Tests
 
-If you want to write new tests you can take any of the `*.test.ts` files (located in [the `test/cases` directory](./test/cases)) as a starting point.
+If you want to write new tests, you can take any of the `*.test.ts` files (located in [the `test/cases` directory](./test/cases)) as a starting point.
 
-Depending on the complexity of the test case you may need to modify the logic for the manager classes located in the [`src` directory](./src).
+You may need to modify the logic for the manager classes located in the [`src` directory](./src), depending on the complexity of the test case you want to write.
 
-Be sure to also check out the existing [topologies](./topologies); they might come in handy.
+Be sure to also check out the existing [topologies](./topologies), as they might come in handy.
 
 ### Rebuild Docker Images
 
@@ -214,7 +214,7 @@ Suppose you want to delete an image called `my-image-name`. You can then delete 
 docker image rm my-image-name
 ```
 
-Afterwards, just [re-run the `generateImages` script](#generate-docker-images), as it will only rebuild what's missing.
+Afterwards, just [re-run the `generateImages` script](#docker-images), as it will only rebuild what's missing.
 
 ## External Links
 
