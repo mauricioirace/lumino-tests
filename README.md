@@ -1,3 +1,48 @@
+<h1 align="center">lumino-tests</h1>
+
+<details open="open">
+  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
+  <ol>
+    <li><a href="#about">About</a>
+      <ul>
+        <li><a href="#how-it-works">How it works</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a>
+          <ul>
+            <li><a href="#nodejs--npm">Node.js & npm</a></li>
+            <li><a href="#typescript">TypeScript</a></li>
+            <li><a href="#docker">Docker</a></li>
+            <li><a href="#lumino-sdk">Lumino SDK</a></li>
+          </ul>
+        </li>
+        <li><a href="#installation">Installation</a>
+          <ul>
+            <li><a href="#repo">Repo</a></li>
+            <li><a href="#docker-images">Docker images</a></li>
+            <li><a href="#project">Project</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#test-suite">Test suite</a>
+          <ul>
+            <li><a href="#individual-tests">Individual tests</a></li>
+          </ul>
+        </li>
+        <li><a href="#new-tests">New tests</a>
+        <li><a href="#rebuild-docker-images">Rebuild Docker images</a>
+      </ul>
+    </li>
+    <li><a href="#external-links">External links</a></li>
+  </ol>
+</details>
+
 ## About
 
 The purpose of the `lumino-tests` project is to provide tools which can run arbitrarily complex automated tests and serve as complements to the RIF Lumino unit tests, for robustness purposes.
@@ -63,7 +108,7 @@ To achieve this, follow these steps:
 
 ### Installation
 
-#### Clone the repo
+#### Repo
 
 Clone this repo through your favorite means, such as:
 
@@ -71,7 +116,7 @@ Clone this repo through your favorite means, such as:
 git clone https://github.com/rsksmart/lumino-sdk.git
 ```
 
-#### Generate Docker images
+#### Docker images
 
 The Docker images need to be generated before they can be used in the tests. You can do so by running the `generateImages` script at the root folder:
 
@@ -81,7 +126,7 @@ lumino-tests$ ./generateImages
 
 **Important**: this will likely take more than 10 minutes, and will need just a little under 6 GB of free space.
 
-#### Install the project
+#### Project
 
 Execute the following at the root folder:
 
@@ -91,7 +136,7 @@ npm install
 
 ## Usage
 
-### Running tests
+### Test suite
 
 To run the entire test suite, execute the following at the root folder:
 
@@ -137,7 +182,7 @@ Time:        559.714 s, estimated 577 s
 Ran all test suites.
 ```
 
-#### Running _some_ tests
+#### Individual tests
 
 Tests can be run individually if needed. A complete list of available test cases can be found in [the `test/cases` directory](./test/cases).
 
@@ -149,7 +194,7 @@ npm run test channels
 
 and so on.
 
-### Writing tests
+### New tests
 
 If you want to write new tests, you can take any of the `*.test.ts` files (located in [the `test/cases` directory](./test/cases)) as a starting point.
 
@@ -157,7 +202,7 @@ Depending on the complexity of the test case, you may need to modify the logic f
 
 Be sure to also check out the existing [topologies](./topologies); they might come in handy.
 
-### Rebuilding Docker images
+### Rebuild Docker images
 
 In case you ever want to delete an image and rebuild it, you can first obtain its name by running:
 
