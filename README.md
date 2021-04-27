@@ -6,7 +6,7 @@ The purpose of the `lumino-tests` project is to provide tools which can run arbi
 
 The project is written in [TypeScript](https://www.typescriptlang.org/) and uses [Jest](https://jestjs.io/) as its testing framework.
 
-Under the hood, it makes use of both [Docker](https://www.docker.com/) as well as the [Lumino SDK]() in order to set up the testing scenarios and carry out actions in them.
+Under the hood, it makes use of both [Docker](https://www.docker.com/) as well as the [Lumino SDK](https://github.com/rsksmart/lumino-sdk) in order to set up the testing scenarios and carry out actions in them.
 
 ## Getting started
 
@@ -91,7 +91,7 @@ npm install
 
 ## Usage
 
-### Run tests
+### Running tests
 
 To run the entire test suite, execute the following at the root folder:
 
@@ -137,9 +137,9 @@ Time:        559.714 s, estimated 577 s
 Ran all test suites.
 ```
 
-#### Run _some_ tests
+#### Running _some_ tests
 
-Tests can be run individually if needed. A complete list of available test cases can be found in [the cases directory](./test/cases).
+Tests can be run individually if needed. A complete list of available test cases can be found in [the `test/cases` directory](./test/cases).
 
 If, for example, you want to run the specific `channels.test.ts` test, execute:
 
@@ -149,7 +149,13 @@ npm run test channels
 
 and so on.
 
-### Write tests
+### Writing tests
+
+If you want to write new tests, you can take any of the `*.test.ts` files (located in [the `test/cases` directory](./test/cases)) as a starting point.
+
+Depending on the complexity of the test case, you may need to modify the logic for the manager classes located in the [`src` directory](./src).
+
+Be sure to also check out the
 
 ### Rebuilding Docker images
 
@@ -169,5 +175,5 @@ Afterwards, just [re-run the `generateImages` script](#generate-docker-images), 
 
 ## External links
 
-- Lumino
-- Lumino SDK
+- [RIF Lumino Network](https://github.com/rsksmart/lumino)
+- [Lumino JavaScript SDK](https://github.com/rsksmart/lumino-sdk)
