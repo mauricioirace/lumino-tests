@@ -13,7 +13,6 @@
       <li><a href="#prerequisites">Prerequisites</a>
         <ul>
           <li><a href="#nodejs--npm">Node.js & npm</a></li>
-          <li><a href="#typescript">TypeScript</a></li>
           <li><a href="#docker">Docker</a></li>
           <li><a href="#lumino-sdk">Lumino SDK</a></li>
         </ul>
@@ -75,14 +74,6 @@ If you have any doubts please check the official documentation here:
 - [Node.js](https://nodejs.org/en/)
 - [npm | get npm](https://www.npmjs.com/get-npm)
 - [nvm-sh/nvm: Node Version Manager](https://github.com/nvm-sh/nvm)
-
-#### TypeScript
-
-Install TypeScript by running the following terminal command:
-
-```
-npm install typescript
-```
 
 #### Docker
 
