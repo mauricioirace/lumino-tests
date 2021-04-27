@@ -45,9 +45,11 @@ npm install typescript
 
 To install Docker please follow the official instructions at the [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu) page. We recommend the _Install using the repository_ method.
 
-**Make sure** to also follow the steps outlined in the first section of the [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) page, in order to manage Docker as a non-root user. The rest of the sections on that page are not necessary.
+**Make sure** to also follow the steps outlined in the first section of the [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) page, in order to manage Docker as a non-root user. The rest of the sections on said page are not necessary.
 
 #### Lumino SDK
+
+You can find the repo [here](https://github.com/rsksmart/lumino-sdk).
 
 Unfortunately, the latest Lumino SDK binaries have not been published yet. This means that you'll have to build this project too, after cloning it.
 
@@ -61,7 +63,39 @@ To achieve this, follow these steps:
 
 ### Installation
 
-Th
+#### Clone the repo
+
+Clone this repo through your favorite means, such as:
+
+```
+git clone https://github.com/rsksmart/lumino-sdk.git
+```
+
+#### Generate Docker images
+
+The Docker images need to be generated before they can be used in the tests. You can do so by running the `generateImages` script at the root folder:
+
+```bash
+lumino-tests$ ./generateImages
+```
+
+**Important**: this will likely take more than 10 minutes, and will need just a little under 6 GB of free space.
+
+##### Rebuilding Docker images
+
+In case you ever want to delete an image and rebuild it, you can first obtain its name by running:
+
+```bash
+docker image ls
+```
+
+Suppose you want to delete an image called `my-image-name`. You can then delete it by executing:
+
+```bash
+docker image rm my-image-name
+```
+
+Afterwards, just [re-run the `generateImages` script](#generate-docker-images), as it will only rebuild what's missing.
 
 ## Usage
 
