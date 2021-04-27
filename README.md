@@ -155,7 +155,7 @@ If you want to write new tests, you can take any of the `*.test.ts` files (locat
 
 Depending on the complexity of the test case, you may need to modify the logic for the manager classes located in the [`src` directory](./src).
 
-Be sure to also check out the
+Be sure to also check out the existing [topologies](./topologies); they might come in handy.
 
 ### Rebuilding Docker images
 
