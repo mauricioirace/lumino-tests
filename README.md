@@ -1,47 +1,45 @@
 <h1 align="center">lumino-tests</h1>
 
-<details open="open">
-  <summary><h2 style="display: inline-block">Table of Contents</h2></summary>
-  <ol>
-    <li><a href="#about">About</a>
-      <ul>
-        <li><a href="#how-it-works">How it works</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a>
-          <ul>
-            <li><a href="#nodejs--npm">Node.js & npm</a></li>
-            <li><a href="#typescript">TypeScript</a></li>
-            <li><a href="#docker">Docker</a></li>
-            <li><a href="#lumino-sdk">Lumino SDK</a></li>
-          </ul>
-        </li>
-        <li><a href="#installation">Installation</a>
-          <ul>
-            <li><a href="#repo">Repo</a></li>
-            <li><a href="#docker-images">Docker images</a></li>
-            <li><a href="#project">Project</a></li>
-          </ul>
-        </li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a>
-      <ul>
-        <li><a href="#test-suite">Test suite</a>
-          <ul>
-            <li><a href="#individual-tests">Individual tests</a></li>
-          </ul>
-        </li>
-        <li><a href="#new-tests">New tests</a>
-        <li><a href="#rebuild-docker-images">Rebuild Docker images</a>
-      </ul>
-    </li>
-    <li><a href="#external-links">External links</a></li>
-  </ol>
-</details>
+<summary><h2 style="display: inline-block">Table of Contents</h2></summary>
+<ol>
+  <li><a href="#about">About</a>
+    <ul>
+      <li><a href="#how-it-works">How it works</a></li>
+    </ul>
+  </li>
+  <li>
+    <a href="#getting-started">Getting started</a>
+    <ul>
+      <li><a href="#prerequisites">Prerequisites</a>
+        <ul>
+          <li><a href="#nodejs--npm">Node.js & npm</a></li>
+          <li><a href="#typescript">TypeScript</a></li>
+          <li><a href="#docker">Docker</a></li>
+          <li><a href="#lumino-sdk">Lumino SDK</a></li>
+        </ul>
+      </li>
+      <li><a href="#installation">Installation</a>
+        <ul>
+          <li><a href="#repo">Repo</a></li>
+          <li><a href="#docker-images">Docker images</a></li>
+          <li><a href="#project">Project</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#usage">Usage</a>
+    <ul>
+      <li><a href="#test-suite">Test suite</a>
+        <ul>
+          <li><a href="#individual-tests">Individual tests</a></li>
+        </ul>
+      </li>
+      <li><a href="#new-tests">New tests</a>
+      <li><a href="#rebuild-docker-images">Rebuild Docker images</a>
+    </ul>
+  </li>
+  <li><a href="#external-links">External links</a></li>
+</ol>
 
 ## About
 
