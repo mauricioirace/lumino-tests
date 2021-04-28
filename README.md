@@ -48,7 +48,7 @@ The purpose of the `lumino-tests` project is to provide tools which can run arbi
 
 The project is written chiefly in [TypeScript](https://www.typescriptlang.org/) and uses [Jest](https://jestjs.io/) as its testing framework.
 
-Under the hood it makes use of both [Docker](https://www.docker.com/), as well as the [Lumino SDK](https://github.com/rsksmart/lumino-sdk), in order to boot up testing scenarios and carry out actions in them.
+Under the hood it makes use of [Docker](https://www.docker.com/) and [Testcontainers](https://github.com/testcontainers/testcontainers-node), as well as the [Lumino SDK](https://github.com/rsksmart/lumino-sdk), in order to boot up testing scenarios and carry out actions in them.
 
 ## Getting Started
 
