@@ -1,16 +1,11 @@
 import {SetupToken} from '../types/setup';
-import {INVALID_TOKEN, Token} from '../constants';
+import {Token} from '../constants';
 import Web3 from 'web3';
 
-export function getTokenAddress(symbol: string): string {
-    switch (symbol) {
-        case Token.LUM.toString():
-            return '0x0E569743F573323F430B6E14E5676EB0cCAd03D9';
-        case Token.RIF.toString():
-            return '0x1Af2844A588759D0DE58abD568ADD96BB8B3B6D8';
-        default:
-            return INVALID_TOKEN;
-    }
+
+export const tokenAddresses = {
+    [Token.LUM.toString()]: '0x0E569743F573323F430B6E14E5676EB0cCAd03D9',
+    [Token.RIF.toString()]: '0x1Af2844A588759D0DE58abD568ADD96BB8B3B6D8'
 }
 
 export function isValidTokenSymbol(symbol: string): boolean {
