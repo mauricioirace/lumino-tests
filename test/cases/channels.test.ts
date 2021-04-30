@@ -4,9 +4,10 @@ import { tokenAddresses, toWei } from "../../src/util/token";
 import { LuminoTestEnvironment } from "../../src/types/lumino-test-environment";
 import { Dictionary } from "../../src/util/collection";
 import { LuminoNode } from "../../src/types/node";
-import { Token } from "../../src/constants";
 
-const TIMEOUT = 10 * 60 * 1000;
+const SETUP_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+const TEARDOWN_TIMEOUT = 1 * 60 * 1000; // 1 minute
+const TEST_TIMEOUT = 1 * 60 * 1000; // 1 minute
 
 describe("Channels", () => {
   let nodes: Dictionary<LuminoNode>;
@@ -15,11 +16,11 @@ describe("Channels", () => {
   beforeAll(async () => {
     tester = await setupTestEnvironment(noChannels);
     nodes = tester.nodes as Dictionary<LuminoNode>;
-  }, TIMEOUT);
+  }, SETUP_TIMEOUT);
 
   afterAll(async () => {
     await tester.stop();
-  }, TIMEOUT);
+  }, TEARDOWN_TIMEOUT);
 
   it(
     "should open a channel with no balance",
@@ -36,7 +37,7 @@ describe("Channels", () => {
         partnerAddress,
       });
     },
-    TIMEOUT
+    TEST_TIMEOUT
   );
 
   it(
@@ -54,7 +55,7 @@ describe("Channels", () => {
         partnerAddress,
       });
     },
-    60 * 1000
+    TEST_TIMEOUT
   );
 
   it(
@@ -77,7 +78,7 @@ describe("Channels", () => {
         partnerAddress,
       });
     },
-    60 * 1000
+    TEST_TIMEOUT
   );
 
   it(
@@ -99,7 +100,7 @@ describe("Channels", () => {
         partnerAddress,
       });
     },
-    60 * 1000
+    TEST_TIMEOUT
   );
 
   it(
@@ -121,7 +122,7 @@ describe("Channels", () => {
         partnerAddress,
       });
     },
-    60 * 1000
+    TEST_TIMEOUT
   );
 
   it(
@@ -137,6 +138,6 @@ describe("Channels", () => {
         partnerAddress: nodes.initiator.client.address,
       });
     },
-    60 * 1000
+    TEST_TIMEOUT
   );
 });
