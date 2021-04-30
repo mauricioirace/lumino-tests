@@ -6,14 +6,15 @@ import { LuminoTestEnvironment } from "../../src/types/lumino-test-environment";
 import { LuminoNode } from "../../src/types/node";
 import { isEmpty } from "../utils";
 
-const TIMEOUT = 10 * 60 * 1000; // 10 minutes
+const SETUP_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+const TEARDOWN_TIMEOUT = 1 * 60 * 1000; // 1 minute
 
 describe("bootstrapping", () => {
   let env: LuminoTestEnvironment;
 
   afterEach(async () => {
     await env.stop();
-  }, TIMEOUT);
+  }, TEARDOWN_TIMEOUT);
 
   it(
     "should be able to boot up a basic node setup",
@@ -21,7 +22,7 @@ describe("bootstrapping", () => {
       env = await setupTestEnvironment(basic as SetupJson);
       verifyEnv(env);
     },
-    TIMEOUT
+    SETUP_TIMEOUT
   );
 
   it(
@@ -30,7 +31,7 @@ describe("bootstrapping", () => {
       env = await setupTestEnvironment(advanced as SetupJson);
       verifyEnv(env);
     },
-    TIMEOUT
+    SETUP_TIMEOUT
   );
 });
 
