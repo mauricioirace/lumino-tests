@@ -4,7 +4,8 @@ import setupTestEnvironment from "../../src";
 import { LuminoTestEnvironment } from "../../src/types/lumino-test-environment";
 import { LuminoNode } from "../../src/types/node";
 import { Dictionary } from "../../src/util/collection";
-import { ChannelTestCase, sleep, verifyChannel } from "../utils";
+import { ChannelState, ChannelTestCase, sleep, verifyChannel } from "../utils";
+
 const SETUP_TIMEOUT = 5 * 60 * 1000; // 5 minutes
 const TEARDOWN_TIMEOUT = 1 * 60 * 1000; // 1 minute
 const TEST_TIMEOUT = 1 * 60 * 1000; // 1 minute
@@ -13,7 +14,7 @@ describe("payments", () => {
   let nodes: Dictionary<LuminoNode>;
   let tester: LuminoTestEnvironment;
 
-  // starting balance for both channels
+  // starting balance for each node
   const initiatorDeposit = p2p.channels[0].participant1.deposit;
   const targetDeposit = p2p.channels[0].participant2.deposit;
 
@@ -38,7 +39,7 @@ describe("payments", () => {
         nodes.target.client.address,
         toWei(initiatorDeposit),
         toWei(initiatorDeposit - initiatorPayment),
-        "opened"
+        ChannelState.OPEN
       );
 
       const tcTarget = new ChannelTestCase(
@@ -46,7 +47,7 @@ describe("payments", () => {
         nodes.initiator.client.address,
         toWei(targetDeposit),
         toWei(targetDeposit + initiatorPayment),
-        "opened"
+        ChannelState.OPEN
       );
 
       await nodes.initiator.client.sdk.makePayment({
@@ -71,7 +72,7 @@ describe("payments", () => {
         nodes.target.client.address,
         toWei(initiatorDeposit),
         toWei(initiatorDeposit - initiatorPayment + targetPayment),
-        "opened"
+        ChannelState.OPEN
       );
 
       const tcTarget = new ChannelTestCase(
@@ -79,7 +80,7 @@ describe("payments", () => {
         nodes.initiator.client.address,
         toWei(targetDeposit),
         toWei(targetDeposit + initiatorPayment - targetPayment),
-        "opened"
+        ChannelState.OPEN
       );
 
       await nodes.target.client.sdk.makePayment({

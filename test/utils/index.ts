@@ -8,19 +8,24 @@ export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+export enum ChannelState {
+  OPEN = "opened",
+  CLOSED = "closed",
+}
+
 export class ChannelTestCase {
   token: string; // hex address
   partner: string; // hex address
   deposit: number; // in Wei
   balance: number; // in Wei
-  state: string; // "opened", "closed"
+  state: ChannelState; // "opened", "closed"
 
   constructor(
     tokenAddr: string,
     partnerAddr: string,
     totalDeposit: number,
     balance: number,
-    channelState: string
+    channelState: ChannelState
   ) {
     this.token = tokenAddr;
     this.partner = partnerAddr;

@@ -4,7 +4,7 @@ import { tokenAddresses, toWei } from "../../src/util/token";
 import { LuminoTestEnvironment } from "../../src/types/lumino-test-environment";
 import { Dictionary } from "../../src/util/collection";
 import { LuminoNode } from "../../src/types/node";
-import { ChannelTestCase, verifyChannel } from "../utils";
+import { ChannelState, ChannelTestCase, verifyChannel } from "../utils";
 
 const SETUP_TIMEOUT = 5 * 60 * 1000; // 5 minutes
 const TEARDOWN_TIMEOUT = 1 * 60 * 1000; // 1 minute
@@ -31,7 +31,7 @@ describe("channels", () => {
         "0x8645315E490A05FeE7EDcF671B096E82D9b616a4",
         toWei(0),
         toWei(0),
-        "opened"
+        ChannelState.OPEN
       );
 
       await nodes.initiator.client.sdk.openChannel({
@@ -53,7 +53,7 @@ describe("channels", () => {
         "0x8645315E490A05FeE7EDcF671B096E82D9b616a4", // previously opened channel
         toWei(1),
         toWei(1),
-        "opened"
+        ChannelState.OPEN
       );
 
       await nodes.initiator.client.sdk.depositTokens({
@@ -75,7 +75,7 @@ describe("channels", () => {
         "0xb9eA1f16E4f1E5CAF211aF150F2147eEd9Fb2245",
         toWei(1),
         toWei(1),
-        "opened"
+        ChannelState.OPEN
       );
 
       await nodes.initiator.client.sdk.openChannel({
@@ -97,7 +97,7 @@ describe("channels", () => {
         "0x8645315E490A05FeE7EDcF671B096E82D9b616a4",
         toWei(1),
         toWei(1),
-        "closed"
+        ChannelState.CLOSED
       );
 
       await nodes.initiator.client.sdk.closeChannel({
@@ -112,7 +112,7 @@ describe("channels", () => {
         "0x8645315E490A05FeE7EDcF671B096E82D9b616a4",
         toWei(1),
         toWei(1),
-        "closed"
+        ChannelState.CLOSED
       );
 
       await nodes.initiator.client.sdk.closeChannel({
@@ -133,7 +133,7 @@ describe("channels", () => {
         nodes.target.client.address,
         toWei(0),
         toWei(0),
-        "closed"
+        ChannelState.CLOSED
       );
 
       // this channel hasn't been opened yet

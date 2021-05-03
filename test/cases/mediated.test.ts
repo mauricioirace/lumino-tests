@@ -4,7 +4,7 @@ import setupTestEnvironment from "../../src";
 import { LuminoTestEnvironment } from "../../src/types/lumino-test-environment";
 import { LuminoNode } from "../../src/types/node";
 import { Dictionary } from "../../src/util/collection";
-import { ChannelTestCase, sleep, verifyChannel } from "../utils";
+import { ChannelState, ChannelTestCase, sleep, verifyChannel } from "../utils";
 
 const SETUP_TIMEOUT = 5 * 60 * 1000; // 5 minutes
 const TEARDOWN_TIMEOUT = 1 * 60 * 1000; // 1 minute
@@ -39,7 +39,7 @@ describe("mediated payments", () => {
         nodes.mediator.client.address,
         toWei(initiatorDeposit),
         toWei(initiatorDeposit - initiatorPayment),
-        "opened"
+        ChannelState.OPEN
       );
 
       const tcMediatorInitiator = new ChannelTestCase(
@@ -47,7 +47,7 @@ describe("mediated payments", () => {
         nodes.initiator.client.address,
         toWei(mediatorDeposit),
         toWei(mediatorDeposit + initiatorPayment),
-        "opened"
+        ChannelState.OPEN
       );
 
       const tcMediatorTarget = new ChannelTestCase(
@@ -55,7 +55,7 @@ describe("mediated payments", () => {
         nodes.target.client.address,
         toWei(mediatorDeposit),
         toWei(mediatorDeposit - initiatorPayment),
-        "opened"
+        ChannelState.OPEN
       );
 
       const tcTarget = new ChannelTestCase(
@@ -63,7 +63,7 @@ describe("mediated payments", () => {
         nodes.mediator.client.address,
         toWei(targetDeposit),
         toWei(targetDeposit + initiatorPayment),
-        "opened"
+        ChannelState.OPEN
       );
 
       await nodes.initiator.client.sdk.makePayment({
