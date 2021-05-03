@@ -20,7 +20,7 @@ describe("bootstrapping", () => {
     "should be able to boot up a basic node setup",
     async () => {
       env = await setupTestEnvironment(basic as SetupJson);
-      verifyEnv(env);
+      await verifyEnv(env);
     },
     SETUP_TIMEOUT
   );
@@ -29,7 +29,7 @@ describe("bootstrapping", () => {
     "should be able to boot up an advanced node setup",
     async () => {
       env = await setupTestEnvironment(advanced as SetupJson);
-      verifyEnv(env);
+      await verifyEnv(env);
     },
     SETUP_TIMEOUT
   );

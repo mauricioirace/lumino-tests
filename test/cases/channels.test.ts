@@ -58,7 +58,7 @@ describe("channels", () => {
         rskPartnerAddress: tc.partner,
       });
 
-      verifyChannel(nodes.initiator.client.sdk, tc);
+      await verifyChannel(nodes.initiator.client.sdk, tc);
     },
     TEST_TIMEOUT
   );
@@ -79,7 +79,7 @@ describe("channels", () => {
         partnerAddress: tc.partner,
       });
 
-      verifyChannel(nodes.initiator.client.sdk, tc);
+      await verifyChannel(nodes.initiator.client.sdk, tc);
     },
     TEST_TIMEOUT
   );
@@ -100,7 +100,7 @@ describe("channels", () => {
         rskPartnerAddress: tc.partner,
       });
 
-      verifyChannel(nodes.initiator.client.sdk, tc);
+      await verifyChannel(nodes.initiator.client.sdk, tc);
     },
     TEST_TIMEOUT
   );
@@ -120,7 +120,7 @@ describe("channels", () => {
         partnerAddress: tc1.partner,
       });
 
-      verifyChannel(nodes.initiator.client.sdk, tc1);
+      await verifyChannel(nodes.initiator.client.sdk, tc1);
 
       const tc2 = new ChannelTestCase(
         tokenAddresses.LUM,
@@ -134,7 +134,7 @@ describe("channels", () => {
         partnerAddress: tc2.partner,
       });
 
-      verifyChannel(nodes.initiator.client.sdk, tc2);
+      await verifyChannel(nodes.initiator.client.sdk, tc2);
     },
     TEST_TIMEOUT
   );
@@ -161,7 +161,7 @@ describe("channels", () => {
         partnerAddress: nodes.initiator.client.address,
       });
 
-      verifyChannel(nodes.target.client.sdk, tc);
+      await verifyChannel(nodes.initiator.client.sdk, tc);
     },
     TEST_TIMEOUT
   );
