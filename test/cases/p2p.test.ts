@@ -4,93 +4,95 @@ import setupTestEnvironment from "../../src";
 import { LuminoTestEnvironment } from "../../src/types/lumino-test-environment";
 import { LuminoNode } from "../../src/types/node";
 import { Dictionary } from "../../src/util/collection";
-import { Token } from "../../src/constants";
-import { sleep } from "../utils";
+import { ChannelTestCase, sleep, verifyChannel } from "../utils";
+const SETUP_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+const TEARDOWN_TIMEOUT = 1 * 60 * 1000; // 1 minute
+const TEST_TIMEOUT = 1 * 60 * 1000; // 1 minute
 
-const TIMEOUT = 10 * 60 * 1000;
-
-describe("Payments", () => {
+describe("payments", () => {
   let nodes: Dictionary<LuminoNode>;
   let tester: LuminoTestEnvironment;
+
+  // starting balance for both channels
+  const initiatorDeposit = p2p.channels[0].participant1.deposit;
+  const targetDeposit = p2p.channels[0].participant2.deposit;
+
+  // amounts for payments to be made from each node
+  const initiatorPayment = 1;
+  const targetPayment = 2;
 
   beforeAll(async () => {
     tester = await setupTestEnvironment(p2p);
     nodes = tester.nodes as Dictionary<LuminoNode>;
-  }, TIMEOUT);
+  }, SETUP_TIMEOUT);
 
   afterAll(async () => {
     await tester.stop();
-  }, TIMEOUT);
+  }, TEARDOWN_TIMEOUT);
 
   it(
-    "should make a payment",
+    "should be able to be made in one direction",
     async () => {
-      const OldInitiatorChannel = await nodes.initiator.client.sdk.getChannel({
-        tokenAddress: tokenAddresses.LUM,
-        partnerAddress: nodes.target.client.address,
-      });
-      const OldTargetChannel = await nodes.target.client.sdk.getChannel({
-        tokenAddress: tokenAddresses.LUM,
-        partnerAddress: nodes.initiator.client.address,
-      });
-      console.debug(OldInitiatorChannel.balance);
-      console.debug(OldTargetChannel);
+      const tcInitiator = new ChannelTestCase(
+        tokenAddresses.LUM,
+        nodes.target.client.address,
+        toWei(initiatorDeposit),
+        toWei(initiatorDeposit - initiatorPayment),
+        "opened"
+      );
+
+      const tcTarget = new ChannelTestCase(
+        tokenAddresses.LUM,
+        nodes.initiator.client.address,
+        toWei(targetDeposit),
+        toWei(targetDeposit + initiatorPayment),
+        "opened"
+      );
+
       await nodes.initiator.client.sdk.makePayment({
         tokenAddress: tokenAddresses.LUM,
         partnerAddress: nodes.target.client.address,
-        amountOnWei: toWei(1),
+        amountOnWei: toWei(initiatorPayment),
       });
+
       await sleep(5000);
-      const initiatorChannel = await nodes.initiator.client.sdk.getChannel({
-        tokenAddress: tokenAddresses.LUM,
-        partnerAddress: nodes.target.client.address,
-      });
-      const targetChannel = await nodes.target.client.sdk.getChannel({
-        tokenAddress: tokenAddresses.LUM,
-        partnerAddress: nodes.initiator.client.address,
-      });
-      expect(initiatorChannel.balance).toBe(
-        OldInitiatorChannel.balance - toWei(1)
-      );
-      expect(targetChannel.balance).toBe(OldTargetChannel.balance + toWei(1));
+
+      await verifyChannel(nodes.initiator.client.sdk, tcInitiator);
+      await verifyChannel(nodes.target.client.sdk, tcTarget);
     },
-    TIMEOUT
+    TEST_TIMEOUT
   );
 
   it(
-    "should make payments in both directions",
+    "should be able to be made in both directions",
     async () => {
-      const OldInitiatorChannel = await nodes.initiator.client.sdk.getChannel({
-        tokenAddress: tokenAddresses.LUM,
-        partnerAddress: nodes.target.client.address,
-      });
-      const OldTargetChannel = await nodes.target.client.sdk.getChannel({
-        tokenAddress: tokenAddresses.LUM,
-        partnerAddress: nodes.initiator.client.address,
-      });
-      console.debug(OldInitiatorChannel.balance);
-      console.debug(OldTargetChannel);
-      await nodes.initiator.client.sdk.makePayment({
-        tokenAddress: tokenAddresses.LUM,
-        partnerAddress: nodes.target.client.address,
-        amountOnWei: toWei(1),
-      });
+      const tcInitiator = new ChannelTestCase(
+        tokenAddresses.LUM,
+        nodes.target.client.address,
+        toWei(initiatorDeposit),
+        toWei(initiatorDeposit - initiatorPayment + targetPayment),
+        "opened"
+      );
+
+      const tcTarget = new ChannelTestCase(
+        tokenAddresses.LUM,
+        nodes.initiator.client.address,
+        toWei(targetDeposit),
+        toWei(targetDeposit + initiatorPayment - targetPayment),
+        "opened"
+      );
+
       await nodes.target.client.sdk.makePayment({
         tokenAddress: tokenAddresses.LUM,
         partnerAddress: nodes.initiator.client.address,
-        amountOnWei: toWei(1),
+        amountOnWei: toWei(targetPayment),
       });
-      const initiatorChannel = await nodes.initiator.client.sdk.getChannel({
-        tokenAddress: tokenAddresses.LUM,
-        partnerAddress: nodes.target.client.address,
-      });
-      const targetChannel = await nodes.target.client.sdk.getChannel({
-        tokenAddress: tokenAddresses.LUM,
-        partnerAddress: nodes.initiator.client.address,
-      });
-      expect(initiatorChannel.balance === OldInitiatorChannel.balance);
-      expect(targetChannel.balance === OldTargetChannel.balance);
+
+      await sleep(5000);
+
+      await verifyChannel(nodes.initiator.client.sdk, tcInitiator);
+      await verifyChannel(nodes.target.client.sdk, tcTarget);
     },
-    TIMEOUT
+    TEST_TIMEOUT
   );
 });

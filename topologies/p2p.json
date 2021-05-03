@@ -1,43 +1,43 @@
 {
-    "nodes": [
+  "nodes": [
+    {
+      "name": "initiator",
+      "tokens": [
         {
-            "name": "initiator",
-            "tokens": [
-                {
-                    "symbol": "LUM",
-                    "amount": 100
-                },
-                {
-                    "symbol": "RIF",
-                    "amount": 100
-                }
-            ]
+          "symbol": "LUM",
+          "amount": 100
         },
         {
-            "name": "target",
-            "tokens":[
-                {
-                    "symbol": "LUM",
-                    "amount": 100
-                },
-                {
-                    "symbol": "RIF",
-                    "amount": 100
-                }
-            ]
+          "symbol": "RIF",
+          "amount": 100
         }
-    ],
-    "channels": [
+      ]
+    },
+    {
+      "name": "target",
+      "tokens": [
         {
-            "tokenSymbol": "LUM",
-            "participant1": {
-                "node": "initiator",
-                "deposit": 10
-            },
-            "participant2": {
-                "node": "target",
-                "deposit": 10
-            }
+          "symbol": "LUM",
+          "amount": 100
+        },
+        {
+          "symbol": "RIF",
+          "amount": 100
         }
-    ]
+      ]
+    }
+  ],
+  "channels": [
+    {
+      "tokenSymbol": "LUM",
+      "participant1": {
+        "node": "initiator",
+        "deposit": 10
+      },
+      "participant2": {
+        "node": "target",
+        "deposit": 10
+      }
+    }
+  ]
 }

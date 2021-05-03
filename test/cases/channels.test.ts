@@ -4,30 +4,11 @@ import { tokenAddresses, toWei } from "../../src/util/token";
 import { LuminoTestEnvironment } from "../../src/types/lumino-test-environment";
 import { Dictionary } from "../../src/util/collection";
 import { LuminoNode } from "../../src/types/node";
-import Lumino from "lumino-js-sdk";
+import { ChannelTestCase, verifyChannel } from "../utils";
 
 const SETUP_TIMEOUT = 5 * 60 * 1000; // 5 minutes
 const TEARDOWN_TIMEOUT = 1 * 60 * 1000; // 1 minute
 const TEST_TIMEOUT = 1 * 60 * 1000; // 1 minute
-
-class ChannelTestCase {
-  token: string; // hex address
-  partner: string; // hex address
-  deposit: number; // in Wei
-  state: string; // "opened", "closed"
-
-  constructor(
-    tokenAddr: string,
-    partnerAddr: string,
-    totalDeposit: number,
-    channelState: string
-  ) {
-    this.token = tokenAddr;
-    this.partner = partnerAddr;
-    this.deposit = totalDeposit;
-    this.state = channelState;
-  }
-}
 
 describe("channels", () => {
   let nodes: Dictionary<LuminoNode>;
@@ -43,11 +24,12 @@ describe("channels", () => {
   }, TEARDOWN_TIMEOUT);
 
   it(
-    "should be able to be opened with no balance",
+    "should be able to be opened with no deposit",
     async () => {
       const tc = new ChannelTestCase(
         tokenAddresses.LUM,
         "0x8645315E490A05FeE7EDcF671B096E82D9b616a4",
+        toWei(0),
         toWei(0),
         "opened"
       );
@@ -70,6 +52,7 @@ describe("channels", () => {
         tokenAddresses.LUM,
         "0x8645315E490A05FeE7EDcF671B096E82D9b616a4", // previously opened channel
         toWei(1),
+        toWei(1),
         "opened"
       );
 
@@ -90,6 +73,7 @@ describe("channels", () => {
       const tc = new ChannelTestCase(
         tokenAddresses.LUM,
         "0xb9eA1f16E4f1E5CAF211aF150F2147eEd9Fb2245",
+        toWei(1),
         toWei(1),
         "opened"
       );
@@ -112,6 +96,7 @@ describe("channels", () => {
         tokenAddresses.LUM,
         "0x8645315E490A05FeE7EDcF671B096E82D9b616a4",
         toWei(1),
+        toWei(1),
         "closed"
       );
 
@@ -125,6 +110,7 @@ describe("channels", () => {
       const tc2 = new ChannelTestCase(
         tokenAddresses.LUM,
         "0x8645315E490A05FeE7EDcF671B096E82D9b616a4",
+        toWei(1),
         toWei(1),
         "closed"
       );
@@ -146,6 +132,7 @@ describe("channels", () => {
         tokenAddresses.LUM,
         nodes.target.client.address,
         toWei(0),
+        toWei(0),
         "closed"
       );
 
@@ -166,15 +153,3 @@ describe("channels", () => {
     TEST_TIMEOUT
   );
 });
-
-async function verifyChannel(sdk: Lumino, tc: ChannelTestCase): Promise<void> {
-  const channelInfo = await sdk.getChannel({
-    tokenAddress: tc.token,
-    partnerAddress: tc.partner,
-  });
-
-  expect(channelInfo.token_address).toBe(tc.token);
-  expect(channelInfo.partner_address).toBe(tc.partner);
-  expect(channelInfo.total_deposit).toBe(tc.deposit);
-  expect(channelInfo.state).toBe(tc.state);
-}
