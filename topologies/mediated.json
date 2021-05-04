@@ -12,7 +12,7 @@
                     "amount": 100
                 }
             ]
-        }, 
+        },
         {
             "name": "mediator",
             "tokens": [
@@ -25,10 +25,10 @@
                     "amount": 100
                 }
             ]
-        }, 
+        },
         {
             "name": "target",
-            "tokens":[
+            "tokens": [
                 {
                     "symbol": "LUM",
                     "amount": 100
@@ -51,7 +51,7 @@
                 "node": "mediator",
                 "deposit": 10
             }
-        }, 
+        },
         {
             "tokenSymbol": "LUM",
             "participant1": {
