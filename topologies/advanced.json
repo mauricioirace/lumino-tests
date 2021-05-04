@@ -1,37 +1,37 @@
 {
-    "enableExplorer": false,
-    "nodes": [
+  "enableExplorer": false,
+  "nodes": [
+    {
+      "name": "node0",
+      "enableHub": false,
+      "tokens": [
         {
-            "name": "firstNode",
-            "enableHub": false,
-            "tokens": [
-                {
-                    "symbol": "LUM",
-                    "amount": 1
-                },
-                {
-                    "symbol": "RIF",
-                    "amount": 2
-                }
-            ]
+          "symbol": "LUM",
+          "amount": 1
         },
         {
-            "name": "secondNode",
-            "enableHub": false,
-            "tokens": []
+          "symbol": "RIF",
+          "amount": 2
         }
-    ],
-    "channels": [
-        {
-            "tokenSymbol": "LUM",
-            "participant1": {
-                "node": "firstNode",
-                "deposit": 1
-            },
-            "participant2": {
-                "node": "secondNode",
-                "deposit": 0
-            }
-        }
-    ]
+      ]
+    },
+    {
+      "name": "node1",
+      "enableHub": false,
+      "tokens": []
+    }
+  ],
+  "channels": [
+    {
+      "tokenSymbol": "LUM",
+      "participant1": {
+        "node": "node0",
+        "deposit": 1
+      },
+      "participant2": {
+        "node": "node1",
+        "deposit": 0
+      }
+    }
+  ]
 }

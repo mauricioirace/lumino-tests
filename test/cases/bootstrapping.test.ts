@@ -6,52 +6,41 @@ import { LuminoTestEnvironment } from "../../src/types/lumino-test-environment";
 import { LuminoNode } from "../../src/types/node";
 import { isEmpty } from "../utils";
 
-const TIMEOUT = 10 * 60 * 1000;
+const SETUP_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+const TEARDOWN_TIMEOUT = 1 * 60 * 1000; // 1 minute
 
-describe("Bootstrapping Basic", () => {
-  let basicEnvironment: LuminoTestEnvironment;
+describe("bootstrapping", () => {
+  let env: LuminoTestEnvironment;
 
-  it(
-    "should have basic nodes ready",
-    async () => {
-      basicEnvironment = await setupTestEnvironment(basic as SetupJson);
-      expect(Object.keys(basicEnvironment.nodes).length).toBe(2);
-      const node0 = basicEnvironment.nodes.node0 as LuminoNode;
-      const node1 = basicEnvironment.nodes.node1 as LuminoNode;
-      const mauriAddress = (await node0.client.sdk.getAddress()).our_address;
-      const jonaAddress = (await node1.client.sdk.getAddress()).our_address;
-      expect(isEmpty(mauriAddress)).toBe(false);
-      expect(isEmpty(jonaAddress)).toBe(false);
-    },
-    TIMEOUT
-  );
-
-  afterAll(async () => {
-    await basicEnvironment.stop();
-  }, TIMEOUT);
-});
-
-describe("Bootstrapping Advanced", () => {
-  let advancedEnvironment: LuminoTestEnvironment;
+  afterEach(async () => {
+    await env.stop();
+  }, TEARDOWN_TIMEOUT);
 
   it(
-    "should have advanced nodes ready",
+    "should be able to boot up a basic node setup",
     async () => {
-      advancedEnvironment = await setupTestEnvironment(advanced as SetupJson);
-      expect(Object.keys(advancedEnvironment.nodes).length).toBe(2);
-      const firstNode = advancedEnvironment.nodes.firstNode as LuminoNode;
-      const secondNode = advancedEnvironment.nodes.secondNode as LuminoNode;
-      const firstAddress = (await firstNode.client.sdk.getAddress())
-        .our_address;
-      const secondAddress = (await secondNode.client.sdk.getAddress())
-        .our_address;
-      expect(isEmpty(firstAddress)).toBe(false);
-      expect(isEmpty(secondAddress)).toBe(false);
+      env = await setupTestEnvironment(basic as SetupJson);
+      await verifyEnv(env);
     },
-    TIMEOUT
+    SETUP_TIMEOUT
   );
 
-  afterAll(async () => {
-    await advancedEnvironment.stop();
-  }, TIMEOUT);
+  it(
+    "should be able to boot up an advanced node setup",
+    async () => {
+      env = await setupTestEnvironment(advanced as SetupJson);
+      await verifyEnv(env);
+    },
+    SETUP_TIMEOUT
+  );
 });
+
+async function verifyEnv(env: LuminoTestEnvironment): Promise<void> {
+  expect(Object.keys(env.nodes).length).toBe(2);
+  const firstNode = env.nodes.node0 as LuminoNode;
+  const secondNode = env.nodes.node1 as LuminoNode;
+  const firstAddr = (await firstNode.client.sdk.getAddress()).our_address;
+  const secondAddr = (await secondNode.client.sdk.getAddress()).our_address;
+  expect(isEmpty(firstAddr)).toBe(false);
+  expect(isEmpty(secondAddr)).toBe(false);
+}

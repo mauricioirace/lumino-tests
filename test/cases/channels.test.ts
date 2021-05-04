@@ -1,142 +1,155 @@
 import setupTestEnvironment from "../../src";
 import noChannels from "../../topologies/no-channels.json";
-import { getTokenAddress, toWei } from "../../src/util/token";
+import { tokenAddresses, toWei } from "../../src/util/token";
 import { LuminoTestEnvironment } from "../../src/types/lumino-test-environment";
 import { Dictionary } from "../../src/util/collection";
 import { LuminoNode } from "../../src/types/node";
-import { Token } from "../../src/constants";
+import { ChannelState, ChannelTestCase, verifyChannel } from "../utils";
 
-const TIMEOUT = 10 * 60 * 1000;
+const SETUP_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+const TEARDOWN_TIMEOUT = 1 * 60 * 1000; // 1 minute
+const TEST_TIMEOUT = 1 * 60 * 1000; // 1 minute
 
-describe("Channels", () => {
+describe("channels", () => {
   let nodes: Dictionary<LuminoNode>;
-  let tester: LuminoTestEnvironment;
+  let env: LuminoTestEnvironment;
 
   beforeAll(async () => {
-    tester = await setupTestEnvironment(noChannels);
-    nodes = tester.nodes as Dictionary<LuminoNode>;
-  }, TIMEOUT);
+    env = await setupTestEnvironment(noChannels);
+    nodes = env.nodes as Dictionary<LuminoNode>;
+  }, SETUP_TIMEOUT);
 
   afterAll(async () => {
-    await tester.stop();
-  }, TIMEOUT);
+    await env.stop();
+  }, TEARDOWN_TIMEOUT);
 
   it(
-    "should open a channel with no balance",
+    "should be able to be opened with no deposit",
     async () => {
-      const tokenAddress = getTokenAddress(Token.LUM.toString());
-      const partnerAddress = "0x8645315E490A05FeE7EDcF671B096E82D9b616a4";
+      const tc = new ChannelTestCase(
+        tokenAddresses.LUM,
+        "0x8645315E490A05FeE7EDcF671B096E82D9b616a4",
+        toWei(0),
+        toWei(0),
+        ChannelState.OPEN
+      );
+
       await nodes.initiator.client.sdk.openChannel({
-        tokenAddress,
-        amountOnWei: toWei(0),
-        rskPartnerAddress: partnerAddress,
+        tokenAddress: tc.token,
+        amountOnWei: tc.deposit,
+        rskPartnerAddress: tc.partner,
       });
-      await nodes.initiator.client.sdk.getChannel({
-        tokenAddress,
-        partnerAddress,
-      });
+
+      await verifyChannel(nodes.initiator.client.sdk, tc);
     },
-    TIMEOUT
+    TEST_TIMEOUT
   );
 
   it(
-    "should open a channel with 1 token",
+    "should be able to have 1 token deposited",
     async () => {
-      const tokenAddress = getTokenAddress(Token.LUM.toString());
-      const partnerAddress = "0xb9eA1f16E4f1E5CAF211aF150F2147eEd9Fb2245";
-      await nodes.initiator.client.sdk.openChannel({
-        tokenAddress,
-        amountOnWei: toWei(0),
-        rskPartnerAddress: partnerAddress,
-      });
-      await nodes.initiator.client.sdk.getChannel({
-        tokenAddress,
-        partnerAddress,
-      });
-    },
-    60 * 1000
-  );
+      const tc = new ChannelTestCase(
+        tokenAddresses.LUM,
+        "0x8645315E490A05FeE7EDcF671B096E82D9b616a4", // previously opened channel
+        toWei(1),
+        toWei(1),
+        ChannelState.OPEN
+      );
 
-  it(
-    "should deposit 1 token",
-    async () => {
-      const tokenAddress = getTokenAddress(Token.LUM.toString());
-      const partnerAddress = "0x907E188cAFdE3913296c3d526cD06F103Dbf15a3";
-      await nodes.initiator.client.sdk.openChannel({
-        tokenAddress,
-        amountOnWei: toWei(0),
-        rskPartnerAddress: partnerAddress,
-      });
       await nodes.initiator.client.sdk.depositTokens({
-        tokenAddress,
-        amountOnWei: toWei(1),
-        partnerAddress: partnerAddress,
+        tokenAddress: tc.token,
+        amountOnWei: tc.deposit,
+        partnerAddress: tc.partner,
       });
-      await nodes.initiator.client.sdk.getChannel({
-        tokenAddress,
-        partnerAddress,
-      });
+
+      await verifyChannel(nodes.initiator.client.sdk, tc);
     },
-    60 * 1000
+    TEST_TIMEOUT
   );
 
   it(
-    "should close a channel with 1 token",
+    "should be able to be opened with 1 token",
     async () => {
-      const tokenAddress = getTokenAddress(Token.LUM.toString());
-      const partnerAddress = "0x03c173e750DDd140D4eB186c5fe76dfa7dff926C";
+      const tc = new ChannelTestCase(
+        tokenAddresses.LUM,
+        "0xb9eA1f16E4f1E5CAF211aF150F2147eEd9Fb2245",
+        toWei(1),
+        toWei(1),
+        ChannelState.OPEN
+      );
+
       await nodes.initiator.client.sdk.openChannel({
-        tokenAddress,
-        amountOnWei: toWei(0),
-        rskPartnerAddress: partnerAddress,
+        tokenAddress: tc.token,
+        amountOnWei: tc.deposit,
+        rskPartnerAddress: tc.partner,
       });
+
+      await verifyChannel(nodes.initiator.client.sdk, tc);
+    },
+    TEST_TIMEOUT
+  );
+
+  it(
+    "should be able to be closed from the initiator",
+    async () => {
+      const tc1 = new ChannelTestCase(
+        tokenAddresses.LUM,
+        "0x8645315E490A05FeE7EDcF671B096E82D9b616a4",
+        toWei(1),
+        toWei(1),
+        ChannelState.CLOSED
+      );
+
       await nodes.initiator.client.sdk.closeChannel({
-        tokenAddress,
-        partnerAddress: partnerAddress,
+        tokenAddress: tc1.token,
+        partnerAddress: tc1.partner,
       });
-      await nodes.initiator.client.sdk.getChannel({
-        tokenAddress,
-        partnerAddress,
-      });
-    },
-    60 * 1000
-  );
 
-  it(
-    "should close a channel with no balance",
-    async () => {
-      const tokenAddress = getTokenAddress(Token.LUM.toString());
-      const partnerAddress = "0xa749925DC36f4f15fdA3E23325097A42Cb0369D0";
-      await nodes.initiator.client.sdk.openChannel({
-        tokenAddress,
-        amountOnWei: toWei(0),
-        rskPartnerAddress: partnerAddress,
-      });
+      await verifyChannel(nodes.initiator.client.sdk, tc1);
+
+      const tc2 = new ChannelTestCase(
+        tokenAddresses.LUM,
+        "0x8645315E490A05FeE7EDcF671B096E82D9b616a4",
+        toWei(1),
+        toWei(1),
+        ChannelState.CLOSED
+      );
+
       await nodes.initiator.client.sdk.closeChannel({
-        tokenAddress,
-        partnerAddress: partnerAddress,
+        tokenAddress: tc2.token,
+        partnerAddress: tc2.partner,
       });
-      await nodes.initiator.client.sdk.getChannel({
-        tokenAddress,
-        partnerAddress,
-      });
+
+      await verifyChannel(nodes.initiator.client.sdk, tc2);
     },
-    60 * 1000
+    TEST_TIMEOUT
   );
 
   it(
-    "should close a channel from partner",
+    "should be able to be closed from the partner",
     async () => {
+      const tc = new ChannelTestCase(
+        tokenAddresses.LUM,
+        nodes.target.client.address,
+        toWei(0),
+        toWei(0),
+        ChannelState.CLOSED
+      );
+
+      // this channel hasn't been opened yet
       await nodes.initiator.client.sdk.openChannel({
-        tokenAddress: getTokenAddress(Token.LUM.toString()),
-        amountOnWei: toWei(0),
-        rskPartnerAddress: nodes.target.client.address,
+        tokenAddress: tc.token,
+        amountOnWei: tc.deposit,
+        rskPartnerAddress: tc.partner,
       });
+
       await nodes.target.client.sdk.closeChannel({
-        tokenAddress: getTokenAddress(Token.LUM.toString()),
+        tokenAddress: tokenAddresses.LUM,
         partnerAddress: nodes.initiator.client.address,
       });
+
+      await verifyChannel(nodes.initiator.client.sdk, tc);
     },
-    60 * 1000
+    TEST_TIMEOUT
   );
 });
