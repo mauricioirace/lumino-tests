@@ -15,7 +15,7 @@
         },
         {
             "name": "target",
-            "tokens":[
+            "tokens": [
                 {
                     "symbol": "LUM",
                     "amount": 100
