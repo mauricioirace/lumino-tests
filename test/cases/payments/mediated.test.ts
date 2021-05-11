@@ -4,11 +4,14 @@ import setupTestEnvironment from '../../../src';
 import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
 import { LuminoNode } from '../../../src/types/node';
 import { Dictionary } from '../../../src/util/collection';
-import { State, ChannelState, sleep, verifyChannel } from '../../utils';
-
-const SETUP_TIMEOUT = 5 * 60 * 1000; // 5 minutes
-const TEARDOWN_TIMEOUT = 1 * 60 * 1000; // 1 minute
-const TEST_TIMEOUT = 1 * 60 * 1000; // 1 minute
+import { sleep, verifyChannel } from '../../utils';
+import {
+    SETUP_TIMEOUT,
+    TEARDOWN_TIMEOUT,
+    ChannelState,
+    State,
+    TEST_TIMEOUT,
+} from '../../common';
 
 interface paymentParams {
     token: string;

@@ -4,11 +4,14 @@ import { tokenAddresses, toWei } from '../../../src/util/token';
 import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
 import { Dictionary } from '../../../src/util/collection';
 import { LuminoNode } from '../../../src/types/node';
-import { State, ChannelState, verifyChannel } from '../../utils';
-
-const SETUP_TIMEOUT = 5 * 60 * 1000; // 5 minutes
-const TEARDOWN_TIMEOUT = 1 * 60 * 1000; // 1 minute
-const TEST_TIMEOUT = 1 * 60 * 1000; // 1 minute
+import { verifyChannel } from '../../utils';
+import {
+    SETUP_TIMEOUT,
+    TEARDOWN_TIMEOUT,
+    ChannelState,
+    State,
+    TEST_TIMEOUT,
+} from '../../common';
 
 interface openParams {
     token: string;
