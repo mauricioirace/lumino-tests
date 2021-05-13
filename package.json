@@ -5,8 +5,8 @@
   "main": "src/index.js",
   "scripts": {
     "test": "npx jest --runInBand",
-    "prettier": "npx prettier --write --ignore-unknown src test topologies types",
-    "prettier-check": "npx prettier --check src test topologies types"
+    "prettier": "npx prettier --write --ignore-unknown .",
+    "prettier-check": "npx prettier --check ."
   },
   "license": "ISC",
   "devDependencies": {

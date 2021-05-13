@@ -1,0 +1,13 @@
+src/container-manager/docker-files
+.gitignore
+.huskyrc
+.prettierignore
+generateImages
+package.json
+package-lock.json
+prettierrc.json5
+README.md
+tsconfig.json
+tslint.json
+node_modules
+coverage
