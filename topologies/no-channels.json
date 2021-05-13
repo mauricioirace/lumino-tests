@@ -1,31 +1,31 @@
 {
-  "nodes": [
-    {
-      "name": "initiator",
-      "tokens": [
+    "nodes": [
         {
-          "symbol": "LUM",
-          "amount": 100
+            "name": "initiator",
+            "tokens": [
+                {
+                    "symbol": "LUM",
+                    "amount": 100
+                },
+                {
+                    "symbol": "RIF",
+                    "amount": 100
+                }
+            ]
         },
         {
-          "symbol": "RIF",
-          "amount": 100
+            "name": "target",
+            "tokens": [
+                {
+                    "symbol": "LUM",
+                    "amount": 100
+                },
+                {
+                    "symbol": "RIF",
+                    "amount": 100
+                }
+            ]
         }
-      ]
-    },
-    {
-      "name": "target",
-      "tokens": [
-        {
-          "symbol": "LUM",
-          "amount": 100
-        },
-        {
-          "symbol": "RIF",
-          "amount": 100
-        }
-      ]
-    }
-  ],
-  "channels": []
+    ],
+    "channels": []
 }

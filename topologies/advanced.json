@@ -1,37 +1,37 @@
 {
-  "enableExplorer": false,
-  "nodes": [
-    {
-      "name": "node0",
-      "enableHub": false,
-      "tokens": [
+    "enableExplorer": false,
+    "nodes": [
         {
-          "symbol": "LUM",
-          "amount": 1
+            "name": "node0",
+            "enableHub": false,
+            "tokens": [
+                {
+                    "symbol": "LUM",
+                    "amount": 1
+                },
+                {
+                    "symbol": "RIF",
+                    "amount": 2
+                }
+            ]
         },
         {
-          "symbol": "RIF",
-          "amount": 2
+            "name": "node1",
+            "enableHub": false,
+            "tokens": []
         }
-      ]
-    },
-    {
-      "name": "node1",
-      "enableHub": false,
-      "tokens": []
-    }
-  ],
-  "channels": [
-    {
-      "tokenSymbol": "LUM",
-      "participant1": {
-        "node": "node0",
-        "deposit": 1
-      },
-      "participant2": {
-        "node": "node1",
-        "deposit": 0
-      }
-    }
-  ]
+    ],
+    "channels": [
+        {
+            "tokenSymbol": "LUM",
+            "participant1": {
+                "node": "node0",
+                "deposit": 1
+            },
+            "participant2": {
+                "node": "node1",
+                "deposit": 0
+            }
+        }
+    ]
 }
