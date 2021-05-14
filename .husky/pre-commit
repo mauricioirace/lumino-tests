@@ -6,7 +6,7 @@ export NVM_DIR="$HOME/.nvm"
 
 PRETTIER_RESULT=$(npx prettier --check . || echo "FAIL")
 
-if [ "${PRETTIER_RESULT}" = "FAIL" ]; then
+if [ "${PRETTIER_RESULT}" == "FAIL" ]; then
   npx prettier  --write --ignore-unknown .
   echo "Prettier found formatting error, fixing it, commit the changes again."
   exit 1
