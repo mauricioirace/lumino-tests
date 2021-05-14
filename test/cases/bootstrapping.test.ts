@@ -14,7 +14,7 @@ describe("bootstrapping", () => {
 
   afterEach(async () => {
     await env.stop();
-  }, TEARDOWN_TIMEOUT);
+  });
 
   it(
     "should be able to boot up a basic node setup",
