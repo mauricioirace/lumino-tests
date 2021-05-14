@@ -11,3 +11,4 @@ tsconfig.json
 tslint.json
 node_modules
 coverage
+dependencies

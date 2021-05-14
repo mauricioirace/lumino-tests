@@ -4,7 +4,7 @@
   "description": "Testing module for lumino node",
   "main": "src/index.js",
   "scripts": {
-    "prepare": "scripts/validateResources",
+    "prepare": "npx husky install && scripts/validateResources",
     "pretest": "scripts/validateResources",
     "requirements": "scripts/validateResources",
     "test": "npx jest --runInBand",
