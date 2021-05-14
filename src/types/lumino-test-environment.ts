@@ -1,4 +1,4 @@
-import {NodeList} from './node';
+import { NodeList } from './node';
 import EnvironmentLoader from '../environment-loader';
 
 export class LuminoTestEnvironment {
