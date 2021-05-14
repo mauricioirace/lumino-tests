@@ -1,0 +1,13 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+PRETTIER_RESULT=$(npx prettier --check . || echo "FAIL")
+
+if [ "${PRETTIER_RESULT}" = "FAIL" ]; then
+  npx prettier  --write --ignore-unknown .
+  echo "Prettier found formatting error, fixing it, commit the changes again."
+  exit 1
+fi
