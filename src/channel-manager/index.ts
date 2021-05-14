@@ -1,6 +1,6 @@
-import {SetupChannel} from '../types/setup';
-import {LuminoNode, NodeList} from '../types/node';
-import {tokenAddresses, toWei} from '../util/token';
+import { SetupChannel } from '../types/setup';
+import { LuminoNode, NodeList } from '../types/node';
+import { tokenAddresses, toWei } from '../util/token';
 
 export default class ChannelManager {
     constructor() {}
