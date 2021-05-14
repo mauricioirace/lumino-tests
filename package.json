@@ -7,9 +7,10 @@
     "prepare": "npx husky install && scripts/validateResources",
     "pretest": "scripts/validateResources",
     "requirements": "scripts/validateResources",
-    "test": "npx jest --runInBand",
+    "test": "scripts/runTests",
     "prettier": "npx prettier --write --ignore-unknown .",
-    "prettier-check": "npx prettier --check ."
+    "prettier-check": "npx prettier --check .",
+    "clean": "scripts/clean"
   },
   "license": "ISC",
   "devDependencies": {
