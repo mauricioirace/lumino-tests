@@ -185,7 +185,7 @@ declare module 'lumino-js-sdk' {
         makePayment({
             amountOnWei,
             tokenAddress,
-            partnerAddress
+            partnerAddress,
         }: {
             amountOnWei: number;
             tokenAddress: string;
