@@ -3,8 +3,6 @@ import advanced from '../../topologies/advanced.json';
 import { SetupJson } from '../../src/types/setup';
 import setupTestEnvironment from '../../src';
 import { LuminoTestEnvironment } from '../../src/types/lumino-test-environment';
-import { verifyEnv } from '../utils';
-import { SETUP_TIMEOUT, TEARDOWN_TIMEOUT } from '../common';
 
 describe('bootstrapping', () => {
     let env: LuminoTestEnvironment;

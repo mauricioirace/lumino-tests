@@ -10,7 +10,7 @@ import {
     TEARDOWN_TIMEOUT,
     ChannelState,
     State,
-    TEST_TIMEOUT,
+    TEST_TIMEOUT
 } from '../../common';
 
 interface depositParams {
@@ -44,13 +44,13 @@ describe('channel deposit', () => {
             const params: depositParams = {
                 token: tokenAddresses.LUM,
                 amount: toWei(1),
-                partner: nodes.target.client.address,
+                partner: nodes.target.client.address
             };
 
             await nodes.initiator.client.sdk.depositTokens({
                 tokenAddress: params.token,
                 amountOnWei: params.amount,
-                partnerAddress: params.partner,
+                partnerAddress: params.partner
             });
 
             const expected = new ChannelState(
@@ -81,13 +81,13 @@ describe('channel deposit', () => {
             const params: depositParams = {
                 token: tokenAddresses.LUM,
                 amount: toWei(2),
-                partner: nodes.initiator.client.address,
+                partner: nodes.initiator.client.address
             };
 
             await nodes.target.client.sdk.depositTokens({
                 tokenAddress: params.token,
                 amountOnWei: params.amount,
-                partnerAddress: params.partner,
+                partnerAddress: params.partner
             });
 
             const targetExpected = new ChannelState(

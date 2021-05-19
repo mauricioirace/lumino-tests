@@ -4,7 +4,7 @@ export const TEST_TIMEOUT = 1 * 60 * 1000; // 1 minute
 
 export enum State {
     OPEN = 'opened',
-    CLOSED = 'closed',
+    CLOSED = 'closed'
 }
 
 export class ChannelState {

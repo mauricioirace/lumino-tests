@@ -10,7 +10,7 @@ import {
     TEARDOWN_TIMEOUT,
     ChannelState,
     State,
-    TEST_TIMEOUT,
+    TEST_TIMEOUT
 } from '../../common';
 
 interface openParams {
@@ -38,13 +38,13 @@ describe('channel open', () => {
             const params: openParams = {
                 token: tokenAddresses.LUM,
                 amount: toWei(0),
-                partner: '0x8645315E490A05FeE7EDcF671B096E82D9b616a4', // too arbitrary, unrelated to topology
+                partner: '0x8645315E490A05FeE7EDcF671B096E82D9b616a4' // too arbitrary, unrelated to topology
             };
 
             await nodes.initiator.client.sdk.openChannel({
                 tokenAddress: params.token,
                 amountOnWei: params.amount,
-                rskPartnerAddress: params.partner,
+                rskPartnerAddress: params.partner
             });
 
             const expected = new ChannelState(
@@ -71,13 +71,13 @@ describe('channel open', () => {
             const params: openParams = {
                 token: tokenAddresses.LUM,
                 amount: toWei(1),
-                partner: '0xb9eA1f16E4f1E5CAF211aF150F2147eEd9Fb2245', // too arbitrary, unrelated to topology
+                partner: '0xb9eA1f16E4f1E5CAF211aF150F2147eEd9Fb2245' // too arbitrary, unrelated to topology
             };
 
             await nodes.initiator.client.sdk.openChannel({
                 tokenAddress: params.token,
                 amountOnWei: params.amount,
-                rskPartnerAddress: params.partner,
+                rskPartnerAddress: params.partner
             });
 
             const expected = new ChannelState(

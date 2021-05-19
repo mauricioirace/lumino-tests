@@ -10,7 +10,7 @@ import {
     TEARDOWN_TIMEOUT,
     ChannelState,
     State,
-    TEST_TIMEOUT,
+    TEST_TIMEOUT
 } from '../../common';
 
 interface paymentParams {
@@ -50,13 +50,13 @@ describe('payments p2p', () => {
             const params: paymentParams = {
                 token: tokenAddresses.LUM,
                 partner: nodes.target.client.address,
-                amount: initiatorPaymentAmount,
+                amount: initiatorPaymentAmount
             };
 
             await nodes.initiator.client.sdk.makePayment({
                 tokenAddress: params.token,
                 partnerAddress: params.partner,
-                amountOnWei: params.amount,
+                amountOnWei: params.amount
             });
 
             await sleep(5000); // should not be necessary
@@ -102,13 +102,13 @@ describe('payments p2p', () => {
             const params: paymentParams = {
                 token: tokenAddresses.LUM,
                 partner: nodes.initiator.client.address,
-                amount: targetPaymentAmount,
+                amount: targetPaymentAmount
             };
 
             await nodes.target.client.sdk.makePayment({
                 tokenAddress: params.token,
                 partnerAddress: params.partner,
-                amountOnWei: params.amount,
+                amountOnWei: params.amount
             });
 
             await sleep(5000); // should not be necessary

@@ -1,7 +1,6 @@
-import {JestLogLevel, JEST_LOG_LEVEL} from '../jest-log.config';
+import { JestLogLevel, JEST_LOG_LEVEL } from '../jest-log.config';
 
 function getLogLevel(): any {
-
     const dummyFN = jest.fn();
 
     let consoleConfig = {
@@ -18,7 +17,7 @@ function getLogLevel(): any {
             return consoleConfig;
         case JestLogLevel.LOG:
             return Object.assign(consoleConfig, {
-                debug: dummyFN,
+                debug: dummyFN
             });
         case JestLogLevel.INFO:
             return Object.assign(consoleConfig, {

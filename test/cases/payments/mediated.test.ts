@@ -10,7 +10,7 @@ import {
     TEARDOWN_TIMEOUT,
     ChannelState,
     State,
-    TEST_TIMEOUT,
+    TEST_TIMEOUT
 } from '../../common';
 
 interface paymentParams {
@@ -50,13 +50,13 @@ describe('payments mediated', () => {
             const params: paymentParams = {
                 token: tokenAddresses.LUM,
                 partner: nodes.target.client.address,
-                amount: paymentAmount,
+                amount: paymentAmount
             };
 
             await nodes.initiator.client.sdk.makePayment({
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: params.partner,
-                amountOnWei: params.amount,
+                amountOnWei: params.amount
             });
 
             await sleep(5000); // should not be necessary

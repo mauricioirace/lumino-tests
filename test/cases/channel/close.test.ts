@@ -10,7 +10,7 @@ import {
     TEARDOWN_TIMEOUT,
     ChannelState,
     State,
-    TEST_TIMEOUT,
+    TEST_TIMEOUT
 } from '../../common';
 
 interface closeParams {
@@ -41,11 +41,11 @@ describe('channel close', () => {
 
             const params: closeParams = {
                 token: tokenAddresses.LUM,
-                partner: nodes.mediator.client.address,
+                partner: nodes.mediator.client.address
             };
             await nodes.initiator.client.sdk.closeChannel({
                 tokenAddress: params.token,
-                partnerAddress: params.partner,
+                partnerAddress: params.partner
             });
 
             let expected = new ChannelState(
@@ -98,11 +98,11 @@ describe('channel close', () => {
 
             const params: closeParams = {
                 token: tokenAddresses.LUM,
-                partner: nodes.mediator.client.address,
+                partner: nodes.mediator.client.address
             };
             await nodes.target.client.sdk.closeChannel({
                 tokenAddress: params.token,
-                partnerAddress: params.partner,
+                partnerAddress: params.partner
             });
 
             let expected = new ChannelState(
