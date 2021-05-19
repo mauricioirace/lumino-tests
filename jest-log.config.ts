@@ -8,5 +8,5 @@ export enum JestLogLevel {
     NONE
 }
 
-export const JEST_LOG_LEVEL: JestLogLevel = JestLogLevel.DEBUG;
+export const JEST_LOG_LEVEL: JestLogLevel = JestLogLevel.LOG;
 
