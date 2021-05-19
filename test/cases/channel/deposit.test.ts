@@ -5,13 +5,7 @@ import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environmen
 import { Dictionary } from '../../../src/util/collection';
 import { LuminoNode } from '../../../src/types/node';
 import { verifyChannel } from '../../utils';
-import {
-    SETUP_TIMEOUT,
-    TEARDOWN_TIMEOUT,
-    ChannelState,
-    State,
-    TEST_TIMEOUT
-} from '../../common';
+import { ChannelState, State, Timeouts } from '../../common';
 
 interface depositParams {
     token: string;
@@ -26,11 +20,11 @@ describe('channel deposit', () => {
     beforeAll(async () => {
         env = await setupTestEnvironment(p2p);
         nodes = env.nodes as Dictionary<LuminoNode>;
-    }, SETUP_TIMEOUT);
+    }, Timeouts.SETUP);
 
     afterAll(async () => {
         await env.stop();
-    }, TEARDOWN_TIMEOUT);
+    }, Timeouts.TEARDOWN);
 
     test(
         'initiator node, 1 token',
@@ -68,7 +62,7 @@ describe('channel deposit', () => {
                 expected
             );
         },
-        TEST_TIMEOUT
+        Timeouts.TEST
     );
 
     test(
@@ -105,6 +99,6 @@ describe('channel deposit', () => {
                 targetExpected
             );
         },
-        TEST_TIMEOUT
+        Timeouts.TEST
     );
 });

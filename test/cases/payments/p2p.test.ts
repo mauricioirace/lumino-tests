@@ -5,13 +5,7 @@ import { Dictionary } from '../../../src/util/collection';
 import setupTestEnvironment from '../../../src';
 import { sleep, verifyChannel } from '../../utils';
 import { tokenAddresses, toWei } from '../../../src/util/token';
-import {
-    SETUP_TIMEOUT,
-    TEARDOWN_TIMEOUT,
-    ChannelState,
-    State,
-    TEST_TIMEOUT
-} from '../../common';
+import { ChannelState, State, Timeouts } from '../../common';
 
 interface paymentParams {
     token: string;
@@ -38,11 +32,11 @@ describe('payments p2p', () => {
     beforeAll(async () => {
         env = await setupTestEnvironment(p2p);
         nodes = env.nodes as Dictionary<LuminoNode>;
-    }, SETUP_TIMEOUT);
+    }, Timeouts.SETUP);
 
     afterAll(async () => {
         await env.stop();
-    }, TEARDOWN_TIMEOUT);
+    }, Timeouts.TEARDOWN);
 
     test(
         'initiator node, 1 token',
@@ -93,7 +87,7 @@ describe('payments p2p', () => {
                 expected
             );
         },
-        TEST_TIMEOUT
+        Timeouts.TEST
     );
 
     test(
@@ -144,6 +138,6 @@ describe('payments p2p', () => {
                 expected
             );
         },
-        TEST_TIMEOUT
+        Timeouts.TEST
     );
 });

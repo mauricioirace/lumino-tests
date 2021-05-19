@@ -5,13 +5,7 @@ import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environmen
 import { Dictionary } from '../../../src/util/collection';
 import { LuminoNode } from '../../../src/types/node';
 import { verifyChannel } from '../../utils';
-import {
-    SETUP_TIMEOUT,
-    TEARDOWN_TIMEOUT,
-    ChannelState,
-    State,
-    TEST_TIMEOUT
-} from '../../common';
+import { ChannelState, State, Timeouts } from '../../common';
 
 interface closeParams {
     token: string;
@@ -25,11 +19,11 @@ describe('channel close', () => {
     beforeAll(async () => {
         env = await setupTestEnvironment(mediated);
         nodes = env.nodes as Dictionary<LuminoNode>;
-    }, SETUP_TIMEOUT);
+    }, Timeouts.SETUP);
 
     afterAll(async () => {
         await env.stop();
-    }, TEARDOWN_TIMEOUT);
+    }, Timeouts.TEARDOWN);
 
     it(
         'from initiator node',
@@ -85,7 +79,7 @@ describe('channel close', () => {
                 expected
             );
         },
-        TEST_TIMEOUT
+        Timeouts.TEST
     );
 
     it(
@@ -142,6 +136,6 @@ describe('channel close', () => {
                 expected
             );
         },
-        TEST_TIMEOUT
+        Timeouts.TEST
     );
 });

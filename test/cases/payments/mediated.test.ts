@@ -5,13 +5,7 @@ import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environmen
 import { LuminoNode } from '../../../src/types/node';
 import { Dictionary } from '../../../src/util/collection';
 import { sleep, verifyChannel } from '../../utils';
-import {
-    SETUP_TIMEOUT,
-    TEARDOWN_TIMEOUT,
-    ChannelState,
-    State,
-    TEST_TIMEOUT
-} from '../../common';
+import { ChannelState, State, Timeouts } from '../../common';
 
 interface paymentParams {
     token: string;
@@ -38,11 +32,11 @@ describe('payments mediated', () => {
     beforeAll(async () => {
         env = await setupTestEnvironment(mediated);
         nodes = env.nodes as Dictionary<LuminoNode>;
-    }, SETUP_TIMEOUT);
+    }, Timeouts.SETUP);
 
     afterAll(async () => {
         await env.stop();
-    }, TEARDOWN_TIMEOUT);
+    }, Timeouts.TEARDOWN);
 
     test(
         'initiator node, 1 token',
@@ -125,6 +119,6 @@ describe('payments mediated', () => {
                 expected
             );
         },
-        TEST_TIMEOUT
+        Timeouts.TEST
     );
 });

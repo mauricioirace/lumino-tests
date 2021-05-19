@@ -1,6 +1,8 @@
-export const SETUP_TIMEOUT = 5 * 60 * 1000; // 5 minutes
-export const TEARDOWN_TIMEOUT = 1 * 60 * 1000; // 1 minute
-export const TEST_TIMEOUT = 1 * 60 * 1000; // 1 minute
+export const Timeouts = {
+    SETUP: 5 * 60 * 1000, // 5 minutes
+    TEARDOWN: 1 * 60 * 1000, // 1 minute
+    TEST: 1 * 60 * 1000 // 1 minute
+};
 
 export enum State {
     OPEN = 'opened',
