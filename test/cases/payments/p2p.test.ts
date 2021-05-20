@@ -4,12 +4,7 @@ import { LuminoNode } from '../../../src/types/node';
 import { Dictionary } from '../../../src/util/collection';
 import setupTestEnvironment from '../../../src';
 import { tokenAddresses, toWei } from '../../../src/util/token';
-import {
-    SETUP_TIMEOUT,
-    TEARDOWN_TIMEOUT,
-    TEST_TIMEOUT,
-    Timeouts
-} from '../../common';
+import { Timeouts } from '../../common';
 import { BalanceIdentifier } from 'lumino-js-sdk';
 import { given } from '../../utils/assertions';
 

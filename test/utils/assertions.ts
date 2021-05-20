@@ -22,34 +22,34 @@ export class ChannelExpectation {
     ) {}
 
     async toHaveBalance(expected: number, timeout = 1000, retries = 5) {
-        let actual = await this.node.client.getChannelBalance(this.identifier);
-        for (let i = 0; expected !== actual && i < retries; i++) {
+        let actual = await this.node.client.sdk.getChannel(this.identifier);
+        for (let i = 0; expected !== actual.balance && i < retries; i++) {
             await sleep(timeout);
-            actual = await this.node.client.getChannelBalance(this.identifier);
+            actual = await this.node.client.sdk.getChannel(this.identifier);
         }
-        expect(actual).toEqual(expected);
+        expect(actual.balance).toEqual(expected);
     }
 
     async toHaveDeposit(expected: number, timeout = 1000, retries = 5) {
-        let actual = await this.node.client.getChannel(this.identifier);
+        let actual = await this.node.client.sdk.getChannel(this.identifier);
         for (let i = 0; expected !== actual.total_deposit && i < retries; i++) {
             await sleep(timeout);
-            actual = await this.node.client.getChannel(this.identifier);
+            actual = await this.node.client.sdk.getChannel(this.identifier);
         }
         expect(actual.total_deposit).toEqual(expected);
     }
 
     async toBeInState(expected: string, timeout = 1000, retries = 5) {
-        let actual = await this.node.client.getChannelState(this.identifier);
-        for (let i = 0; expected !== actual && i < retries; i++) {
+        let actual = await this.node.client.sdk.getChannel(this.identifier);
+        for (let i = 0; expected !== actual.state && i < retries; i++) {
             await sleep(timeout);
-            actual = await this.node.client.getChannelState(this.identifier);
+            actual = await this.node.client.sdk.getChannel(this.identifier);
         }
-        expect(actual).toEqual(expected);
+        expect(actual.state).toEqual(expected);
     }
 
     async toBe(expected: ChannelState) {
-        const actual = await this.node.client.getChannel(this.identifier);
+        const actual = await this.node.client.sdk.getChannel(this.identifier);
         expect(actual.token_address).toBe(expected.token);
         expect(actual.partner_address).toBe(expected.partner);
         expect(actual.total_deposit).toBe(expected.deposit);
