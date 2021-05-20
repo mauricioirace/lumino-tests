@@ -12,18 +12,11 @@
     <ul>
       <li><a href="#prerequisites">Prerequisites</a>
         <ul>
-          <li><a href="#nodejs--npm">Node.js & npm</a></li>
+          <li><a href="#nodejs">NodeJS</a></li>
           <li><a href="#docker">Docker</a></li>
-          <li><a href="#lumino-sdk">Lumino SDK</a></li>
         </ul>
       </li>
-      <li><a href="#installation">Installation</a>
-        <ul>
-          <li><a href="#repo">Repo</a></li>
-          <li><a href="#docker-images">Docker Images</a></li>
-          <li><a href="#project">Project</a></li>
-        </ul>
-      </li>
+      <li><a href="#installation">Installation</a></li>
     </ul>
   </li>
   <li><a href="#usage">Usage</a>
@@ -54,13 +47,13 @@ Under the hood it makes use of [Docker](https://www.docker.com/) and [Testcontai
 
 Please note that all instructions are written for Ubuntu.
 
-### Prerequisites
+## Prerequisites
 
 The following prerequisites and dependencies must be installed manually beforehand.
 
-#### Node.js & `npm`
+### NodeJS
 
-These should be included with your Ubuntu distribution. `node v14.x` and `npm 7.x` should be more than enough. You can check these by executing:
+NodeJS should be included with your Ubuntu distribution. `node v14.x` with `npm 7.x` should be more than enough. You can check these by executing:
 
 ```bash
 node -v
@@ -75,53 +68,22 @@ If you have any doubts please check the official documentation here:
 - [npm | get npm](https://www.npmjs.com/get-npm)
 - [nvm-sh/nvm: Node Version Manager](https://github.com/nvm-sh/nvm)
 
-#### Docker
+### Docker
 
 To install Docker please follow the official instructions at the [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu) page. We recommend the _Install using the repository_ method.
 
 **Make sure** to also follow the steps outlined in the first section of the [Post-installation steps for Linux](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) page in order to manage Docker as a non-root user. The rest of the sections on said page are not necessary.
 
-#### Lumino SDK
-
-You can find the repo [here](https://github.com/rsksmart/lumino-sdk).
-
-Unfortunately the latest Lumino SDK binaries have not been published yet. This means that you'll have to build this project too, after cloning it.
-
-`lumino-tests` expects its parent folder to also contain the `lumino-sdk` folder. The latter must include the build for that project.
-
-Follow these steps:
-
-1. clone the `lumino-sdk` repo.
-2. run `npm install` in the repo folder.
-3. run `npm run bundle` in the repo folder.
-
-### Installation
-
-#### Repo
+## Installation
 
 Clone this repo through your favorite means, e.g.:
 
 ```
-git clone https://github.com/rsksmart/lumino-sdk.git
+git clone https://github.com/rsksmart/lumino-tests.git
 ```
 
-#### Docker Images
-
-The Docker images need to be generated before they can be used in the tests. You can do so by running the `generateImages` script at the root directory:
-
-```bash
-lumino-tests$ ./generateImages
-```
-
-**Important**: this will likely take more than a couple of minutes and will need around 6 GB of disk space.
-
-#### Project
-
-To install the project, execute the following command at the root directory:
-
-```bash
-npm install
-```
+Run `npm i` to install all the required dependencies. 
+This will likely take more than a couple of minutes and will need around 6 GB of disk space.
 
 ## Usage
 
@@ -190,22 +152,6 @@ If you want to write new tests, you can take any of the `*.test.ts` files (locat
 You may need to modify the logic for the manager classes located in the [`src` directory](./src), depending on the complexity of the test case you want to write.
 
 Be sure to also check out the existing [topologies](./topologies), as they might come in handy.
-
-### Rebuild Docker Images
-
-In case you ever want to delete an image and rebuild it, you can first obtain its name by running:
-
-```bash
-docker image ls
-```
-
-Suppose you want to delete an image called `my-image-name`. You can then delete it by executing:
-
-```bash
-docker image rm my-image-name
-```
-
-Afterwards, just [re-run the `generateImages` script](#docker-images), as it will only rebuild what's missing.
 
 ## External Links
 

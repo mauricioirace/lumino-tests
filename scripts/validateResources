@@ -1,0 +1,64 @@
+#!/bin/bash
+
+ROOT_PATH=$(pwd)
+
+echo "Checking Needed Resources"
+
+NEEDED_DOCKER_IMAGE_NAMES=(
+  "lumino-testing-rsk-node-image"
+  "lumino-testing-explorer-image"
+  "lumino-testing-rif-comms-boot-node-image"
+  "lumino-testing-lumino-node-image"
+)
+
+NEEDED_DOCKER_IMAGE_SOURCES=(
+  "${ROOT_PATH}/src/container-manager/docker-files/rsk-node"
+  "${ROOT_PATH}/src/container-manager/docker-files/lumino-explorer"
+  "${ROOT_PATH}/src/container-manager/docker-files/rif-comms-bootnode"
+  "${ROOT_PATH}/src/container-manager/docker-files/lumino-node"
+)
+
+for IMAGE_INDEX in "${!NEEDED_DOCKER_IMAGE_NAMES[@]}"; do
+  IMAGE_NAME=${NEEDED_DOCKER_IMAGE_NAMES[${IMAGE_INDEX}]}
+  IMAGE_SOURCE=${NEEDED_DOCKER_IMAGE_SOURCES[${IMAGE_INDEX}]}
+  IMAGE_READY=$(docker images | grep "${IMAGE_NAME}")
+  if [ "${IMAGE_READY}" == "" ]; then
+    echo "Image ${IMAGE_NAME} - MISSING"
+    echo "Generating..."
+    cd "${IMAGE_SOURCE}" || exit 1
+    docker build -t "${IMAGE_NAME}" .
+    cd "${ROOT_PATH}" || exit 1
+  else
+    echo "Image ${IMAGE_NAME} - OK"
+  fi
+done
+
+if [ ! -d "dependencies" ]; then
+  echo "Creating missing dependencies folder"
+  mkdir dependencies
+fi
+
+if [ -d "dependencies/lumino-sdk" ]; then
+  echo "Lumino SDK - Found"
+else
+  echo "Lumino SDK - MISSING"
+  echo "Downloading..."
+  git clone https://github.com/rsksmart/lumino-sdk.git dependencies/lumino-sdk
+fi
+
+if [ -d "dependencies/lumino-sdk/dist" ]; then
+  echo "Lumino SDK - Installed"
+else
+  echo "Lumino SDK is not installed"
+  echo "Installing"
+  cd "dependencies/lumino-sdk" && npm i && npm run dist && cd "${ROOT_PATH}" || exit 1
+fi
+
+NETWORK=$(docker network ls --filter name="rsk-network" -q)
+if [ "${NETWORK}" == "" ]; then
+  echo "Docker Network - MISSING"
+  echo "Generating..."
+  docker network create "rsk-network"
+else
+  echo "Docker Network - OK"
+fi

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+RYUK_CONTAINER_TIMEOUT=60
+
+function wait_for_test_containers() {
+  CURRENT_TIME=0
+  TEST_CONTAINERS_RUNNING=$(docker container ls -q -f name=testcontainers-ryuk)
+  while [ "${TEST_CONTAINERS_RUNNING}" != "" ]; do
+    if [ ${CURRENT_TIME} -gt ${RYUK_CONTAINER_TIMEOUT} ]; then
+      echo "Ryuk should be down by now, you should stop TestContainers properly before continue."
+      exit 1
+    fi
+    echo "Waiting for TestContainers to finish current execution..."
+    sleep 5
+    CURRENT_TIME=$((CURRENT_TIME + 5))
+    TEST_CONTAINERS_RUNNING=$(docker container ls -q -f name=testcontainers-ryuk)
+  done
+}
+
+trap wait_for_test_containers INT
+
+wait_for_test_containers
+
+npx jest --runInBand "$@"
