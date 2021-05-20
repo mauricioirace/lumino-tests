@@ -4,10 +4,13 @@
   "description": "Testing module for lumino node",
   "main": "src/index.js",
   "scripts": {
-    "test": "npx jest --runInBand",
+    "preinstall": "npx husky install && scripts/validateResources",
+    "pretest": "scripts/validateResources",
+    "requirements": "scripts/validateResources",
+    "test": "scripts/runTests",
     "prettier": "npx prettier --write --ignore-unknown .",
     "prettier-check": "npx prettier --check .",
-    "prepare": "npx husky install"
+    "clean": "scripts/clean"
   },
   "license": "ISC",
   "devDependencies": {
@@ -22,7 +25,7 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
-    "lumino-js-sdk": "file:../lumino-sdk",
+    "lumino-js-sdk": "file:dependencies/lumino-sdk",
     "path": "^0.12.7",
     "testcontainers": "^7.7.0",
     "tslib": "^2.2.0",
