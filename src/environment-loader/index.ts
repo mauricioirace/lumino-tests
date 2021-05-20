@@ -1,12 +1,11 @@
 import ContainerManager from '../container-manager';
-import {validateTokens} from '../util/token';
-import {NodeList} from '../types/node';
-import {SetupJson, SetupNode, SetupToken} from '../types/setup';
-import {LuminoTestEnvironment} from "../types/lumino-test-environment";
+import { validateTokens } from '../util/token';
+import { NodeList } from '../types/node';
+import { SetupJson, SetupNode, SetupToken } from '../types/setup';
+import { LuminoTestEnvironment } from '../types/lumino-test-environment';
 import ChannelManager from '../channel-manager';
 
 export default class EnvironmentLoader {
-
     private containerManager: ContainerManager = ContainerManager.create();
     private channelManager: ChannelManager = new ChannelManager();
     private nodes: NodeList = {};
@@ -39,7 +38,9 @@ export default class EnvironmentLoader {
     private async loadLuminoNodes(setup: SetupJson): Promise<void> {
         let nodeConfigs: SetupNode[] = [];
         if (Array.isArray(setup.nodes)) {
-            const tokens: SetupToken[] = setup.nodes.flatMap(node => node.tokens);
+            const tokens: SetupToken[] = setup.nodes.flatMap(
+                (node) => node.tokens
+            );
             validateTokens(tokens);
             nodeConfigs = setup.nodes;
         } else {
@@ -54,12 +55,16 @@ export default class EnvironmentLoader {
         }
         this.nodes = {};
         for (let nodeConfig of nodeConfigs) {
-            this.nodes[nodeConfig.name] = await this.containerManager.startupLuminoNode(nodeConfig);
+            this.nodes[nodeConfig.name] =
+                await this.containerManager.startupLuminoNode(nodeConfig);
         }
     }
 
     private async openChannels(setup: SetupJson) {
-        return await this.channelManager.openChannels(setup.channels, this.nodes);
+        return await this.channelManager.openChannels(
+            setup.channels,
+            this.nodes
+        );
     }
 
     public getNodes(): NodeList {

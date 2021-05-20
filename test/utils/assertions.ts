@@ -1,18 +1,17 @@
-import { ChannelIdentifier } from "lumino-js-sdk";
-import { sleep } from ".";
-import { LuminoNode } from "../../src/types/node";
+import { ChannelIdentifier } from 'lumino-js-sdk';
+import { sleep } from '.';
+import { LuminoNode } from '../../src/types/node';
 import { ChannelState } from '../common';
-
 
 export function given(node: LuminoNode): ExpectationContext {
     return new ExpectationContext(node);
 }
 
 export class ExpectationContext {
-    constructor(private node: LuminoNode) { }
+    constructor(private node: LuminoNode) {}
 
     expectChannel(identifier: ChannelIdentifier): ChannelExpectation {
-        return new ChannelExpectation(this.node, identifier)
+        return new ChannelExpectation(this.node, identifier);
     }
 }
 
@@ -20,12 +19,12 @@ export class ChannelExpectation {
     constructor(
         private node: LuminoNode,
         private identifier: ChannelIdentifier
-    ) { }
+    ) {}
 
     async toHaveBalance(expected: number, timeout = 1000, retries = 5) {
         let actual = await this.node.client.getChannelBalance(this.identifier);
         for (let i = 0; expected !== actual && i < retries; i++) {
-            await sleep(timeout)
+            await sleep(timeout);
             actual = await this.node.client.getChannelBalance(this.identifier);
         }
         expect(actual).toEqual(expected);
@@ -34,18 +33,17 @@ export class ChannelExpectation {
     async toHaveDeposit(expected: number, timeout = 1000, retries = 5) {
         let actual = await this.node.client.getChannel(this.identifier);
         for (let i = 0; expected !== actual.total_deposit && i < retries; i++) {
-            await sleep(timeout)
+            await sleep(timeout);
             actual = await this.node.client.getChannel(this.identifier);
         }
         expect(actual.total_deposit).toEqual(expected);
     }
 
-
     async toBeInState(expected: string, timeout = 1000, retries = 5) {
-        let actual = await this.node.client.getChannelState(this.identifier)
+        let actual = await this.node.client.getChannelState(this.identifier);
         for (let i = 0; expected !== actual && i < retries; i++) {
-            await sleep(timeout)
-            actual = await this.node.client.getChannelState(this.identifier)
+            await sleep(timeout);
+            actual = await this.node.client.getChannelState(this.identifier);
         }
         expect(actual).toEqual(expected);
     }

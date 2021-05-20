@@ -29,7 +29,7 @@ export async function verifyChannel(
 ): Promise<void> {
     const channelInfo = await sdk.getChannel({
         tokenAddress: token,
-        partnerAddress: partner,
+        partnerAddress: partner
     });
 
     expect(channelInfo.token_address).toBe(expected.token);

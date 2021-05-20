@@ -4,16 +4,9 @@ import { tokenAddresses, toWei } from '../../../src/util/token';
 import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
 import { Dictionary } from '../../../src/util/collection';
 import { LuminoNode } from '../../../src/types/node';
-import { verifyChannel } from '../../utils';
-import {
-    SETUP_TIMEOUT,
-    TEARDOWN_TIMEOUT,
-    ChannelState,
-    State,
-    TEST_TIMEOUT,
-} from '../../common';
 import { BalanceIdentifier, ChannelIdentifier } from 'lumino-js-sdk';
 import { given } from '../../utils/assertions';
+import { Timeouts } from '../../common';
 
 describe('channel deposit', () => {
     let nodes: Dictionary<LuminoNode>;
@@ -22,11 +15,11 @@ describe('channel deposit', () => {
     beforeAll(async () => {
         env = await setupTestEnvironment(p2p);
         nodes = env.nodes as Dictionary<LuminoNode>;
-    }, SETUP_TIMEOUT);
+    }, Timeouts.SETUP);
 
     afterAll(async () => {
         await env.stop();
-    }, TEARDOWN_TIMEOUT);
+    }, Timeouts.TEARDOWN);
 
     test(
         'initiator node, 1 token',
@@ -38,23 +31,24 @@ describe('channel deposit', () => {
 
             const channelId: ChannelIdentifier = {
                 tokenAddress: tokenAddresses.LUM,
-                partnerAddress: nodes.target.client.address 
-            }
+                partnerAddress: nodes.target.client.address
+            };
             // deposit to be made
             const balance: BalanceIdentifier = {
                 ...channelId,
-                amountOnWei: toWei(1),
+                amountOnWei: toWei(1)
             };
 
             await nodes.initiator.client.sdk.depositTokens(balance);
 
-            await given(nodes.initiator).expectChannel(channelId)
-                    .toHaveDeposit(initiatorDeposit + balance.amountOnWei);
-            await given(nodes.initiator).expectChannel(channelId)
-                    .toHaveBalance(initiatorDeposit + balance.amountOnWei);
-            
+            await given(nodes.initiator)
+                .expectChannel(channelId)
+                .toHaveDeposit(initiatorDeposit + balance.amountOnWei);
+            await given(nodes.initiator)
+                .expectChannel(channelId)
+                .toHaveBalance(initiatorDeposit + balance.amountOnWei);
         },
-        TEST_TIMEOUT
+        Timeouts.TEST
     );
 
     test(
@@ -67,22 +61,23 @@ describe('channel deposit', () => {
 
             const channelId: ChannelIdentifier = {
                 tokenAddress: tokenAddresses.LUM,
-                partnerAddress: nodes.target.client.address 
-            }
+                partnerAddress: nodes.target.client.address
+            };
             // deposit to be made
             const balance: BalanceIdentifier = {
                 ...channelId,
-                amountOnWei: toWei(2),
+                amountOnWei: toWei(2)
             };
 
             await nodes.target.client.sdk.depositTokens(balance);
 
-            await given(nodes.target).expectChannel(channelId)
-                    .toHaveDeposit(targetDeposit + balance.amountOnWei);
-            await given(nodes.target).expectChannel(channelId)
-                    .toHaveBalance(targetDeposit + balance.amountOnWei);
-
+            await given(nodes.target)
+                .expectChannel(channelId)
+                .toHaveDeposit(targetDeposit + balance.amountOnWei);
+            await given(nodes.target)
+                .expectChannel(channelId)
+                .toHaveBalance(targetDeposit + balance.amountOnWei);
         },
-        TEST_TIMEOUT
+        Timeouts.TEST
     );
 });
