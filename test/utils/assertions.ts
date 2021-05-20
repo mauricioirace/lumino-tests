@@ -31,6 +31,15 @@ export class ChannelExpectation {
         expect(actual).toEqual(expected);
     }
 
+    async toHaveDeposit(expected: number, timeout = 1000, retries = 5) {
+        let actual = await this.node.client.getChannel(this.identifier);
+        for (let i = 0; expected !== actual.total_deposit && i < retries; i++) {
+            await sleep(timeout)
+            actual = await this.node.client.getChannel(this.identifier);
+        }
+        expect(actual.total_deposit).toEqual(expected);
+    }
+
 
     async toBeInState(expected: string, timeout = 1000, retries = 5) {
         let actual = await this.node.client.getChannelState(this.identifier)

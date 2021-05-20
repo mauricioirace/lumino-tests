@@ -12,12 +12,8 @@ import {
     State,
     TEST_TIMEOUT,
 } from '../../common';
-
-interface depositParams {
-    token: string;
-    amount: number;
-    partner: string;
-}
+import { BalanceIdentifier, ChannelIdentifier } from 'lumino-js-sdk';
+import { given } from '../../utils/assertions';
 
 describe('channel deposit', () => {
     let nodes: Dictionary<LuminoNode>;
@@ -40,33 +36,23 @@ describe('channel deposit', () => {
                 p2p.channels[0].participant1.deposit // should be inferred
             );
 
+            const channelId: ChannelIdentifier = {
+                tokenAddress: tokenAddresses.LUM,
+                partnerAddress: nodes.target.client.address 
+            }
             // deposit to be made
-            const params: depositParams = {
-                token: tokenAddresses.LUM,
-                amount: toWei(1),
-                partner: nodes.target.client.address,
+            const balance: BalanceIdentifier = {
+                ...channelId,
+                amountOnWei: toWei(1),
             };
 
-            await nodes.initiator.client.sdk.depositTokens({
-                tokenAddress: params.token,
-                amountOnWei: params.amount,
-                partnerAddress: params.partner,
-            });
+            await nodes.initiator.client.sdk.depositTokens(balance);
 
-            const expected = new ChannelState(
-                params.token,
-                params.partner,
-                initiatorDeposit + params.amount,
-                initiatorDeposit + params.amount, // balance should equal deposit
-                State.OPEN
-            );
-
-            await verifyChannel(
-                nodes.initiator.client.sdk,
-                params.token,
-                params.partner,
-                expected
-            );
+            await given(nodes.initiator).expectChannel(channelId)
+                    .toHaveDeposit(initiatorDeposit + balance.amountOnWei);
+            await given(nodes.initiator).expectChannel(channelId)
+                    .toHaveBalance(initiatorDeposit + balance.amountOnWei);
+            
         },
         TEST_TIMEOUT
     );
@@ -74,36 +60,28 @@ describe('channel deposit', () => {
     test(
         'target node, 2 tokens',
         async () => {
-            // starting deposit for node "target"
-            const targetDeposit = toWei(p2p.channels[0].participant2.deposit); // should be inferred
+            // starting deposit for node "initiator"
+            const targetDeposit = toWei(
+                p2p.channels[0].participant2.deposit // should be inferred
+            );
 
+            const channelId: ChannelIdentifier = {
+                tokenAddress: tokenAddresses.LUM,
+                partnerAddress: nodes.target.client.address 
+            }
             // deposit to be made
-            const params: depositParams = {
-                token: tokenAddresses.LUM,
-                amount: toWei(2),
-                partner: nodes.initiator.client.address,
+            const balance: BalanceIdentifier = {
+                ...channelId,
+                amountOnWei: toWei(2),
             };
 
-            await nodes.target.client.sdk.depositTokens({
-                tokenAddress: params.token,
-                amountOnWei: params.amount,
-                partnerAddress: params.partner,
-            });
+            await nodes.target.client.sdk.depositTokens(balance);
 
-            const targetExpected = new ChannelState(
-                params.token,
-                params.partner,
-                targetDeposit + params.amount,
-                targetDeposit + params.amount, // balance should equal deposit
-                State.OPEN
-            );
+            await given(nodes.target).expectChannel(channelId)
+                    .toHaveDeposit(targetDeposit + balance.amountOnWei);
+            await given(nodes.target).expectChannel(channelId)
+                    .toHaveBalance(targetDeposit + balance.amountOnWei);
 
-            await verifyChannel(
-                nodes.target.client.sdk,
-                params.token,
-                params.partner,
-                targetExpected
-            );
         },
         TEST_TIMEOUT
     );

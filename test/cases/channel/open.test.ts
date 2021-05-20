@@ -12,6 +12,8 @@ import {
     State,
     TEST_TIMEOUT,
 } from '../../common';
+import { BalanceIdentifier, ChannelIdentifier, OpenChannelRequest } from 'lumino-js-sdk';
+import { given } from '../../utils/assertions';
 
 interface openParams {
     token: string;
@@ -35,32 +37,21 @@ describe('channel open', () => {
     test(
         'initiator node, 0 tokens',
         async () => {
-            const params: openParams = {
-                token: tokenAddresses.LUM,
-                amount: toWei(0),
-                partner: '0x8645315E490A05FeE7EDcF671B096E82D9b616a4', // too arbitrary, unrelated to topology
+            const channelId: ChannelIdentifier = {
+                tokenAddress: tokenAddresses.LUM, 
+                partnerAddress: '0x8645315E490A05FeE7EDcF671B096E82D9b616a4'
+            }
+            const openChannelRequest: OpenChannelRequest = {
+                tokenAddress: channelId.tokenAddress,
+                amountOnWei: toWei(0),
+                rskPartnerAddress: channelId.partnerAddress, // too arbitrary, unrelated to topology
             };
 
-            await nodes.initiator.client.sdk.openChannel({
-                tokenAddress: params.token,
-                amountOnWei: params.amount,
-                rskPartnerAddress: params.partner,
-            });
+            await nodes.initiator.client.sdk.openChannel(openChannelRequest);
 
-            const expected = new ChannelState(
-                params.token,
-                params.partner,
-                params.amount,
-                params.amount, // balance should equal deposit
-                State.OPEN
-            );
-
-            await verifyChannel(
-                nodes.initiator.client.sdk,
-                params.token,
-                params.partner,
-                expected
-            );
+            await given(nodes.initiator).expectChannel(channelId).toBeInState(State.OPEN);
+            await given(nodes.initiator).expectChannel(channelId).toHaveBalance(toWei(0));
+            await given(nodes.initiator).expectChannel(channelId).toHaveDeposit(toWei(0));
         },
         TEST_TIMEOUT
     );
@@ -68,32 +59,21 @@ describe('channel open', () => {
     test(
         'initiator node, 1 token',
         async () => {
-            const params: openParams = {
-                token: tokenAddresses.LUM,
-                amount: toWei(1),
-                partner: '0xb9eA1f16E4f1E5CAF211aF150F2147eEd9Fb2245', // too arbitrary, unrelated to topology
+            const channelId: ChannelIdentifier = {
+                tokenAddress: tokenAddresses.LUM, 
+                partnerAddress: '0xb9eA1f16E4f1E5CAF211aF150F2147eEd9Fb2245'
+            }
+            const openChannelRequest: OpenChannelRequest = {
+                tokenAddress: channelId.tokenAddress,
+                amountOnWei: toWei(1),
+                rskPartnerAddress: channelId.partnerAddress, // too arbitrary, unrelated to topology
             };
 
-            await nodes.initiator.client.sdk.openChannel({
-                tokenAddress: params.token,
-                amountOnWei: params.amount,
-                rskPartnerAddress: params.partner,
-            });
+            await nodes.initiator.client.sdk.openChannel(openChannelRequest);
 
-            const expected = new ChannelState(
-                params.token,
-                params.partner,
-                params.amount,
-                params.amount, // balance should equal deposit
-                State.OPEN
-            );
-
-            await verifyChannel(
-                nodes.initiator.client.sdk,
-                params.token,
-                params.partner,
-                expected
-            );
+            await given(nodes.initiator).expectChannel(channelId).toBeInState(State.OPEN);
+            await given(nodes.initiator).expectChannel(channelId).toHaveBalance(toWei(1));
+            await given(nodes.initiator).expectChannel(channelId).toHaveDeposit(toWei(1));
         },
         TEST_TIMEOUT
     );
