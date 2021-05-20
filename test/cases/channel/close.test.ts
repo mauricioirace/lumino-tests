@@ -2,8 +2,7 @@ import setupTestEnvironment from '../../../src';
 import mediated from '../../../topologies/mediated.json';
 import { tokenAddresses, toWei } from '../../../src/util/token';
 import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
-import { Dictionary } from '../../../src/util/collection';
-import { LuminoNode } from '../../../src/types/node';
+import { LuminoNode, LuminoNodeList } from '../../../src/types/node';
 import { verifyChannel } from '../../utils';
 import { ChannelState, State, Timeouts } from '../../common';
 
@@ -13,12 +12,12 @@ interface closeParams {
 }
 
 describe('channel close', () => {
-    let nodes: Dictionary<LuminoNode>;
+    let nodes: LuminoNodeList;
     let env: LuminoTestEnvironment;
 
     beforeAll(async () => {
         env = await setupTestEnvironment(mediated);
-        nodes = env.nodes as Dictionary<LuminoNode>;
+        nodes = env.nodes;
     }, Timeouts.SETUP);
 
     afterAll(async () => {

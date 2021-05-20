@@ -1,7 +1,6 @@
 import p2p from '../../../topologies/p2p.json';
 import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
-import { LuminoNode } from '../../../src/types/node';
-import { Dictionary } from '../../../src/util/collection';
+import { LuminoNode, LuminoNodeList } from '../../../src/types/node';
 import setupTestEnvironment from '../../../src';
 import { sleep, verifyChannel } from '../../utils';
 import { tokenAddresses, toWei } from '../../../src/util/token';
@@ -14,7 +13,7 @@ interface paymentParams {
 }
 
 describe('payments p2p', () => {
-    let nodes: Dictionary<LuminoNode>;
+    let nodes: LuminoNodeList;
     let env: LuminoTestEnvironment;
 
     // starting deposit for nodes
@@ -31,7 +30,7 @@ describe('payments p2p', () => {
 
     beforeAll(async () => {
         env = await setupTestEnvironment(p2p);
-        nodes = env.nodes as Dictionary<LuminoNode>;
+        nodes = env.nodes;
     }, Timeouts.SETUP);
 
     afterAll(async () => {

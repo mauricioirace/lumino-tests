@@ -1,5 +1,5 @@
 import { SetupChannel } from '../types/setup';
-import { LuminoNode, NodeList } from '../types/node';
+import { LuminoNodeList } from '../types/node';
 import { tokenAddresses, toWei } from '../util/token';
 
 export default class ChannelManager {
@@ -7,7 +7,7 @@ export default class ChannelManager {
 
     async openChannels(
         channels: SetupChannel[],
-        nodes: NodeList
+        nodes: LuminoNodeList
     ): Promise<void> {
         console.debug('Opening channels');
         await Promise.all(
@@ -17,11 +17,11 @@ export default class ChannelManager {
     }
     async openChannel(
         { tokenSymbol, participant1, participant2 }: SetupChannel,
-        nodes: NodeList
+        nodes: LuminoNodeList
     ): Promise<void> {
         const tokenAddress = tokenAddresses[tokenSymbol];
-        const creator = nodes[participant1.node] as LuminoNode;
-        const partner = nodes[participant2.node] as LuminoNode;
+        const creator = nodes[participant1.node];
+        const partner = nodes[participant2.node];
         console.debug(
             `opening channel between ${creator.client.address} and ${partner.client.address} with token ${tokenAddress}`
         );

@@ -1,8 +1,8 @@
-import { NodeList } from './node';
+import { LuminoNodeList } from './node';
 import EnvironmentLoader from '../environment-loader';
 
 export class LuminoTestEnvironment {
-    get nodes(): NodeList {
+    get nodes(): LuminoNodeList {
         return this.environmentLoader.getNodes();
     }
     constructor(private environmentLoader: EnvironmentLoader) {}

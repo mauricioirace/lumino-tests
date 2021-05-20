@@ -2,8 +2,7 @@ import setupTestEnvironment from '../../../src';
 import noChannels from '../../../topologies/no-channels.json';
 import { tokenAddresses, toWei } from '../../../src/util/token';
 import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
-import { Dictionary } from '../../../src/util/collection';
-import { LuminoNode } from '../../../src/types/node';
+import { LuminoNodeList } from '../../../src/types/node';
 import { verifyChannel } from '../../utils';
 import { ChannelState, State, Timeouts } from '../../common';
 
@@ -14,12 +13,12 @@ interface openParams {
 }
 
 describe('channel open', () => {
-    let nodes: Dictionary<LuminoNode>;
+    let nodes: LuminoNodeList;
     let env: LuminoTestEnvironment;
 
     beforeAll(async () => {
         env = await setupTestEnvironment(noChannels);
-        nodes = env.nodes as Dictionary<LuminoNode>;
+        nodes = env.nodes;
     }, Timeouts.SETUP);
 
     afterAll(async () => {

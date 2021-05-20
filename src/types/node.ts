@@ -11,4 +11,4 @@ export interface Node {
     container: StartedTestContainer;
 }
 
-export type NodeList = Dictionary<Node>;
+export type LuminoNodeList = Dictionary<LuminoNode>;

@@ -2,8 +2,7 @@ import { tokenAddresses, toWei } from '../../../src/util/token';
 import mediated from '../../../topologies/mediated.json';
 import setupTestEnvironment from '../../../src';
 import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
-import { LuminoNode } from '../../../src/types/node';
-import { Dictionary } from '../../../src/util/collection';
+import { LuminoNode, LuminoNodeList } from '../../../src/types/node';
 import { sleep, verifyChannel } from '../../utils';
 import { ChannelState, State, Timeouts } from '../../common';
 
@@ -14,7 +13,7 @@ interface paymentParams {
 }
 
 describe('payments mediated', () => {
-    let nodes: Dictionary<LuminoNode>;
+    let nodes: LuminoNodeList;
     let env: LuminoTestEnvironment;
 
     // starting balance for each node
@@ -31,7 +30,7 @@ describe('payments mediated', () => {
 
     beforeAll(async () => {
         env = await setupTestEnvironment(mediated);
-        nodes = env.nodes as Dictionary<LuminoNode>;
+        nodes = env.nodes;
     }, Timeouts.SETUP);
 
     afterAll(async () => {
