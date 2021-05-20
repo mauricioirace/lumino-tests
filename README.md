@@ -153,22 +153,6 @@ You may need to modify the logic for the manager classes located in the [`src` d
 
 Be sure to also check out the existing [topologies](./topologies), as they might come in handy.
 
-### Rebuild Docker Images
-
-In case you ever want to delete an image and rebuild it, you can first obtain its name by running:
-
-```bash
-docker image ls
-```
-
-Suppose you want to delete an image called `my-image-name`. You can then delete it by executing:
-
-```bash
-docker image rm my-image-name
-```
-
-Afterwards, just [run `npm run requirements`](#docker-images), as it will only rebuild what's missing.
-
 ## External Links
 
 - [RIF Lumino Network](https://github.com/rsksmart/lumino)
