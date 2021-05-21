@@ -25,18 +25,18 @@ describe('channel close', () => {
     }, Timeouts.TEARDOWN);
 
     it(
-        'from initiator node',
+        'from alice node',
         async () => {
-            // deposit for node "initiator"
-            const initiatorDeposit = toWei(
+            // deposit for node "alice"
+            const aliceDeposit = toWei(
                 mediated.channels[0].participant1.deposit // should be inferred
             );
 
             const params: closeParams = {
                 token: tokenAddresses.LUM,
-                partner: nodes.mediator.client.address
+                partner: nodes.bob.client.address
             };
-            await nodes.initiator.client.sdk.closeChannel({
+            await nodes.alice.client.sdk.closeChannel({
                 tokenAddress: params.token,
                 partnerAddress: params.partner
             });
@@ -44,37 +44,37 @@ describe('channel close', () => {
             let expected = new ChannelState(
                 params.token,
                 params.partner,
-                initiatorDeposit,
-                initiatorDeposit, // balance should equal deposit
+                aliceDeposit,
+                aliceDeposit, // balance should equal deposit
                 State.CLOSED
             );
 
             await verifyChannel(
-                nodes.initiator.client.sdk,
+                nodes.alice.client.sdk,
                 params.token,
                 params.partner,
                 expected
             );
 
-            // repeat verification from "mediator" node
+            // repeat verification from "bob" node
 
-            // deposit for node "mediator"
-            const mediatorDeposit = toWei(
+            // deposit for node "bob"
+            const bobDeposit = toWei(
                 mediated.channels[0].participant2.deposit // should be inferred
             );
 
             expected = new ChannelState(
                 params.token,
-                nodes.initiator.client.address, // should be inferred
-                mediatorDeposit,
-                mediatorDeposit, // balance should equal deposit
+                nodes.alice.client.address, // should be inferred
+                bobDeposit,
+                bobDeposit, // balance should equal deposit
                 State.CLOSED
             );
 
             await verifyChannel(
-                nodes.mediator.client.sdk,
+                nodes.bob.client.sdk,
                 params.token,
-                nodes.initiator.client.address,
+                nodes.alice.client.address,
                 expected
             );
         },
@@ -82,18 +82,18 @@ describe('channel close', () => {
     );
 
     it(
-        'from target node',
+        'from charlie node',
         async () => {
-            // deposit for node "target"
-            const targetDeposit = toWei(
+            // deposit for node "charlie"
+            const charlieDeposit = toWei(
                 mediated.channels[1].participant2.deposit // should be inferred
             );
 
             const params: closeParams = {
                 token: tokenAddresses.LUM,
-                partner: nodes.mediator.client.address
+                partner: nodes.bob.client.address
             };
-            await nodes.target.client.sdk.closeChannel({
+            await nodes.charlie.client.sdk.closeChannel({
                 tokenAddress: params.token,
                 partnerAddress: params.partner
             });
@@ -101,37 +101,37 @@ describe('channel close', () => {
             let expected = new ChannelState(
                 params.token,
                 params.partner,
-                targetDeposit,
-                targetDeposit, // balance should equal deposit
+                charlieDeposit,
+                charlieDeposit, // balance should equal deposit
                 State.CLOSED
             );
 
             await verifyChannel(
-                nodes.target.client.sdk,
+                nodes.charlie.client.sdk,
                 params.token,
                 params.partner,
                 expected
             );
 
-            // repeat verification from "mediator" node
+            // repeat verification from "bob" node
 
-            // deposit for node "mediator"
-            const mediatorDeposit = toWei(
+            // deposit for node "bob"
+            const bobDeposit = toWei(
                 mediated.channels[1].participant1.deposit // should be inferred
             );
 
             expected = new ChannelState(
                 params.token,
-                nodes.target.client.address, // should be inferred
-                mediatorDeposit,
-                mediatorDeposit, // balance should equal deposit
+                nodes.charlie.client.address, // should be inferred
+                bobDeposit,
+                bobDeposit, // balance should equal deposit
                 State.CLOSED
             );
 
             await verifyChannel(
-                nodes.mediator.client.sdk,
+                nodes.bob.client.sdk,
                 params.token,
-                nodes.target.client.address,
+                nodes.charlie.client.address,
                 expected
             );
         },

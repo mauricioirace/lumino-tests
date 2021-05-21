@@ -26,7 +26,7 @@ describe('channel open', () => {
     }, Timeouts.TEARDOWN);
 
     test(
-        'initiator node, 0 tokens',
+        'alice node, 0 tokens',
         async () => {
             const params: openParams = {
                 token: tokenAddresses.LUM,
@@ -34,7 +34,7 @@ describe('channel open', () => {
                 partner: '0x8645315E490A05FeE7EDcF671B096E82D9b616a4' // too arbitrary, unrelated to topology
             };
 
-            await nodes.initiator.client.sdk.openChannel({
+            await nodes.alice.client.sdk.openChannel({
                 tokenAddress: params.token,
                 amountOnWei: params.amount,
                 rskPartnerAddress: params.partner
@@ -49,7 +49,7 @@ describe('channel open', () => {
             );
 
             await verifyChannel(
-                nodes.initiator.client.sdk,
+                nodes.alice.client.sdk,
                 params.token,
                 params.partner,
                 expected
@@ -59,7 +59,7 @@ describe('channel open', () => {
     );
 
     test(
-        'initiator node, 1 token',
+        'alice node, 1 token',
         async () => {
             const params: openParams = {
                 token: tokenAddresses.LUM,
@@ -67,7 +67,7 @@ describe('channel open', () => {
                 partner: '0xb9eA1f16E4f1E5CAF211aF150F2147eEd9Fb2245' // too arbitrary, unrelated to topology
             };
 
-            await nodes.initiator.client.sdk.openChannel({
+            await nodes.alice.client.sdk.openChannel({
                 tokenAddress: params.token,
                 amountOnWei: params.amount,
                 rskPartnerAddress: params.partner
@@ -82,7 +82,7 @@ describe('channel open', () => {
             );
 
             await verifyChannel(
-                nodes.initiator.client.sdk,
+                nodes.alice.client.sdk,
                 params.token,
                 params.partner,
                 expected

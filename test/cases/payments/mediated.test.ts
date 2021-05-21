@@ -17,14 +17,8 @@ describe('payments mediated', () => {
     let env: LuminoTestEnvironment;
 
     // starting balance for each node
-    const initiatorDeposit = toWei(mediated.channels[0].participant1.deposit);
-    const mediatorInitiatorDeposit = toWei(
-        mediated.channels[0].participant2.deposit
-    );
-    const mediatorTargetDeposit = toWei(
-        mediated.channels[1].participant1.deposit
-    );
-    const targetDeposit = toWei(mediated.channels[1].participant2.deposit);
+    const aliceDeposit = toWei(mediated.channels[0].participant1.deposit);
+    const bobAliceDeposit = toWei(mediated.channels[0].participant2.deposit);
 
     const paymentAmount = toWei(1);
 
@@ -38,15 +32,15 @@ describe('payments mediated', () => {
     }, Timeouts.TEARDOWN);
 
     test(
-        'initiator node, 1 token',
+        'alice node, 1 token',
         async () => {
             const params: paymentParams = {
                 token: tokenAddresses.LUM,
-                partner: nodes.target.client.address,
+                partner: nodes.charlie.client.address,
                 amount: paymentAmount
             };
 
-            await nodes.initiator.client.sdk.makePayment({
+            await nodes.alice.client.sdk.makePayment({
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: params.partner,
                 amountOnWei: params.amount
@@ -54,67 +48,67 @@ describe('payments mediated', () => {
 
             await sleep(5000); // should not be necessary
 
-            // verify initiator -> target
+            // verify alice -> charlie
 
             let expected = new ChannelState(
                 params.token,
-                nodes.mediator.client.address,
-                initiatorDeposit,
-                initiatorDeposit - paymentAmount,
+                nodes.bob.client.address,
+                aliceDeposit,
+                aliceDeposit - paymentAmount,
                 State.OPEN
             );
 
             await verifyChannel(
-                nodes.initiator.client.sdk,
+                nodes.alice.client.sdk,
                 params.token,
-                nodes.mediator.client.address,
+                nodes.bob.client.address,
                 expected
             );
 
             expected = new ChannelState(
                 params.token,
                 params.partner,
-                mediatorInitiatorDeposit,
-                mediatorInitiatorDeposit - paymentAmount,
+                bobAliceDeposit,
+                bobAliceDeposit - paymentAmount,
                 State.OPEN
             );
 
             await verifyChannel(
-                nodes.mediator.client.sdk,
+                nodes.bob.client.sdk,
                 params.token,
-                nodes.target.client.address,
+                nodes.charlie.client.address,
                 expected
             );
 
-            // now verify target -> initiator
+            // now verify charlie -> alice
 
             expected = new ChannelState(
                 params.token,
-                nodes.mediator.client.address,
-                mediatorInitiatorDeposit,
-                mediatorInitiatorDeposit + paymentAmount,
+                nodes.bob.client.address,
+                bobAliceDeposit,
+                bobAliceDeposit + paymentAmount,
                 State.OPEN
             );
 
             await verifyChannel(
-                nodes.target.client.sdk,
+                nodes.charlie.client.sdk,
                 params.token,
-                nodes.mediator.client.address,
+                nodes.bob.client.address,
                 expected
             );
 
             expected = new ChannelState(
                 params.token,
-                nodes.initiator.client.address,
-                mediatorInitiatorDeposit,
-                mediatorInitiatorDeposit + paymentAmount,
+                nodes.alice.client.address,
+                bobAliceDeposit,
+                bobAliceDeposit + paymentAmount,
                 State.OPEN
             );
 
             await verifyChannel(
-                nodes.mediator.client.sdk,
+                nodes.bob.client.sdk,
                 params.token,
-                nodes.initiator.client.address,
+                nodes.alice.client.address,
                 expected
             );
         },

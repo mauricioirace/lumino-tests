@@ -17,16 +17,16 @@ describe('payments p2p', () => {
     let env: LuminoTestEnvironment;
 
     // starting deposit for nodes
-    const initiatorDeposit = toWei(
+    const aliceDeposit = toWei(
         p2p.channels[0].participant1.deposit // should be inferred
     );
-    const targetDeposit = toWei(
+    const bobDeposit = toWei(
         p2p.channels[0].participant2.deposit // should be inferred
     );
 
     // payment amounts to be made
-    const initiatorPaymentAmount = toWei(1);
-    const targetPaymentAmount = toWei(2);
+    const alicePaymentAmount = toWei(1);
+    const bobPaymentAmount = toWei(2);
 
     beforeAll(async () => {
         env = await setupTestEnvironment(p2p);
@@ -38,15 +38,15 @@ describe('payments p2p', () => {
     }, Timeouts.TEARDOWN);
 
     test(
-        'initiator node, 1 token',
+        'alice node, 1 token',
         async () => {
             const params: paymentParams = {
                 token: tokenAddresses.LUM,
-                partner: nodes.target.client.address,
-                amount: initiatorPaymentAmount
+                partner: nodes.bob.client.address,
+                amount: alicePaymentAmount
             };
 
-            await nodes.initiator.client.sdk.makePayment({
+            await nodes.alice.client.sdk.makePayment({
                 tokenAddress: params.token,
                 partnerAddress: params.partner,
                 amountOnWei: params.amount
@@ -57,32 +57,32 @@ describe('payments p2p', () => {
             let expected = new ChannelState(
                 params.token,
                 params.partner,
-                initiatorDeposit,
-                initiatorDeposit - initiatorPaymentAmount,
+                aliceDeposit,
+                aliceDeposit - alicePaymentAmount,
                 State.OPEN
             );
 
             await verifyChannel(
-                nodes.initiator.client.sdk,
+                nodes.alice.client.sdk,
                 params.token,
                 params.partner,
                 expected
             );
 
-            // now verify from "target" node
+            // now verify from "bob" node
 
             expected = new ChannelState(
                 params.token,
-                nodes.initiator.client.address, // should be inferred
-                targetDeposit,
-                targetDeposit + params.amount,
+                nodes.alice.client.address, // should be inferred
+                bobDeposit,
+                bobDeposit + params.amount,
                 State.OPEN
             );
 
             await verifyChannel(
-                nodes.target.client.sdk,
+                nodes.bob.client.sdk,
                 params.token,
-                nodes.initiator.client.address, // should be inferred
+                nodes.alice.client.address, // should be inferred
                 expected
             );
         },
@@ -90,15 +90,15 @@ describe('payments p2p', () => {
     );
 
     test(
-        '2 tokens, target node',
+        '2 tokens, bob node',
         async () => {
             const params: paymentParams = {
                 token: tokenAddresses.LUM,
-                partner: nodes.initiator.client.address,
-                amount: targetPaymentAmount
+                partner: nodes.alice.client.address,
+                amount: bobPaymentAmount
             };
 
-            await nodes.target.client.sdk.makePayment({
+            await nodes.bob.client.sdk.makePayment({
                 tokenAddress: params.token,
                 partnerAddress: params.partner,
                 amountOnWei: params.amount
@@ -109,31 +109,31 @@ describe('payments p2p', () => {
             let expected = new ChannelState(
                 params.token,
                 params.partner,
-                targetDeposit,
-                targetDeposit + initiatorPaymentAmount - targetPaymentAmount,
+                bobDeposit,
+                bobDeposit + alicePaymentAmount - bobPaymentAmount,
                 State.OPEN
             );
             await verifyChannel(
-                nodes.target.client.sdk,
+                nodes.bob.client.sdk,
                 params.token,
                 params.partner,
                 expected
             );
 
-            // repeat verification from "initiator" node
+            // repeat verification from "alice" node
 
             expected = new ChannelState(
                 params.token,
-                nodes.target.client.address, // should be inferred
-                initiatorDeposit,
-                initiatorDeposit - initiatorPaymentAmount + targetPaymentAmount,
+                nodes.bob.client.address, // should be inferred
+                aliceDeposit,
+                aliceDeposit - alicePaymentAmount + bobPaymentAmount,
                 State.OPEN
             );
 
             await verifyChannel(
-                nodes.initiator.client.sdk,
+                nodes.alice.client.sdk,
                 params.token,
-                nodes.target.client.address, // should be inferred
+                nodes.bob.client.address, // should be inferred
                 expected
             );
         },

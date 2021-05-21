@@ -47,7 +47,7 @@ export default class EnvironmentLoader {
             validateTokens(setup.tokens);
             for (let i = 0; i < setup.nodes; i++) {
                 nodeConfigs.push({
-                    name: `node${i}`,
+                    name: `${i}`,
                     tokens: setup.tokens as SetupToken[],
                     enableHub: setup.enableHub ?? false
                 });

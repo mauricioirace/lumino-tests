@@ -2,7 +2,7 @@
     "enableExplorer": false,
     "nodes": [
         {
-            "name": "node0",
+            "name": "alice",
             "enableHub": false,
             "tokens": [
                 {
@@ -16,7 +16,7 @@
             ]
         },
         {
-            "name": "node1",
+            "name": "bob",
             "enableHub": false,
             "tokens": []
         }
@@ -25,11 +25,11 @@
         {
             "tokenSymbol": "LUM",
             "participant1": {
-                "node": "node0",
+                "node": "alice",
                 "deposit": 1
             },
             "participant2": {
-                "node": "node1",
+                "node": "bob",
                 "deposit": 0
             }
         }

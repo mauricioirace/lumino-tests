@@ -2,7 +2,7 @@ import setupTestEnvironment from '../../../src';
 import p2p from '../../../topologies/p2p.json';
 import { tokenAddresses, toWei } from '../../../src/util/token';
 import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
-import { LuminoNode, LuminoNodeList } from '../../../src/types/node';
+import { LuminoNodeList } from '../../../src/types/node';
 import { verifyChannel } from '../../utils';
 import { ChannelState, State, Timeouts } from '../../common';
 
@@ -26,10 +26,10 @@ describe('channel deposit', () => {
     }, Timeouts.TEARDOWN);
 
     test(
-        'initiator node, 1 token',
+        'alice node, 1 token',
         async () => {
-            // starting deposit for node "initiator"
-            const initiatorDeposit = toWei(
+            // starting deposit for node "alice"
+            const aliceDeposit = toWei(
                 p2p.channels[0].participant1.deposit // should be inferred
             );
 
@@ -37,10 +37,10 @@ describe('channel deposit', () => {
             const params: depositParams = {
                 token: tokenAddresses.LUM,
                 amount: toWei(1),
-                partner: nodes.target.client.address
+                partner: nodes.bob.client.address
             };
 
-            await nodes.initiator.client.sdk.depositTokens({
+            await nodes.alice.client.sdk.depositTokens({
                 tokenAddress: params.token,
                 amountOnWei: params.amount,
                 partnerAddress: params.partner
@@ -49,13 +49,13 @@ describe('channel deposit', () => {
             const expected = new ChannelState(
                 params.token,
                 params.partner,
-                initiatorDeposit + params.amount,
-                initiatorDeposit + params.amount, // balance should equal deposit
+                aliceDeposit + params.amount,
+                aliceDeposit + params.amount, // balance should equal deposit
                 State.OPEN
             );
 
             await verifyChannel(
-                nodes.initiator.client.sdk,
+                nodes.alice.client.sdk,
                 params.token,
                 params.partner,
                 expected
@@ -65,37 +65,37 @@ describe('channel deposit', () => {
     );
 
     test(
-        'target node, 2 tokens',
+        'bob node, 2 tokens',
         async () => {
-            // starting deposit for node "target"
-            const targetDeposit = toWei(p2p.channels[0].participant2.deposit); // should be inferred
+            // starting deposit for node "bob"
+            const bobDeposit = toWei(p2p.channels[0].participant2.deposit); // should be inferred
 
             // deposit to be made
             const params: depositParams = {
                 token: tokenAddresses.LUM,
                 amount: toWei(2),
-                partner: nodes.initiator.client.address
+                partner: nodes.alice.client.address
             };
 
-            await nodes.target.client.sdk.depositTokens({
+            await nodes.bob.client.sdk.depositTokens({
                 tokenAddress: params.token,
                 amountOnWei: params.amount,
                 partnerAddress: params.partner
             });
 
-            const targetExpected = new ChannelState(
+            const bobExpected = new ChannelState(
                 params.token,
                 params.partner,
-                targetDeposit + params.amount,
-                targetDeposit + params.amount, // balance should equal deposit
+                bobDeposit + params.amount,
+                bobDeposit + params.amount, // balance should equal deposit
                 State.OPEN
             );
 
             await verifyChannel(
-                nodes.target.client.sdk,
+                nodes.bob.client.sdk,
                 params.token,
                 params.partner,
-                targetExpected
+                bobExpected
             );
         },
         Timeouts.TEST
