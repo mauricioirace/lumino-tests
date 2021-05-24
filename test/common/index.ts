@@ -1,7 +1,7 @@
 export const Timeouts = {
-    SETUP: 5 * 60 * 1000, // 5 minutes
-    TEARDOWN: 1 * 60 * 1000, // 1 minute
-    TEST: 1 * 60 * 1000 // 1 minute
+    SETUP: 10 * 60 * 1000, // 5 minutes
+    TEARDOWN: 10 * 60 * 1000, // 1 minute
+    TEST: 5 * 60 * 1000 // 1 minute
 };
 
 export enum State {
