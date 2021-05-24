@@ -51,7 +51,6 @@ describe('channel open', () => {
                     balance: toWei(0),
                     state: State.OPEN
                 });
-            y;
         },
         Timeouts.TEST
     );
