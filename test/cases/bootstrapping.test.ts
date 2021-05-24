@@ -19,7 +19,7 @@ describe('bootstrapping', () => {
             env = await setupTestEnvironment(basic as SetupJson);
             await verifyEnv(env);
         },
-        Timeouts.TEST
+        Timeouts.SETUP
     );
 
     it(
@@ -28,6 +28,6 @@ describe('bootstrapping', () => {
             env = await setupTestEnvironment(advanced as SetupJson);
             await verifyEnv(env);
         },
-        Timeouts.TEST
+        Timeouts.SETUP
     );
 });
