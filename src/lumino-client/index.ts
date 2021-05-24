@@ -1,8 +1,4 @@
-import Lumino, {
-    BalanceIdentifier,
-    ChannelIdentifier,
-    OpenChannelRequest
-} from 'lumino-js-sdk';
+import Lumino from 'lumino-js-sdk';
 
 export default class LuminoClient {
     private constructor(

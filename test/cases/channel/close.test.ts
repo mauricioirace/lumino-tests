@@ -24,22 +24,22 @@ describe('channel close', () => {
     it(
         'from initiator node',
         async () => {
-            let channelId: ChannelIdentifier = {
+            let initiatorChannel: ChannelIdentifier = {
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: nodes.mediator.client.address
             };
-            let inverseChannelId = {
+            let mediatorChannel = {
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: nodes.initiator.client.address
             };
 
-            await nodes.initiator.client.sdk.closeChannel(channelId);
+            await nodes.initiator.client.sdk.closeChannel(initiatorChannel);
 
             await given(nodes.initiator)
-                .expectChannel(channelId)
+                .expectChannel(initiatorChannel)
                 .toBeInState(State.CLOSED);
             await given(nodes.mediator)
-                .expectChannel(inverseChannelId)
+                .expectChannel(mediatorChannel)
                 .toBeInState(State.CLOSED);
         },
         Timeouts.TEST
@@ -48,22 +48,22 @@ describe('channel close', () => {
     it(
         'from target node',
         async () => {
-            let channelId: ChannelIdentifier = {
+            let targetChannel: ChannelIdentifier = {
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: nodes.mediator.client.address
             };
-            let inverseChannelId = {
+            let mediatorChannel = {
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: nodes.target.client.address
             };
 
-            await nodes.target.client.sdk.closeChannel(channelId);
+            await nodes.target.client.sdk.closeChannel(targetChannel);
 
             await given(nodes.target)
-                .expectChannel(channelId)
+                .expectChannel(targetChannel)
                 .toBeInState(State.CLOSED);
             await given(nodes.mediator)
-                .expectChannel(inverseChannelId)
+                .expectChannel(mediatorChannel)
                 .toBeInState(State.CLOSED);
         },
         Timeouts.TEST

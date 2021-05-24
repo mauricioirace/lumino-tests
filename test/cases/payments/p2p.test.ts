@@ -63,16 +63,19 @@ describe('payments p2p', () => {
     test(
         '2 tokens, target node',
         async () => {
+            // pay initator -> target
             await nodes.initiator.client.sdk.makePayment({
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: nodes.target.client.address,
                 amountOnWei: initiatorPaymentAmount
             });
+            // pay target -> initator
             await nodes.target.client.sdk.makePayment({
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: nodes.initiator.client.address,
                 amountOnWei: targetPaymentAmount
             });
+            // verify from "target" node
             await given(nodes.target)
                 .expectChannel({
                     tokenAddress: tokenAddresses.LUM,

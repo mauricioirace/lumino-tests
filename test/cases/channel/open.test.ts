@@ -44,13 +44,14 @@ describe('channel open', () => {
 
             await given(nodes.initiator)
                 .expectChannel(channelId)
-                .toBeInState(State.OPEN);
-            await given(nodes.initiator)
-                .expectChannel(channelId)
-                .toHaveBalance(toWei(0));
-            await given(nodes.initiator)
-                .expectChannel(channelId)
-                .toHaveDeposit(toWei(0));
+                .toBe({
+                    token: channelId.tokenAddress,
+                    partner: channelId.partnerAddress,
+                    deposit: toWei(0),
+                    balance: toWei(0),
+                    state: State.OPEN
+                });
+            y;
         },
         Timeouts.TEST
     );
@@ -69,16 +70,15 @@ describe('channel open', () => {
             };
 
             await nodes.initiator.client.sdk.openChannel(openChannelRequest);
-
             await given(nodes.initiator)
                 .expectChannel(channelId)
-                .toBeInState(State.OPEN);
-            await given(nodes.initiator)
-                .expectChannel(channelId)
-                .toHaveBalance(toWei(1));
-            await given(nodes.initiator)
-                .expectChannel(channelId)
-                .toHaveDeposit(toWei(1));
+                .toBe({
+                    token: channelId.tokenAddress,
+                    partner: channelId.partnerAddress,
+                    deposit: toWei(1),
+                    balance: toWei(1),
+                    state: State.OPEN
+                });
         },
         Timeouts.TEST
     );

@@ -44,9 +44,6 @@ describe('channel deposit', () => {
             await given(nodes.initiator)
                 .expectChannel(channelId)
                 .toHaveDeposit(initiatorDeposit + balance.amountOnWei);
-            await given(nodes.initiator)
-                .expectChannel(channelId)
-                .toHaveBalance(initiatorDeposit + balance.amountOnWei);
         },
         Timeouts.TEST
     );
@@ -74,9 +71,6 @@ describe('channel deposit', () => {
             await given(nodes.target)
                 .expectChannel(channelId)
                 .toHaveDeposit(targetDeposit + balance.amountOnWei);
-            await given(nodes.target)
-                .expectChannel(channelId)
-                .toHaveBalance(targetDeposit + balance.amountOnWei);
         },
         Timeouts.TEST
     );
