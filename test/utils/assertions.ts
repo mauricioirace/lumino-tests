@@ -61,19 +61,19 @@ export class ChannelExpectation {
 
     async toBe(expected: ChannelState) {
         const actual = await this.node.client.sdk.getChannel(this.channel);
-        if (actual.token_address !== undefined) {
+        if (expected.token !== undefined && expected.token !== null) {
             expect(actual.token_address).toBe(expected.token);
         }
-        if (actual.partner_address !== undefined) {
+        if (expected.partner !== undefined && expected.partner !== null) {
             expect(actual.partner_address).toBe(expected.partner);
         }
-        if (actual.total_deposit !== undefined) {
+        if (expected.deposit !== undefined && expected.deposit !== null) {
             expect(actual.total_deposit).toBe(expected.deposit);
         }
-        if (actual.balance !== undefined) {
+        if (expected.balance !== undefined && expected.balance !== null) {
             expect(actual.balance).toBe(expected.balance);
         }
-        if (actual.state !== undefined) {
+        if (expected.state !== undefined && expected.state !== null) {
             expect(actual.state).toBe(expected.state);
         }
     }
