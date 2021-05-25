@@ -1,16 +1,11 @@
 import p2p from '../../../topologies/p2p.json';
 import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
-import { LuminoNode, LuminoNodeList } from '../../../src/types/node';
+import { LuminoNodeList } from '../../../src/types/node';
 import setupTestEnvironment from '../../../src';
-import { sleep, verifyChannel } from '../../utils';
 import { tokenAddresses, toWei } from '../../../src/util/token';
-import { ChannelState, State, Timeouts } from '../../common';
-
-interface paymentParams {
-    token: string;
-    partner: string;
-    amount: number;
-}
+import { Timeouts } from '../../common';
+import { PaymentParams } from 'lumino-js-sdk';
+import { given } from '../../utils/assertions';
 
 describe('payments p2p', () => {
     let nodes: LuminoNodeList;
@@ -28,63 +23,38 @@ describe('payments p2p', () => {
     const alicePaymentAmount = toWei(1);
     const bobPaymentAmount = toWei(2);
 
-    beforeAll(async () => {
+    beforeEach(async () => {
         env = await setupTestEnvironment(p2p);
         nodes = env.nodes;
     }, Timeouts.SETUP);
 
-    afterAll(async () => {
+    afterEach(async () => {
         await env.stop();
     }, Timeouts.TEARDOWN);
 
     test(
         'alice node, 1 token',
         async () => {
-            const params: paymentParams = {
-                token: tokenAddresses.LUM,
-                partner: nodes.bob.client.address,
-                amount: alicePaymentAmount
+            const payment: PaymentParams = {
+                tokenAddress: tokenAddresses.LUM,
+                partnerAddress: nodes.bob.client.address,
+                amountOnWei: alicePaymentAmount
             };
-
-            await nodes.alice.client.sdk.makePayment({
-                tokenAddress: params.token,
-                partnerAddress: params.partner,
-                amountOnWei: params.amount
-            });
-
-            await sleep(5000); // should not be necessary
-
-            let expected = new ChannelState(
-                params.token,
-                params.partner,
-                aliceDeposit,
-                aliceDeposit - alicePaymentAmount,
-                State.OPEN
-            );
-
-            await verifyChannel(
-                nodes.alice.client.sdk,
-                params.token,
-                params.partner,
-                expected
-            );
-
+            await nodes.alice.client.sdk.makePayment(payment);
+            // verify alice -> bob
+            await given(nodes.alice)
+                .expectChannel({
+                    tokenAddress: tokenAddresses.LUM,
+                    partnerAddress: nodes.bob.client.address
+                })
+                .toHaveBalance(aliceDeposit - alicePaymentAmount);
             // now verify from "bob" node
-
-            expected = new ChannelState(
-                params.token,
-                nodes.alice.client.address, // should be inferred
-                bobDeposit,
-                bobDeposit + params.amount,
-                State.OPEN
-            );
-
-            await verifyChannel(
-                nodes.bob.client.sdk,
-                params.token,
-                nodes.alice.client.address, // should be inferred
-                expected
-            );
+            await given(nodes.bob)
+                .expectChannel({
+                    tokenAddress: tokenAddresses.LUM,
+                    partnerAddress: nodes.alice.client.address
+                })
+                .toHaveBalance(bobDeposit + alicePaymentAmount);
         },
         Timeouts.TEST
     );
@@ -92,50 +62,36 @@ describe('payments p2p', () => {
     test(
         '2 tokens, bob node',
         async () => {
-            const params: paymentParams = {
-                token: tokenAddresses.LUM,
-                partner: nodes.alice.client.address,
-                amount: bobPaymentAmount
-            };
-
-            await nodes.bob.client.sdk.makePayment({
-                tokenAddress: params.token,
-                partnerAddress: params.partner,
-                amountOnWei: params.amount
+            // pay initator -> bob
+            await nodes.alice.client.sdk.makePayment({
+                tokenAddress: tokenAddresses.LUM,
+                partnerAddress: nodes.bob.client.address,
+                amountOnWei: alicePaymentAmount
             });
-
-            await sleep(5000); // should not be necessary
-
-            let expected = new ChannelState(
-                params.token,
-                params.partner,
-                bobDeposit,
-                bobDeposit + alicePaymentAmount - bobPaymentAmount,
-                State.OPEN
-            );
-            await verifyChannel(
-                nodes.bob.client.sdk,
-                params.token,
-                params.partner,
-                expected
-            );
-
+            // pay bob -> initator
+            await nodes.bob.client.sdk.makePayment({
+                tokenAddress: tokenAddresses.LUM,
+                partnerAddress: nodes.alice.client.address,
+                amountOnWei: bobPaymentAmount
+            });
+            // verify from "bob" node
+            await given(nodes.bob)
+                .expectChannel({
+                    tokenAddress: tokenAddresses.LUM,
+                    partnerAddress: nodes.alice.client.address
+                })
+                .toHaveBalance(
+                    bobDeposit + alicePaymentAmount - bobPaymentAmount
+                );
             // repeat verification from "alice" node
-
-            expected = new ChannelState(
-                params.token,
-                nodes.bob.client.address, // should be inferred
-                aliceDeposit,
-                aliceDeposit - alicePaymentAmount + bobPaymentAmount,
-                State.OPEN
-            );
-
-            await verifyChannel(
-                nodes.alice.client.sdk,
-                params.token,
-                nodes.bob.client.address, // should be inferred
-                expected
-            );
+            await given(nodes.alice)
+                .expectChannel({
+                    tokenAddress: tokenAddresses.LUM,
+                    partnerAddress: nodes.bob.client.address
+                })
+                .toHaveBalance(
+                    aliceDeposit - alicePaymentAmount + bobPaymentAmount
+                );
         },
         Timeouts.TEST
     );

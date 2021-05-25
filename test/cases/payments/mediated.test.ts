@@ -2,15 +2,10 @@ import { tokenAddresses, toWei } from '../../../src/util/token';
 import mediated from '../../../topologies/mediated.json';
 import setupTestEnvironment from '../../../src';
 import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
-import { LuminoNode, LuminoNodeList } from '../../../src/types/node';
-import { sleep, verifyChannel } from '../../utils';
-import { ChannelState, State, Timeouts } from '../../common';
-
-interface paymentParams {
-    token: string;
-    partner: string;
-    amount: number;
-}
+import { LuminoNodeList } from '../../../src/types/node';
+import { Timeouts } from '../../common';
+import { given } from '../../utils/assertions';
+import { PaymentParams } from 'lumino-js-sdk';
 
 describe('payments mediated', () => {
     let nodes: LuminoNodeList;
@@ -19,6 +14,8 @@ describe('payments mediated', () => {
     // starting balance for each node
     const aliceDeposit = toWei(mediated.channels[0].participant1.deposit);
     const bobAliceDeposit = toWei(mediated.channels[0].participant2.deposit);
+    const bobCharlieDeposit = toWei(mediated.channels[1].participant1.deposit);
+    const charlieDeposit = toWei(mediated.channels[1].participant2.deposit);
 
     const paymentAmount = toWei(1);
 
@@ -34,83 +31,43 @@ describe('payments mediated', () => {
     test(
         'alice node, 1 token',
         async () => {
-            const params: paymentParams = {
-                token: tokenAddresses.LUM,
-                partner: nodes.charlie.client.address,
-                amount: paymentAmount
+            const payment: PaymentParams = {
+                tokenAddress: tokenAddresses.LUM,
+                partnerAddress: nodes.charlie.client.address,
+                amountOnWei: paymentAmount
             };
 
-            await nodes.alice.client.sdk.makePayment({
-                tokenAddress: tokenAddresses.LUM,
-                partnerAddress: params.partner,
-                amountOnWei: params.amount
-            });
-
-            await sleep(5000); // should not be necessary
+            await nodes.alice.client.sdk.makePayment(payment);
 
             // verify alice -> charlie
+            await given(nodes.alice)
+                .expectChannel({
+                    tokenAddress: tokenAddresses.LUM,
+                    partnerAddress: nodes.bob.client.address
+                })
+                .toHaveBalance(aliceDeposit - paymentAmount);
 
-            let expected = new ChannelState(
-                params.token,
-                nodes.bob.client.address,
-                aliceDeposit,
-                aliceDeposit - paymentAmount,
-                State.OPEN
-            );
-
-            await verifyChannel(
-                nodes.alice.client.sdk,
-                params.token,
-                nodes.bob.client.address,
-                expected
-            );
-
-            expected = new ChannelState(
-                params.token,
-                params.partner,
-                bobAliceDeposit,
-                bobAliceDeposit - paymentAmount,
-                State.OPEN
-            );
-
-            await verifyChannel(
-                nodes.bob.client.sdk,
-                params.token,
-                nodes.charlie.client.address,
-                expected
-            );
+            await given(nodes.bob)
+                .expectChannel({
+                    tokenAddress: tokenAddresses.LUM,
+                    partnerAddress: nodes.charlie.client.address
+                })
+                .toHaveBalance(bobCharlieDeposit - paymentAmount);
 
             // now verify charlie -> alice
+            await given(nodes.charlie)
+                .expectChannel({
+                    tokenAddress: tokenAddresses.LUM,
+                    partnerAddress: nodes.bob.client.address
+                })
+                .toHaveBalance(charlieDeposit + paymentAmount);
 
-            expected = new ChannelState(
-                params.token,
-                nodes.bob.client.address,
-                bobAliceDeposit,
-                bobAliceDeposit + paymentAmount,
-                State.OPEN
-            );
-
-            await verifyChannel(
-                nodes.charlie.client.sdk,
-                params.token,
-                nodes.bob.client.address,
-                expected
-            );
-
-            expected = new ChannelState(
-                params.token,
-                nodes.alice.client.address,
-                bobAliceDeposit,
-                bobAliceDeposit + paymentAmount,
-                State.OPEN
-            );
-
-            await verifyChannel(
-                nodes.bob.client.sdk,
-                params.token,
-                nodes.alice.client.address,
-                expected
-            );
+            await given(nodes.bob)
+                .expectChannel({
+                    tokenAddress: tokenAddresses.LUM,
+                    partnerAddress: nodes.alice.client.address
+                })
+                .toHaveBalance(bobAliceDeposit + paymentAmount);
         },
         Timeouts.TEST
     );

@@ -5,7 +5,7 @@ export function waitForHealthCheck({
     command,
     container,
     expectedResult,
-    timeoutMS = 60000,
+    timeoutMS = 120000,
     waitBeforeStart = 1000
 }: {
     command: string;
