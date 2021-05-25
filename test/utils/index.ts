@@ -9,13 +9,3 @@ export function isEmpty(value: any): boolean {
 export function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
-
-export async function verifyEnv(env: LuminoTestEnvironment): Promise<void> {
-    expect(Object.keys(env.nodes).length).toBe(2);
-    const firstNode = env.nodes[0];
-    const secondNode = env.nodes[1];
-    const firstAddress = await firstNode.client.address;
-    const secondAddress = await secondNode.client.address;
-    expect(isEmpty(firstAddress)).toBe(false);
-    expect(isEmpty(secondAddress)).toBe(false);
-}
