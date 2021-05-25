@@ -5,7 +5,7 @@ import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environmen
 import { Dictionary } from '../../../src/util/collection';
 import { LuminoNode } from '../../../src/types/node';
 import { State, Timeouts } from '../../common';
-import { ChannelIdentifier, OpenChannelRequest } from 'lumino-js-sdk';
+import { ChannelParams, OpenChannelParams } from 'lumino-js-sdk';
 import { given } from '../../utils/assertions';
 
 interface openParams {
@@ -30,11 +30,11 @@ describe('channel open', () => {
     test(
         'initiator node, 0 tokens',
         async () => {
-            const channelId: ChannelIdentifier = {
+            const channelId: ChannelParams = {
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: '0x8645315E490A05FeE7EDcF671B096E82D9b616a4'
             };
-            const openChannelRequest: OpenChannelRequest = {
+            const openChannelRequest: OpenChannelParams = {
                 tokenAddress: channelId.tokenAddress,
                 amountOnWei: toWei(0),
                 rskPartnerAddress: channelId.partnerAddress // too arbitrary, unrelated to topology
@@ -58,11 +58,11 @@ describe('channel open', () => {
     test(
         'initiator node, 1 token',
         async () => {
-            const channelId: ChannelIdentifier = {
+            const channelId: ChannelParams = {
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: '0xb9eA1f16E4f1E5CAF211aF150F2147eEd9Fb2245'
             };
-            const openChannelRequest: OpenChannelRequest = {
+            const openChannelRequest: OpenChannelParams = {
                 tokenAddress: channelId.tokenAddress,
                 amountOnWei: toWei(1),
                 rskPartnerAddress: channelId.partnerAddress // too arbitrary, unrelated to topology

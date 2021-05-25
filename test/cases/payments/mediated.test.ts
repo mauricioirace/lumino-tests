@@ -5,7 +5,7 @@ import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environmen
 import { LuminoNode } from '../../../src/types/node';
 import { Dictionary } from '../../../src/util/collection';
 import { given } from '../../utils/assertions';
-import { BalanceIdentifier, ChannelIdentifier } from 'lumino-js-sdk';
+import { PaymentParams, ChannelParams } from 'lumino-js-sdk';
 import { Timeouts } from '../../common';
 
 describe('payments mediated', () => {
@@ -36,7 +36,7 @@ describe('payments mediated', () => {
     test(
         'initiator node, 1 token',
         async () => {
-            const payment: BalanceIdentifier = {
+            const payment: PaymentParams = {
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: nodes.target.client.address,
                 amountOnWei: paymentAmount

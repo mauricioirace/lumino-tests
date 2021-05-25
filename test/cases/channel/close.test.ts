@@ -6,7 +6,7 @@ import { Dictionary } from '../../../src/util/collection';
 import { LuminoNode } from '../../../src/types/node';
 import { State, Timeouts } from '../../common';
 import { given } from '../../utils/assertions';
-import { ChannelIdentifier } from 'lumino-js-sdk';
+import { ChannelParams } from 'lumino-js-sdk';
 
 describe('channel close', () => {
     let nodes: Dictionary<LuminoNode>;
@@ -24,7 +24,7 @@ describe('channel close', () => {
     it(
         'from initiator node',
         async () => {
-            let initiatorChannel: ChannelIdentifier = {
+            let initiatorChannel: ChannelParams = {
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: nodes.mediator.client.address
             };
@@ -48,7 +48,7 @@ describe('channel close', () => {
     it(
         'from target node',
         async () => {
-            let targetChannel: ChannelIdentifier = {
+            let targetChannel: ChannelParams = {
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: nodes.mediator.client.address
             };

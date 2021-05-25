@@ -4,7 +4,7 @@ import { tokenAddresses, toWei } from '../../../src/util/token';
 import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
 import { Dictionary } from '../../../src/util/collection';
 import { LuminoNode } from '../../../src/types/node';
-import { BalanceIdentifier, ChannelIdentifier } from 'lumino-js-sdk';
+import { ChannelParams, DepositParams } from 'lumino-js-sdk';
 import { given } from '../../utils/assertions';
 import { Timeouts } from '../../common';
 
@@ -25,25 +25,27 @@ describe('channel deposit', () => {
         'initiator node, 1 token',
         async () => {
             // starting deposit for node "initiator"
-            const initiatorDeposit = toWei(
+            const initiatorInitialDeposit = toWei(
                 p2p.channels[0].participant1.deposit // should be inferred
             );
 
-            const channelId: ChannelIdentifier = {
+            const channelId: ChannelParams = {
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: nodes.target.client.address
             };
             // deposit to be made
-            const balance: BalanceIdentifier = {
+            const initiatorDeposit: DepositParams = {
                 ...channelId,
                 amountOnWei: toWei(1)
             };
 
-            await nodes.initiator.client.sdk.depositTokens(balance);
+            await nodes.initiator.client.sdk.depositTokens(initiatorDeposit);
 
             await given(nodes.initiator)
                 .expectChannel(channelId)
-                .toHaveDeposit(initiatorDeposit + balance.amountOnWei);
+                .toHaveDeposit(
+                    initiatorInitialDeposit + initiatorDeposit.amountOnWei
+                );
         },
         Timeouts.TEST
     );
@@ -52,25 +54,27 @@ describe('channel deposit', () => {
         'target node, 2 tokens',
         async () => {
             // starting deposit for node "initiator"
-            const targetDeposit = toWei(
+            const targetInitialDeposit = toWei(
                 p2p.channels[0].participant2.deposit // should be inferred
             );
 
-            const channelId: ChannelIdentifier = {
+            const channelId: ChannelParams = {
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: nodes.target.client.address
             };
             // deposit to be made
-            const balance: BalanceIdentifier = {
+            const targetDeposit: DepositParams = {
                 ...channelId,
                 amountOnWei: toWei(2)
             };
 
-            await nodes.target.client.sdk.depositTokens(balance);
+            await nodes.target.client.sdk.depositTokens(targetDeposit);
 
             await given(nodes.target)
                 .expectChannel(channelId)
-                .toHaveDeposit(targetDeposit + balance.amountOnWei);
+                .toHaveDeposit(
+                    targetInitialDeposit + targetDeposit.amountOnWei
+                );
         },
         Timeouts.TEST
     );

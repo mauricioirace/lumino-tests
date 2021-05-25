@@ -5,7 +5,7 @@ import { Dictionary } from '../../../src/util/collection';
 import setupTestEnvironment from '../../../src';
 import { tokenAddresses, toWei } from '../../../src/util/token';
 import { Timeouts } from '../../common';
-import { BalanceIdentifier } from 'lumino-js-sdk';
+import { PaymentParams } from 'lumino-js-sdk';
 import { given } from '../../utils/assertions';
 
 describe('payments p2p', () => {
@@ -36,7 +36,7 @@ describe('payments p2p', () => {
     test(
         'initiator node, 1 token',
         async () => {
-            const payment: BalanceIdentifier = {
+            const payment: PaymentParams = {
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: nodes.target.client.address,
                 amountOnWei: initiatorPaymentAmount
