@@ -1,4 +1,25 @@
 declare module 'lumino-js-sdk' {
+    export interface ChannelParams {
+        tokenAddress: string;
+        partnerAddress: string;
+    }
+    export interface OpenChannelParams {
+        tokenAddress: string;
+        amountOnWei: number;
+        rskPartnerAddress?: string;
+        rnsPartnerAddress?: string;
+    }
+    export interface PaymentParams {
+        tokenAddress: string;
+        amountOnWei: number;
+        partnerAddress: string;
+    }
+    export interface DepositParams {
+        tokenAddress: string;
+        amountOnWei: number;
+        partnerAddress: string;
+    }
+
     /**
      * @classdesc Represents the Lumino SDK. It allows the user to make every call to the API with a single function.
      * @class
@@ -105,13 +126,7 @@ declare module 'lumino-js-sdk' {
          * @return {Promise} Channels - Returns a Observable that, when fulfilled, will either return an Array with the
          * channels or an Error with the problem. The channels obtained are only open.
          */
-        getChannel({
-            tokenAddress,
-            partnerAddress
-        }: {
-            tokenAddress: string;
-            partnerAddress: string;
-        }): Promise<any>;
+        getChannel(params: ChannelParams): Promise<any>;
 
         /**
          * Search tokens, channels, nodes and rns addresses.
@@ -146,17 +161,7 @@ declare module 'lumino-js-sdk' {
          *
          * @returns {Promise} new channel info, or and error information
          */
-        openChannel({
-            tokenAddress,
-            amountOnWei,
-            rskPartnerAddress,
-            rnsPartnerAddress
-        }: {
-            tokenAddress: string;
-            amountOnWei: number;
-            rskPartnerAddress?: string;
-            rnsPartnerAddress?: string;
-        }): Promise<any>;
+        openChannel(request: OpenChannelParams): Promise<any>;
 
         /**
          * Close an exist channel.
@@ -165,13 +170,7 @@ declare module 'lumino-js-sdk' {
          * @param tokenAddress {String} - For example: 0x714E99c00D4Abf4a8a2Af90Fd40B595C68801C42
          * @returns {Promise} close channel response, or error response.
          */
-        closeChannel({
-            tokenAddress,
-            partnerAddress
-        }: {
-            tokenAddress: string;
-            partnerAddress: string;
-        }): Promise<any>;
+        closeChannel(channel: ChannelParams): Promise<any>;
 
         /**
          * Make off chain payment in a channel.
@@ -182,15 +181,7 @@ declare module 'lumino-js-sdk' {
          *
          * @returns {Promise}
          */
-        makePayment({
-            amountOnWei,
-            tokenAddress,
-            partnerAddress
-        }: {
-            amountOnWei: number;
-            tokenAddress: string;
-            partnerAddress: string;
-        }): Promise<any>;
+        makePayment(payment: PaymentParams): Promise<any>;
 
         /**
          * Deposit tokens into a channel
@@ -201,15 +192,7 @@ declare module 'lumino-js-sdk' {
          *
          * @returns {Promise} deposit result or error
          */
-        depositTokens({
-            amountOnWei,
-            tokenAddress,
-            partnerAddress
-        }: {
-            amountOnWei: number;
-            tokenAddress: string;
-            partnerAddress: string;
-        }): Promise<any>;
+        depositTokens(deposit: DepositParams): Promise<any>;
 
         /**
          * Join into a network creating a new channels with specific token with each node of the

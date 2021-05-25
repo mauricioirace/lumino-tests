@@ -4,13 +4,9 @@ import { tokenAddresses, toWei } from '../../../src/util/token';
 import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
 import { Dictionary } from '../../../src/util/collection';
 import { LuminoNode } from '../../../src/types/node';
-import { verifyChannel } from '../../utils';
-import { ChannelState, State, Timeouts } from '../../common';
-
-interface closeParams {
-    token: string;
-    partner: string;
-}
+import { State, Timeouts } from '../../common';
+import { given } from '../../utils/assertions';
+import { ChannelParams } from 'lumino-js-sdk';
 
 describe('channel close', () => {
     let nodes: Dictionary<LuminoNode>;
@@ -28,56 +24,23 @@ describe('channel close', () => {
     it(
         'from initiator node',
         async () => {
-            // deposit for node "initiator"
-            const initiatorDeposit = toWei(
-                mediated.channels[0].participant1.deposit // should be inferred
-            );
-
-            const params: closeParams = {
-                token: tokenAddresses.LUM,
-                partner: nodes.mediator.client.address
+            let initiatorChannel: ChannelParams = {
+                tokenAddress: tokenAddresses.LUM,
+                partnerAddress: nodes.mediator.client.address
             };
-            await nodes.initiator.client.sdk.closeChannel({
-                tokenAddress: params.token,
-                partnerAddress: params.partner
-            });
+            let mediatorChannel = {
+                tokenAddress: tokenAddresses.LUM,
+                partnerAddress: nodes.initiator.client.address
+            };
 
-            let expected = new ChannelState(
-                params.token,
-                params.partner,
-                initiatorDeposit,
-                initiatorDeposit, // balance should equal deposit
-                State.CLOSED
-            );
+            await nodes.initiator.client.sdk.closeChannel(initiatorChannel);
 
-            await verifyChannel(
-                nodes.initiator.client.sdk,
-                params.token,
-                params.partner,
-                expected
-            );
-
-            // repeat verification from "mediator" node
-
-            // deposit for node "mediator"
-            const mediatorDeposit = toWei(
-                mediated.channels[0].participant2.deposit // should be inferred
-            );
-
-            expected = new ChannelState(
-                params.token,
-                nodes.initiator.client.address, // should be inferred
-                mediatorDeposit,
-                mediatorDeposit, // balance should equal deposit
-                State.CLOSED
-            );
-
-            await verifyChannel(
-                nodes.mediator.client.sdk,
-                params.token,
-                nodes.initiator.client.address,
-                expected
-            );
+            await given(nodes.initiator)
+                .expectChannel(initiatorChannel)
+                .toBeInState(State.CLOSED);
+            await given(nodes.mediator)
+                .expectChannel(mediatorChannel)
+                .toBeInState(State.CLOSED);
         },
         Timeouts.TEST
     );
@@ -85,56 +48,23 @@ describe('channel close', () => {
     it(
         'from target node',
         async () => {
-            // deposit for node "target"
-            const targetDeposit = toWei(
-                mediated.channels[1].participant2.deposit // should be inferred
-            );
-
-            const params: closeParams = {
-                token: tokenAddresses.LUM,
-                partner: nodes.mediator.client.address
+            let targetChannel: ChannelParams = {
+                tokenAddress: tokenAddresses.LUM,
+                partnerAddress: nodes.mediator.client.address
             };
-            await nodes.target.client.sdk.closeChannel({
-                tokenAddress: params.token,
-                partnerAddress: params.partner
-            });
+            let mediatorChannel = {
+                tokenAddress: tokenAddresses.LUM,
+                partnerAddress: nodes.target.client.address
+            };
 
-            let expected = new ChannelState(
-                params.token,
-                params.partner,
-                targetDeposit,
-                targetDeposit, // balance should equal deposit
-                State.CLOSED
-            );
+            await nodes.target.client.sdk.closeChannel(targetChannel);
 
-            await verifyChannel(
-                nodes.target.client.sdk,
-                params.token,
-                params.partner,
-                expected
-            );
-
-            // repeat verification from "mediator" node
-
-            // deposit for node "mediator"
-            const mediatorDeposit = toWei(
-                mediated.channels[1].participant1.deposit // should be inferred
-            );
-
-            expected = new ChannelState(
-                params.token,
-                nodes.target.client.address, // should be inferred
-                mediatorDeposit,
-                mediatorDeposit, // balance should equal deposit
-                State.CLOSED
-            );
-
-            await verifyChannel(
-                nodes.mediator.client.sdk,
-                params.token,
-                nodes.target.client.address,
-                expected
-            );
+            await given(nodes.target)
+                .expectChannel(targetChannel)
+                .toBeInState(State.CLOSED);
+            await given(nodes.mediator)
+                .expectChannel(mediatorChannel)
+                .toBeInState(State.CLOSED);
         },
         Timeouts.TEST
     );

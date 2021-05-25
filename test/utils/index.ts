@@ -20,21 +20,3 @@ export async function verifyEnv(env: LuminoTestEnvironment): Promise<void> {
     expect(isEmpty(firstAddr)).toBe(false);
     expect(isEmpty(secondAddr)).toBe(false);
 }
-
-export async function verifyChannel(
-    sdk: Lumino,
-    token: string,
-    partner: string,
-    expected: ChannelState
-): Promise<void> {
-    const channelInfo = await sdk.getChannel({
-        tokenAddress: token,
-        partnerAddress: partner
-    });
-
-    expect(channelInfo.token_address).toBe(expected.token);
-    expect(channelInfo.partner_address).toBe(expected.partner);
-    expect(channelInfo.total_deposit).toBe(expected.deposit);
-    expect(channelInfo.balance).toBe(expected.balance);
-    expect(channelInfo.state).toBe(expected.state);
-}

@@ -4,14 +4,9 @@ import setupTestEnvironment from '../../../src';
 import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
 import { LuminoNode } from '../../../src/types/node';
 import { Dictionary } from '../../../src/util/collection';
-import { sleep, verifyChannel } from '../../utils';
-import { ChannelState, State, Timeouts } from '../../common';
-
-interface paymentParams {
-    token: string;
-    partner: string;
-    amount: number;
-}
+import { given } from '../../utils/assertions';
+import { PaymentParams, ChannelParams } from 'lumino-js-sdk';
+import { Timeouts } from '../../common';
 
 describe('payments mediated', () => {
     let nodes: Dictionary<LuminoNode>;
@@ -41,83 +36,44 @@ describe('payments mediated', () => {
     test(
         'initiator node, 1 token',
         async () => {
-            const params: paymentParams = {
-                token: tokenAddresses.LUM,
-                partner: nodes.target.client.address,
-                amount: paymentAmount
+            const payment: PaymentParams = {
+                tokenAddress: tokenAddresses.LUM,
+                partnerAddress: nodes.target.client.address,
+                amountOnWei: paymentAmount
             };
 
-            await nodes.initiator.client.sdk.makePayment({
-                tokenAddress: tokenAddresses.LUM,
-                partnerAddress: params.partner,
-                amountOnWei: params.amount
-            });
-
-            await sleep(5000); // should not be necessary
+            await nodes.initiator.client.sdk.makePayment(payment);
 
             // verify initiator -> target
+            await given(nodes.initiator)
+                .expectChannel({
+                    tokenAddress: tokenAddresses.LUM,
+                    partnerAddress: nodes.mediator.client.address
+                })
+                .toHaveBalance(initiatorDeposit - paymentAmount);
 
-            let expected = new ChannelState(
-                params.token,
-                nodes.mediator.client.address,
-                initiatorDeposit,
-                initiatorDeposit - paymentAmount,
-                State.OPEN
-            );
-
-            await verifyChannel(
-                nodes.initiator.client.sdk,
-                params.token,
-                nodes.mediator.client.address,
-                expected
-            );
-
-            expected = new ChannelState(
-                params.token,
-                params.partner,
-                mediatorInitiatorDeposit,
-                mediatorInitiatorDeposit - paymentAmount,
-                State.OPEN
-            );
-
-            await verifyChannel(
-                nodes.mediator.client.sdk,
-                params.token,
-                nodes.target.client.address,
-                expected
-            );
+            await given(nodes.mediator)
+                .expectChannel({
+                    tokenAddress: tokenAddresses.LUM,
+                    partnerAddress: nodes.target.client.address
+                })
+                .toHaveBalance(mediatorTargetDeposit - paymentAmount);
 
             // now verify target -> initiator
 
-            expected = new ChannelState(
-                params.token,
-                nodes.mediator.client.address,
-                mediatorInitiatorDeposit,
-                mediatorInitiatorDeposit + paymentAmount,
-                State.OPEN
-            );
+            await given(nodes.target)
+                .expectChannel({
+                    tokenAddress: tokenAddresses.LUM,
+                    partnerAddress: nodes.mediator.client.address
+                })
+                .toHaveBalance(targetDeposit + paymentAmount);
 
-            await verifyChannel(
-                nodes.target.client.sdk,
-                params.token,
-                nodes.mediator.client.address,
-                expected
-            );
-
-            expected = new ChannelState(
-                params.token,
-                nodes.initiator.client.address,
-                mediatorInitiatorDeposit,
-                mediatorInitiatorDeposit + paymentAmount,
-                State.OPEN
-            );
-
-            await verifyChannel(
-                nodes.mediator.client.sdk,
-                params.token,
-                nodes.initiator.client.address,
-                expected
-            );
+            await given(nodes.mediator)
+                .expectChannel({
+                    tokenAddress: tokenAddresses.LUM,
+                    partnerAddress: nodes.initiator.client.address
+                })
+                .toHaveBalance(mediatorInitiatorDeposit + paymentAmount);
         },
         Timeouts.TEST
     );

@@ -4,14 +4,9 @@ import { tokenAddresses, toWei } from '../../../src/util/token';
 import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
 import { Dictionary } from '../../../src/util/collection';
 import { LuminoNode } from '../../../src/types/node';
-import { verifyChannel } from '../../utils';
-import { ChannelState, State, Timeouts } from '../../common';
-
-interface depositParams {
-    token: string;
-    amount: number;
-    partner: string;
-}
+import { ChannelParams, DepositParams } from 'lumino-js-sdk';
+import { given } from '../../utils/assertions';
+import { Timeouts } from '../../common';
 
 describe('channel deposit', () => {
     let nodes: Dictionary<LuminoNode>;
@@ -30,37 +25,27 @@ describe('channel deposit', () => {
         'initiator node, 1 token',
         async () => {
             // starting deposit for node "initiator"
-            const initiatorDeposit = toWei(
+            const initiatorInitialDeposit = toWei(
                 p2p.channels[0].participant1.deposit // should be inferred
             );
 
+            const channelId: ChannelParams = {
+                tokenAddress: tokenAddresses.LUM,
+                partnerAddress: nodes.target.client.address
+            };
             // deposit to be made
-            const params: depositParams = {
-                token: tokenAddresses.LUM,
-                amount: toWei(1),
-                partner: nodes.target.client.address
+            const initiatorDeposit: DepositParams = {
+                ...channelId,
+                amountOnWei: toWei(1)
             };
 
-            await nodes.initiator.client.sdk.depositTokens({
-                tokenAddress: params.token,
-                amountOnWei: params.amount,
-                partnerAddress: params.partner
-            });
+            await nodes.initiator.client.sdk.depositTokens(initiatorDeposit);
 
-            const expected = new ChannelState(
-                params.token,
-                params.partner,
-                initiatorDeposit + params.amount,
-                initiatorDeposit + params.amount, // balance should equal deposit
-                State.OPEN
-            );
-
-            await verifyChannel(
-                nodes.initiator.client.sdk,
-                params.token,
-                params.partner,
-                expected
-            );
+            await given(nodes.initiator)
+                .expectChannel(channelId)
+                .toHaveDeposit(
+                    initiatorInitialDeposit + initiatorDeposit.amountOnWei
+                );
         },
         Timeouts.TEST
     );
@@ -68,36 +53,28 @@ describe('channel deposit', () => {
     test(
         'target node, 2 tokens',
         async () => {
-            // starting deposit for node "target"
-            const targetDeposit = toWei(p2p.channels[0].participant2.deposit); // should be inferred
+            // starting deposit for node "initiator"
+            const targetInitialDeposit = toWei(
+                p2p.channels[0].participant2.deposit // should be inferred
+            );
 
+            const channelId: ChannelParams = {
+                tokenAddress: tokenAddresses.LUM,
+                partnerAddress: nodes.target.client.address
+            };
             // deposit to be made
-            const params: depositParams = {
-                token: tokenAddresses.LUM,
-                amount: toWei(2),
-                partner: nodes.initiator.client.address
+            const targetDeposit: DepositParams = {
+                ...channelId,
+                amountOnWei: toWei(2)
             };
 
-            await nodes.target.client.sdk.depositTokens({
-                tokenAddress: params.token,
-                amountOnWei: params.amount,
-                partnerAddress: params.partner
-            });
+            await nodes.target.client.sdk.depositTokens(targetDeposit);
 
-            const targetExpected = new ChannelState(
-                params.token,
-                params.partner,
-                targetDeposit + params.amount,
-                targetDeposit + params.amount, // balance should equal deposit
-                State.OPEN
-            );
-
-            await verifyChannel(
-                nodes.target.client.sdk,
-                params.token,
-                params.partner,
-                targetExpected
-            );
+            await given(nodes.target)
+                .expectChannel(channelId)
+                .toHaveDeposit(
+                    targetInitialDeposit + targetDeposit.amountOnWei
+                );
         },
         Timeouts.TEST
     );
