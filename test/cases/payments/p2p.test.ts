@@ -62,13 +62,13 @@ describe('payments p2p', () => {
     test(
         '2 tokens, bob node',
         async () => {
-            // pay initator -> bob
+            // pay alice -> bob
             await nodes.alice.client.sdk.makePayment({
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: nodes.bob.client.address,
                 amountOnWei: alicePaymentAmount
             });
-            // pay bob -> initator
+            // pay bob -> alice
             await nodes.bob.client.sdk.makePayment({
                 tokenAddress: tokenAddresses.LUM,
                 partnerAddress: nodes.alice.client.address,
