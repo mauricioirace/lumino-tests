@@ -1,7 +1,6 @@
 import p2p from '../../../topologies/p2p.json';
 import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
-import { LuminoNode } from '../../../src/types/node';
-import { Dictionary } from '../../../src/util/collection';
+import { LuminoNodeList } from '../../../src/types/node';
 import setupTestEnvironment from '../../../src';
 import { tokenAddresses, toWei } from '../../../src/util/token';
 import { Timeouts } from '../../common';
@@ -9,24 +8,24 @@ import { PaymentParams } from 'lumino-js-sdk';
 import { given } from '../../utils/assertions';
 
 describe('payments p2p', () => {
-    let nodes: Dictionary<LuminoNode>;
+    let nodes: LuminoNodeList;
     let env: LuminoTestEnvironment;
 
     // starting deposit for nodes
-    const initiatorDeposit = toWei(
+    const aliceDeposit = toWei(
         p2p.channels[0].participant1.deposit // should be inferred
     );
-    const targetDeposit = toWei(
+    const bobDeposit = toWei(
         p2p.channels[0].participant2.deposit // should be inferred
     );
 
     // payment amounts to be made
-    const initiatorPaymentAmount = toWei(1);
-    const targetPaymentAmount = toWei(2);
+    const alicePaymentAmount = toWei(1);
+    const bobPaymentAmount = toWei(2);
 
     beforeEach(async () => {
         env = await setupTestEnvironment(p2p);
-        nodes = env.nodes as Dictionary<LuminoNode>;
+        nodes = env.nodes;
     }, Timeouts.SETUP);
 
     afterEach(async () => {
@@ -34,66 +33,64 @@ describe('payments p2p', () => {
     }, Timeouts.TEARDOWN);
 
     test(
-        'initiator node, 1 token',
+        'alice node, 1 token',
         async () => {
             const payment: PaymentParams = {
                 tokenAddress: tokenAddresses.LUM,
-                partnerAddress: nodes.target.client.address,
-                amountOnWei: initiatorPaymentAmount
+                partnerAddress: nodes.bob.client.address,
+                amountOnWei: alicePaymentAmount
             };
-            await nodes.initiator.client.sdk.makePayment(payment);
-            // verify initiator -> target
-            await given(nodes.initiator)
+            await nodes.alice.client.sdk.makePayment(payment);
+            // verify alice -> bob
+            await given(nodes.alice)
                 .expectChannel({
                     tokenAddress: tokenAddresses.LUM,
-                    partnerAddress: nodes.target.client.address
+                    partnerAddress: nodes.bob.client.address
                 })
-                .toHaveBalance(initiatorDeposit - initiatorPaymentAmount);
-            // now verify from "target" node
-            await given(nodes.target)
+                .toHaveBalance(aliceDeposit - alicePaymentAmount);
+            // now verify from "bob" node
+            await given(nodes.bob)
                 .expectChannel({
                     tokenAddress: tokenAddresses.LUM,
-                    partnerAddress: nodes.initiator.client.address
+                    partnerAddress: nodes.alice.client.address
                 })
-                .toHaveBalance(targetDeposit + initiatorPaymentAmount);
+                .toHaveBalance(bobDeposit + alicePaymentAmount);
         },
         Timeouts.TEST
     );
 
     test(
-        '2 tokens, target node',
+        '2 tokens, bob node',
         async () => {
-            // pay initator -> target
-            await nodes.initiator.client.sdk.makePayment({
+            // pay alice -> bob
+            await nodes.alice.client.sdk.makePayment({
                 tokenAddress: tokenAddresses.LUM,
-                partnerAddress: nodes.target.client.address,
-                amountOnWei: initiatorPaymentAmount
+                partnerAddress: nodes.bob.client.address,
+                amountOnWei: alicePaymentAmount
             });
-            // pay target -> initator
-            await nodes.target.client.sdk.makePayment({
+            // pay bob -> alice
+            await nodes.bob.client.sdk.makePayment({
                 tokenAddress: tokenAddresses.LUM,
-                partnerAddress: nodes.initiator.client.address,
-                amountOnWei: targetPaymentAmount
+                partnerAddress: nodes.alice.client.address,
+                amountOnWei: bobPaymentAmount
             });
-            // verify from "target" node
-            await given(nodes.target)
+            // verify from "bob" node
+            await given(nodes.bob)
                 .expectChannel({
                     tokenAddress: tokenAddresses.LUM,
-                    partnerAddress: nodes.initiator.client.address
+                    partnerAddress: nodes.alice.client.address
                 })
                 .toHaveBalance(
-                    targetDeposit + initiatorPaymentAmount - targetPaymentAmount
+                    bobDeposit + alicePaymentAmount - bobPaymentAmount
                 );
-            // repeat verification from "initiator" node
-            await given(nodes.initiator)
+            // repeat verification from "alice" node
+            await given(nodes.alice)
                 .expectChannel({
                     tokenAddress: tokenAddresses.LUM,
-                    partnerAddress: nodes.target.client.address
+                    partnerAddress: nodes.bob.client.address
                 })
                 .toHaveBalance(
-                    initiatorDeposit -
-                        initiatorPaymentAmount +
-                        targetPaymentAmount
+                    aliceDeposit - alicePaymentAmount + bobPaymentAmount
                 );
         },
         Timeouts.TEST

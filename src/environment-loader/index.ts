@@ -1,6 +1,6 @@
 import ContainerManager from '../container-manager';
 import { validateTokens } from '../util/token';
-import { NodeList } from '../types/node';
+import { LuminoNodeList } from '../types/node';
 import { SetupJson, SetupNode, SetupToken } from '../types/setup';
 import { LuminoTestEnvironment } from '../types/lumino-test-environment';
 import ChannelManager from '../channel-manager';
@@ -8,7 +8,7 @@ import ChannelManager from '../channel-manager';
 export default class EnvironmentLoader {
     private containerManager: ContainerManager = ContainerManager.create();
     private channelManager: ChannelManager = new ChannelManager();
-    private nodes: NodeList = {};
+    private nodes: LuminoNodeList = {};
 
     private constructor() {}
 
@@ -47,7 +47,7 @@ export default class EnvironmentLoader {
             validateTokens(setup.tokens);
             for (let i = 0; i < setup.nodes; i++) {
                 nodeConfigs.push({
-                    name: `node${i}`,
+                    name: `${i}`,
                     tokens: setup.tokens as SetupToken[],
                     enableHub: setup.enableHub ?? false
                 });
@@ -67,7 +67,7 @@ export default class EnvironmentLoader {
         );
     }
 
-    public getNodes(): NodeList {
+    public getNodes(): LuminoNodeList {
         return this.nodes;
     }
 

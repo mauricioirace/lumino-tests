@@ -1,20 +1,19 @@
 import setupTestEnvironment from '../../../src';
 import mediated from '../../../topologies/mediated.json';
-import { tokenAddresses, toWei } from '../../../src/util/token';
+import { tokenAddresses } from '../../../src/util/token';
 import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
-import { Dictionary } from '../../../src/util/collection';
-import { LuminoNode } from '../../../src/types/node';
+import { LuminoNodeList } from '../../../src/types/node';
 import { State, Timeouts } from '../../common';
 import { given } from '../../utils/assertions';
 import { ChannelParams } from 'lumino-js-sdk';
 
 describe('channel close', () => {
-    let nodes: Dictionary<LuminoNode>;
+    let nodes: LuminoNodeList;
     let env: LuminoTestEnvironment;
 
     beforeAll(async () => {
         env = await setupTestEnvironment(mediated);
-        nodes = env.nodes as Dictionary<LuminoNode>;
+        nodes = env.nodes;
     }, Timeouts.SETUP);
 
     afterAll(async () => {
@@ -22,48 +21,48 @@ describe('channel close', () => {
     }, Timeouts.TEARDOWN);
 
     it(
-        'from initiator node',
+        'from alice node',
         async () => {
-            let initiatorChannel: ChannelParams = {
+            const aliceChannel: ChannelParams = {
                 tokenAddress: tokenAddresses.LUM,
-                partnerAddress: nodes.mediator.client.address
+                partnerAddress: nodes.bob.client.address
             };
-            let mediatorChannel = {
+            const bobChannel: ChannelParams = {
                 tokenAddress: tokenAddresses.LUM,
-                partnerAddress: nodes.initiator.client.address
+                partnerAddress: nodes.alice.client.address
             };
 
-            await nodes.initiator.client.sdk.closeChannel(initiatorChannel);
+            await nodes.alice.client.sdk.closeChannel(aliceChannel);
 
-            await given(nodes.initiator)
-                .expectChannel(initiatorChannel)
+            await given(nodes.alice)
+                .expectChannel(aliceChannel)
                 .toBeInState(State.CLOSED);
-            await given(nodes.mediator)
-                .expectChannel(mediatorChannel)
+            await given(nodes.bob)
+                .expectChannel(bobChannel)
                 .toBeInState(State.CLOSED);
         },
         Timeouts.TEST
     );
 
     it(
-        'from target node',
+        'from charlie node',
         async () => {
-            let targetChannel: ChannelParams = {
+            const charlieChannel: ChannelParams = {
                 tokenAddress: tokenAddresses.LUM,
-                partnerAddress: nodes.mediator.client.address
+                partnerAddress: nodes.bob.client.address
             };
-            let mediatorChannel = {
+            const bobChannel: ChannelParams = {
                 tokenAddress: tokenAddresses.LUM,
-                partnerAddress: nodes.target.client.address
+                partnerAddress: nodes.charlie.client.address
             };
 
-            await nodes.target.client.sdk.closeChannel(targetChannel);
+            await nodes.charlie.client.sdk.closeChannel(charlieChannel);
 
-            await given(nodes.target)
-                .expectChannel(targetChannel)
+            await given(nodes.charlie)
+                .expectChannel(charlieChannel)
                 .toBeInState(State.CLOSED);
-            await given(nodes.mediator)
-                .expectChannel(mediatorChannel)
+            await given(nodes.bob)
+                .expectChannel(bobChannel)
                 .toBeInState(State.CLOSED);
         },
         Timeouts.TEST

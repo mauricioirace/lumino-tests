@@ -1,7 +1,7 @@
 {
     "nodes": [
         {
-            "name": "initiator",
+            "name": "alice",
             "tokens": [
                 {
                     "symbol": "LUM",
@@ -14,7 +14,7 @@
             ]
         },
         {
-            "name": "mediator",
+            "name": "bob",
             "tokens": [
                 {
                     "symbol": "LUM",
@@ -27,7 +27,7 @@
             ]
         },
         {
-            "name": "target",
+            "name": "charlie",
             "tokens": [
                 {
                     "symbol": "LUM",
@@ -44,22 +44,22 @@
         {
             "tokenSymbol": "LUM",
             "participant1": {
-                "node": "initiator",
+                "node": "alice",
                 "deposit": 10
             },
             "participant2": {
-                "node": "mediator",
+                "node": "bob",
                 "deposit": 10
             }
         },
         {
             "tokenSymbol": "LUM",
             "participant1": {
-                "node": "mediator",
+                "node": "bob",
                 "deposit": 10
             },
             "participant2": {
-                "node": "target",
+                "node": "charlie",
                 "deposit": 10
             }
         }

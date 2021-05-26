@@ -1,7 +1,7 @@
 {
     "nodes": [
         {
-            "name": "initiator",
+            "name": "alice",
             "tokens": [
                 {
                     "symbol": "LUM",
@@ -14,7 +14,7 @@
             ]
         },
         {
-            "name": "target",
+            "name": "bob",
             "tokens": [
                 {
                     "symbol": "LUM",
