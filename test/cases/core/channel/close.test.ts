@@ -1,10 +1,10 @@
-import setupTestEnvironment from '../../../src';
-import mediated from '../../../topologies/mediated.json';
-import { tokenAddresses } from '../../../src/util/token';
-import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
-import { LuminoNodeList } from '../../../src/types/node';
-import { State, Timeouts } from '../../common';
-import { given } from '../../utils/assertions';
+import setupTestEnvironment from '../../../../src';
+import mediated from '../../../../topologies/mediated.json';
+import { tokenAddresses } from '../../../../src/util/token';
+import { LuminoTestEnvironment } from '../../../../src/types/lumino-test-environment';
+import { LuminoNodeList } from '../../../../src/types/node';
+import { State, Timeouts } from '../../../common';
+import { given } from '../../../utils/assertions';
 import { ChannelParams } from 'lumino-js-sdk';
 
 describe('channel close', () => {

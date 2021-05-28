@@ -1,0 +1,170 @@
+{
+    "nodes": [
+        {
+            "name": "alice",
+            "tokens": [
+                {
+                    "symbol": "LUM",
+                    "amount": 100
+                },
+                {
+                    "symbol": "RIF",
+                    "amount": 0.01
+                }
+            ]
+        },
+        {
+            "name": "bob",
+            "tokens": [
+                {
+                    "symbol": "LUM",
+                    "amount": 100
+                },
+                {
+                    "symbol": "RIF",
+                    "amount": 0.01
+                }
+            ]
+        },
+        {
+            "name": "charlie",
+            "tokens": [
+                {
+                    "symbol": "LUM",
+                    "amount": 100
+                },
+                {
+                    "symbol": "RIF",
+                    "amount": 0.01
+                }
+            ]
+        },
+        {
+            "name": "dave",
+            "tokens": [
+                {
+                    "symbol": "LUM",
+                    "amount": 100
+                },
+                {
+                    "symbol": "RIF",
+                    "amount": 0.01
+                }
+            ]
+        },
+        {
+            "name": "eve",
+            "tokens": [
+                {
+                    "symbol": "LUM",
+                    "amount": 100
+                },
+                {
+                    "symbol": "RIF",
+                    "amount": 0.01
+                }
+            ]
+        }
+    ],
+    "channels": [
+        {
+            "tokenSymbol": "RIF",
+            "participant1": {
+                "node": "alice",
+                "deposit": 0.001
+            },
+            "participant2": {
+                "node": "bob",
+                "deposit": 0.001
+            }
+        },
+        {
+            "tokenSymbol": "RIF",
+            "participant1": {
+                "node": "bob",
+                "deposit": 0.001
+            },
+            "participant2": {
+                "node": "charlie",
+                "deposit": 0.001
+            }
+        },
+        {
+            "tokenSymbol": "RIF",
+            "participant1": {
+                "node": "charlie",
+                "deposit": 0.001
+            },
+            "participant2": {
+                "node": "dave",
+                "deposit": 0.001
+            }
+        },
+        {
+            "tokenSymbol": "RIF",
+            "participant1": {
+                "node": "dave",
+                "deposit": 0.001
+            },
+            "participant2": {
+                "node": "alice",
+                "deposit": 0.001
+            }
+        },
+        {
+            "tokenSymbol": "LUM",
+            "participant1": {
+                "node": "alice",
+                "deposit": 10
+            },
+            "participant2": {
+                "node": "bob",
+                "deposit": 1
+            }
+        },
+        {
+            "tokenSymbol": "LUM",
+            "participant1": {
+                "node": "bob",
+                "deposit": 10
+            },
+            "participant2": {
+                "node": "charlie",
+                "deposit": 10
+            }
+        },
+        {
+            "tokenSymbol": "LUM",
+            "participant1": {
+                "node": "charlie",
+                "deposit": 10
+            },
+            "participant2": {
+                "node": "dave",
+                "deposit": 10
+            }
+        },
+        {
+            "tokenSymbol": "LUM",
+            "participant1": {
+                "node": "dave",
+                "deposit": 1
+            },
+            "participant2": {
+                "node": "alice",
+                "deposit": 10
+            }
+        },
+        {
+            "tokenSymbol": "LUM",
+            "participant1": {
+                "node": "dave",
+                "deposit": 10
+            },
+            "participant2": {
+                "node": "eve",
+                "deposit": 10
+            }
+        }
+    ]
+}

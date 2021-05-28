@@ -1,10 +1,10 @@
-import { tokenAddresses, toWei } from '../../../src/util/token';
-import mediated from '../../../topologies/mediated.json';
-import setupTestEnvironment from '../../../src';
-import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
-import { LuminoNodeList } from '../../../src/types/node';
-import { Timeouts } from '../../common';
-import { given } from '../../utils/assertions';
+import { tokenAddresses, toWei } from '../../../../src/util/token';
+import mediated from '../../../../topologies/mediated.json';
+import setupTestEnvironment from '../../../../src';
+import { LuminoTestEnvironment } from '../../../../src/types/lumino-test-environment';
+import { LuminoNodeList } from '../../../../src/types/node';
+import { Timeouts } from '../../../common';
+import { given } from '../../../utils/assertions';
 import { PaymentParams } from 'lumino-js-sdk';
 
 describe('payments mediated', () => {

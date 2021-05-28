@@ -1,11 +1,11 @@
-import p2p from '../../../topologies/p2p.json';
-import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
-import { LuminoNodeList } from '../../../src/types/node';
-import setupTestEnvironment from '../../../src';
-import { tokenAddresses, toWei } from '../../../src/util/token';
-import { Timeouts } from '../../common';
+import p2p from '../../../../topologies/p2p.json';
+import { LuminoTestEnvironment } from '../../../../src/types/lumino-test-environment';
+import { LuminoNodeList } from '../../../../src/types/node';
+import setupTestEnvironment from '../../../../src';
+import { tokenAddresses, toWei } from '../../../../src/util/token';
+import { Timeouts } from '../../../common';
 import { PaymentParams } from 'lumino-js-sdk';
-import { given } from '../../utils/assertions';
+import { given } from '../../../utils/assertions';
 
 describe('payments p2p', () => {
     let nodes: LuminoNodeList;
