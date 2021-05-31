@@ -48,7 +48,7 @@ describe('channel open', () => {
         Timeouts.TEST
     );
 
-    test(
+    it(
         'should open channel with 1 token',
         async () => {
             const channelId: ChannelParams = {
@@ -75,7 +75,7 @@ describe('channel open', () => {
         Timeouts.TEST
     );
 
-    test(
+    it(
         'should open 2 channel with different tokens',
         async () => {
             const lumChannel: ChannelParams = {
@@ -88,12 +88,12 @@ describe('channel open', () => {
                 rskPartnerAddress: lumChannel.partnerAddress // too arbitrary, unrelated to topology
             };
             const rifChannel: ChannelParams = {
-                tokenAddress: tokenAddresses.LUM,
+                tokenAddress: tokenAddresses.RIF,
                 partnerAddress: nodes.bob.client.address
             };
             const openRifChannel: OpenChannelParams = {
                 tokenAddress: rifChannel.tokenAddress,
-                amountOnWei: toWei(1),
+                amountOnWei: toWei(0),
                 rskPartnerAddress: rifChannel.partnerAddress // too arbitrary, unrelated to topology
             };
             // Open two channels, one with lumino token, and the other one with rif
