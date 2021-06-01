@@ -8,6 +8,8 @@
     "pretest": "scripts/validateResources",
     "requirements": "scripts/validateResources",
     "test": "scripts/runTests",
+    "test:core": "scripts/runTests test/cases/core",
+    "test:heavy": "scripts/runTests test/cases/heavy",
     "prettier": "npx prettier --write --ignore-unknown .",
     "prettier-check": "npx prettier --check .",
     "clean": "scripts/clean"

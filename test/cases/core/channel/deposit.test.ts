@@ -1,11 +1,11 @@
-import setupTestEnvironment from '../../../src';
-import p2p from '../../../topologies/p2p.json';
-import { tokenAddresses, toWei } from '../../../src/util/token';
-import { LuminoTestEnvironment } from '../../../src/types/lumino-test-environment';
-import { LuminoNodeList } from '../../../src/types/node';
-import { Timeouts } from '../../common';
+import setupTestEnvironment from '../../../../src';
+import p2p from '../../../../topologies/p2p.json';
+import { tokenAddresses, toWei } from '../../../../src/util/token';
+import { LuminoTestEnvironment } from '../../../../src/types/lumino-test-environment';
+import { LuminoNodeList } from '../../../../src/types/node';
+import { Timeouts } from '../../../common';
 import { ChannelParams, DepositParams } from 'lumino-js-sdk';
-import { given } from '../../utils/assertions';
+import { given } from '../../../utils/assertions';
 
 describe('channel deposit', () => {
     let nodes: LuminoNodeList;
