@@ -25,12 +25,12 @@ describe('channel open', () => {
         async () => {
             const channelParams: ChannelParams = {
                 tokenAddress: tokenAddresses.LUM,
-                partnerAddress: '0x8645315E490A05FeE7EDcF671B096E82D9b616a4'
+                partnerAddress: '0x8645315E490A05FeE7EDcF671B096E82D9b616a4' // too arbitrary, unrelated to topology
             };
             const openChannel: OpenChannelParams = {
                 tokenAddress: channelParams.tokenAddress,
                 amountOnWei: toWei(0),
-                rskPartnerAddress: channelParams.partnerAddress // too arbitrary, unrelated to topology
+                rskPartnerAddress: channelParams.partnerAddress
             };
 
             await nodes.alice.client.sdk.openChannel(openChannel);
@@ -53,12 +53,12 @@ describe('channel open', () => {
         async () => {
             const channelId: ChannelParams = {
                 tokenAddress: tokenAddresses.LUM,
-                partnerAddress: '0xb9eA1f16E4f1E5CAF211aF150F2147eEd9Fb2245'
+                partnerAddress: '0xb9eA1f16E4f1E5CAF211aF150F2147eEd9Fb2245' // too arbitrary, unrelated to topology
             };
             const openChannelRequest: OpenChannelParams = {
                 tokenAddress: channelId.tokenAddress,
                 amountOnWei: toWei(1),
-                rskPartnerAddress: channelId.partnerAddress // too arbitrary, unrelated to topology
+                rskPartnerAddress: channelId.partnerAddress
             };
 
             await nodes.alice.client.sdk.openChannel(openChannelRequest);
@@ -85,7 +85,7 @@ describe('channel open', () => {
             const openLumChannel: OpenChannelParams = {
                 tokenAddress: lumChannel.tokenAddress,
                 amountOnWei: toWei(0),
-                rskPartnerAddress: lumChannel.partnerAddress // too arbitrary, unrelated to topology
+                rskPartnerAddress: lumChannel.partnerAddress
             };
             const rifChannel: ChannelParams = {
                 tokenAddress: tokenAddresses.RIF,
@@ -94,7 +94,7 @@ describe('channel open', () => {
             const openRifChannel: OpenChannelParams = {
                 tokenAddress: rifChannel.tokenAddress,
                 amountOnWei: toWei(0),
-                rskPartnerAddress: rifChannel.partnerAddress // too arbitrary, unrelated to topology
+                rskPartnerAddress: rifChannel.partnerAddress
             };
             // Open two channels, one with lumino token, and the other one with rif
             await nodes.alice.client.sdk.openChannel(openLumChannel);

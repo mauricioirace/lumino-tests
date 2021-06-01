@@ -17,13 +17,12 @@ describe('payment timeout', () => {
         nodes = env.nodes;
         channelWithOfflineNode = {
             tokenAddress: tokenAddresses.LUM,
-            // TODO: Generate address somehow else
-            partnerAddress: '0x8645315E490A05FeE7EDcF671B096E82D9b616a4'
+            partnerAddress: '0x8645315E490A05FeE7EDcF671B096E82D9b616a4' // too arbitrary, unrelated to topology
         };
         const openChannel: OpenChannelParams = {
             tokenAddress: channelWithOfflineNode.tokenAddress,
             amountOnWei: toWei(1),
-            rskPartnerAddress: channelWithOfflineNode.partnerAddress // too arbitrary, unrelated to topology
+            rskPartnerAddress: channelWithOfflineNode.partnerAddress
         };
 
         await nodes.alice.client.sdk.openChannel(openChannel);
